@@ -5,9 +5,14 @@ import { z } from "zod";
 
 const ConfigSchema = z.object({
 	/**
-	 * The path to the changelog file.
+	 * The name of the changelog file.
 	 */
-	infile: z.string(),
+	changelog: z.string(),
+
+	/**
+	 * Files to be updated.
+	 */
+	outFiles: z.array(z.string()),
 
 	/**
 	 * If true, no output will be written to disk.
@@ -22,14 +27,18 @@ const ConfigSchema = z.object({
 export type ForkConfig = z.infer<typeof ConfigSchema>;
 
 const DEFAULT_FORK_CONFIG: ForkConfig = {
-	infile: "CHANGELOG.md",
+	changelog: "CHANGELOG.md",
+
+	outFiles: ["package.json", "package-lock.json"],
+
 	dry: false,
 	silent: false,
 };
 
-export function defineConfig(config: ForkConfig): ForkConfig {
-	if (ConfigSchema.safeParse(config).success) {
-		return config;
+export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
+	const parsedConfig = ConfigSchema.partial().safeParse(config);
+	if (parsedConfig.success) {
+		return parsedConfig.data;
 	}
 	return DEFAULT_FORK_CONFIG;
 }
@@ -54,12 +63,14 @@ export class ConfigurationClass {
 				filepath: configPath,
 			});
 
-			const parsedConfig = ConfigSchema.safeParse(config.mod.default || config.mod);
-
+			const parsedConfig = ConfigSchema.partial().safeParse(config.mod.default || config.mod);
 			if (parsedConfig.success) {
+				const { ...userConf } = parsedConfig.data;
+
 				this.config = {
 					...this.config,
-					...parsedConfig.data,
+					...userConf,
+					outFiles: Array.from(new Set(this.config.outFiles.concat(userConf?.outFiles || []))),
 				};
 			}
 		}
