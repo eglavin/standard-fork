@@ -1,0 +1,30 @@
+{
+	"name": "standard-fork",
+	"version": "1.0.0",
+	"description": "Replacement for standard version written with modern syntax",
+	"author": {
+		"name": "Eanna Glavin",
+		"url": "https://eglavin.com"
+	},
+	"license": "ISC",
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.cts",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"lint:style": "prettier --write \"src/**/*.ts\"",
+		"lint:code": "eslint --fix \"src/**/*.ts\""
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "6.7.2",
+		"@typescript-eslint/parser": "6.7.2",
+		"eslint": "8.49.0",
+		"eslint-config-prettier": "9.0.0",
+		"eslint-plugin-prettier": "5.0.0",
+		"globals": "13.21.0",
+		"prettier": "3.0.3",
+		"tsup": "7.2.0",
+		"typescript": "5.2.2"
+	}
+}
