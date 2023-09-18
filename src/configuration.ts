@@ -3,12 +3,11 @@ import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { z } from "zod";
 
-const ConfigSchema = z.object({
+const ForkConfigSchema = z.object({
 	/**
 	 * The name of the changelog file.
 	 */
 	changelog: z.string(),
-
 	/**
 	 * Files to be updated.
 	 */
@@ -24,29 +23,26 @@ const ConfigSchema = z.object({
 	silent: z.boolean(),
 });
 
-export type ForkConfig = z.infer<typeof ConfigSchema>;
+export interface IForkConfig extends z.infer<typeof ForkConfigSchema> {}
 
-const DEFAULT_FORK_CONFIG: ForkConfig = {
+const DEFAULT_CONFIG: IForkConfig = {
 	changelog: "CHANGELOG.md",
-
 	outFiles: ["package.json", "package-lock.json"],
 
 	dry: false,
 	silent: false,
 };
 
-export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
-	const parsedConfig = ConfigSchema.partial().safeParse(config);
+export function defineConfig(config: Partial<IForkConfig>): Partial<IForkConfig> {
+	const parsedConfig = ForkConfigSchema.partial().safeParse(config);
 	if (parsedConfig.success) {
 		return parsedConfig.data;
 	}
-	return DEFAULT_FORK_CONFIG;
+	return DEFAULT_CONFIG;
 }
 
-export class ConfigurationClass {
-	private config: ForkConfig = { ...DEFAULT_FORK_CONFIG };
-
-	constructor() {}
+export class ForkConfig {
+	private config: IForkConfig = { ...DEFAULT_CONFIG };
 
 	public async readConfig() {
 		const cwd = process.cwd();
@@ -59,21 +55,21 @@ export class ConfigurationClass {
 		});
 
 		if (configPath) {
-			const config = await bundleRequire({
-				filepath: configPath,
-			});
+			const config = await bundleRequire({ filepath: configPath });
 
-			const parsedConfig = ConfigSchema.partial().safeParse(config.mod.default || config.mod);
+			const parsedConfig = ForkConfigSchema.partial().safeParse(config.mod.default || config.mod);
 			if (parsedConfig.success) {
-				const { ...userConf } = parsedConfig.data;
+				const _outFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
 
 				this.config = {
-					...this.config,
-					...userConf,
-					outFiles: Array.from(new Set(this.config.outFiles.concat(userConf?.outFiles || []))),
+					...DEFAULT_CONFIG,
+					...parsedConfig.data,
+					outFiles: Array.from(new Set(_outFiles)),
 				};
 			}
 		}
+
+		return this.config;
 	}
 
 	public getConfig() {

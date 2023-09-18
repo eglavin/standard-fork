@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-import { ConfigurationClass } from "./configuration.js";
+import { ForkConfig } from "./configuration.js";
+import { FileSystem } from "./file-system.js";
 
 async function runFork() {
-	const config = new ConfigurationClass();
-	await config.readConfig();
+	const conf = new ForkConfig();
+	const options = await conf.readConfig();
 
-	console.log(config.getConfig());
+	const fs = new FileSystem(!options.dry);
+
+	console.log(options);
 }
 
 runFork();
