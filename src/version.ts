@@ -1,13 +1,13 @@
 import { resolve, extname } from "node:path";
-import semver from "semver";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import semver, { ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
-import { ForkConfigOptions } from "./configuration.js";
-import type { FileSystem } from "./file-system.js";
+import detectIndent from "detect-indent";
+import detectNewLine from "detect-newline";
+import { stringifyPackage } from "./libs/stringify-package.js";
+import type { ForkConfigOptions } from "./configuration.js";
 
-function getCurrentVersion(
-	options: ForkConfigOptions,
-	fs: FileSystem,
-): {
+function getCurrentVersion(options: ForkConfigOptions): {
 	files: string[];
 	version: string;
 } {
@@ -19,14 +19,14 @@ function getCurrentVersion(
 			switch (extname(file)) {
 				case ".json": {
 					const filePath = resolve(process.cwd(), file);
-					if (fs.exists(filePath)) {
+					if (existsSync(filePath)) {
 						files.push(filePath);
 
 						if (options.currentVersion) {
 							continue;
 						}
 
-						const fileContents = JSON.parse(fs.read(filePath));
+						const fileContents = JSON.parse(readFileSync(filePath, "utf8"));
 
 						// Get version property if exists
 						if (fileContents.version && !versions.includes(fileContents.version)) {
@@ -61,7 +61,7 @@ async function getNextVersion(
 	level?: number;
 	preMajor?: boolean;
 	reason?: string;
-	releaseType?: semver.ReleaseType;
+	releaseType?: ReleaseType;
 }> {
 	if (semver.valid(options.nextVersion)) {
 		return {
@@ -89,10 +89,32 @@ async function getNextVersion(
 	throw new Error("Unable to find next version");
 }
 
-export async function bumpVersion(
-	options: ForkConfigOptions,
-	fs: FileSystem,
-): Promise<{
+function updateFile(options: ForkConfigOptions, fileToUpdate: string, nextVersion: string) {
+	try {
+		switch (extname(fileToUpdate)) {
+			case ".json": {
+				const fileContents = readFileSync(fileToUpdate, "utf8");
+
+				const indent = detectIndent(fileContents).indent;
+				const newline = detectNewLine(fileContents);
+				const parsedJson = JSON.parse(fileContents);
+
+				parsedJson.version = nextVersion;
+				if (parsedJson.packages && parsedJson.packages[""]) {
+					parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
+				}
+
+				if (!options.dry) {
+					writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
+				}
+			}
+		}
+	} catch (error) {
+		console.log(`Error writing file: ${fileToUpdate}`, error);
+	}
+}
+
+export async function bumpVersion(options: ForkConfigOptions): Promise<{
 	current: string;
 	next: string;
 
@@ -100,10 +122,14 @@ export async function bumpVersion(
 	level?: number;
 	preMajor?: boolean;
 	reason?: string;
-	releaseType?: semver.ReleaseType;
+	releaseType?: ReleaseType;
 }> {
-	const current = getCurrentVersion(options, fs);
+	const current = getCurrentVersion(options);
 	const next = await getNextVersion(options, current.version);
+
+	for (const outFile of current.files) {
+		updateFile(options, outFile, next.version);
+	}
 
 	return {
 		current: current.version,
