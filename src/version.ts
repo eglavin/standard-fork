@@ -7,6 +7,30 @@ import detectNewLine from "detect-newline";
 import { stringifyPackage } from "./libs/stringify-package.js";
 import type { ForkConfigOptions } from "./configuration.js";
 
+function getFile(options: ForkConfigOptions, fileToGet: string) {
+	try {
+		switch (extname(fileToGet)) {
+			case ".json": {
+				const filePath = resolve(process.cwd(), fileToGet);
+				if (existsSync(filePath)) {
+					const fileContents = readFileSync(filePath, "utf8");
+					const parsedJson = JSON.parse(fileContents);
+
+					// Return if version property exists
+					if (parsedJson.version) {
+						return {
+							path: filePath,
+							version: parsedJson.version,
+						};
+					}
+				}
+			}
+		}
+	} catch (error) {
+		console.log(`Error reading file: ${fileToGet}`, error);
+	}
+}
+
 function getCurrentVersion(options: ForkConfigOptions): {
 	files: string[];
 	version: string;
@@ -15,29 +39,22 @@ function getCurrentVersion(options: ForkConfigOptions): {
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
-		try {
-			switch (extname(file)) {
-				case ".json": {
-					const filePath = resolve(process.cwd(), file);
-					if (existsSync(filePath)) {
-						files.push(filePath);
+		const fileState = getFile(options, file);
+		if (fileState) {
+			files.push(fileState.path);
 
-						if (options.currentVersion) {
-							continue;
-						}
-
-						const fileContents = JSON.parse(readFileSync(filePath, "utf8"));
-
-						// Get version property if exists
-						if (fileContents.version && !versions.includes(fileContents.version)) {
-							versions.push(fileContents.version);
-						}
-					}
-				}
+			if (options.currentVersion) {
+				continue;
 			}
-		} catch (error) {
-			console.log(`Error reading file: ${file}`, error);
+
+			if (!versions.includes(fileState.version)) {
+				versions.push(fileState.version);
+			}
 		}
+	}
+
+	if (options.currentVersion) {
+		versions.push(options.currentVersion);
 	}
 
 	if (versions.length === 0) {
@@ -94,7 +111,6 @@ function updateFile(options: ForkConfigOptions, fileToUpdate: string, nextVersio
 		switch (extname(fileToUpdate)) {
 			case ".json": {
 				const fileContents = readFileSync(fileToUpdate, "utf8");
-
 				const indent = detectIndent(fileContents).indent;
 				const newline = detectNewLine(fileContents);
 				const parsedJson = JSON.parse(fileContents);
