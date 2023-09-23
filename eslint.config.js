@@ -10,30 +10,29 @@ import prettierPlugin from "eslint-plugin-prettier";
 export default [
 	js.configs.recommended,
 	{
-		ignores: ["**/dist", "**/node_modules"],
 		languageOptions: {
 			globals: {
-				...globals.es2021,
 				...globals.node,
+				...globals.es2021,
 			},
+			parser: typescriptParser,
 		},
 		plugins: {
+			"@typescript-eslint": typescriptPlugin,
 			prettier: prettierPlugin,
 		},
+	},
+	{
+		ignores: ["dist/**/*", "node_modules/**/*"],
 		rules: {
 			"no-console": 0,
 			"no-unused-vars": 1,
+
 			"prettier/prettier": 1,
 		},
 	},
 	{
 		files: ["**/*.ts"],
-		plugins: {
-			"@typescript-eslint": typescriptPlugin,
-		},
-		languageOptions: {
-			parser: typescriptParser,
-		},
 		rules: {
 			...typescriptPlugin.configs.recommended.rules,
 
