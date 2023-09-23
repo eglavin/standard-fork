@@ -1,6 +1,4 @@
 declare module "conventional-recommended-bump" {
-	import { GitOptions } from "git-raw-commits";
-
 	interface Options {
 		cwd: string;
 		lernaPackage: string;
@@ -24,7 +22,7 @@ declare module "conventional-recommended-bump" {
 		level: number;
 		reason: string;
 		releaseType: "major" | "minor" | "patch" | undefined;
-	}> {};
+	}>;
 
 	export default conventionalRecommendedBump;
 }

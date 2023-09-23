@@ -68,38 +68,30 @@ export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkCo
 	return DEFAULT_CONFIG;
 }
 
-export class ForkConfig {
-	private config: ForkConfigOptions = { ...DEFAULT_CONFIG };
+export async function getForkConfig(): Promise<ForkConfigOptions> {
+	const cwd = process.cwd();
 
-	public async readConfig(): Promise<ForkConfigOptions> {
-		const cwd = process.cwd();
+	const joycon = new JoyCon.default();
+	const configPath = await joycon.resolve({
+		files: ["fork.config.js"],
+		cwd: cwd,
+		stopDir: path.parse(cwd).root,
+	});
 
-		const joycon = new JoyCon.default();
-		const configPath = await joycon.resolve({
-			files: ["fork.config.js"],
-			cwd: cwd,
-			stopDir: path.parse(cwd).root,
-		});
+	if (configPath) {
+		const foundConfig = await bundleRequire({ filepath: configPath });
+		const parsedConfig = ForkConfigSchema.partial().safeParse(
+			foundConfig.mod.default || foundConfig.mod,
+		);
 
-		if (configPath) {
-			const config = await bundleRequire({ filepath: configPath });
+		if (parsedConfig.success) {
+			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
 
-			const parsedConfig = ForkConfigSchema.partial().safeParse(config.mod.default || config.mod);
-			if (parsedConfig.success) {
-				const _outFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
-
-				this.config = {
-					...DEFAULT_CONFIG,
-					...parsedConfig.data,
-					outFiles: Array.from(new Set(_outFiles)),
-				};
-			}
+			return Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, {
+				outFiles: Array.from(new Set(mergedOutFiles)),
+			});
 		}
-
-		return this.config;
 	}
 
-	public getConfig(): ForkConfigOptions {
-		return this.config;
-	}
+	return DEFAULT_CONFIG;
 }
