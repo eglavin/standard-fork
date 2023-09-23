@@ -8,16 +8,11 @@ async function runFork() {
 	const options = await getForkConfig();
 	const fs = new FileSystem(!options.dry);
 
-	const { current, next, files, releaseType, level, reason } = await bumpVersion(options, fs);
+	const bumpResult = await bumpVersion(options, fs);
 
 	console.log({
 		options,
-		current,
-		next,
-		files,
-		releaseType,
-		level,
-		reason,
+		bumpResult,
 	});
 }
 

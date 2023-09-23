@@ -59,6 +59,7 @@ async function getNextVersion(
 	version: string;
 
 	level?: number;
+	preMajor?: boolean;
 	reason?: string;
 	releaseType?: semver.ReleaseType;
 }> {
@@ -68,14 +69,19 @@ async function getNextVersion(
 		};
 	}
 
+	const preMajor = semver.lt(currentVersion, "1.0.0");
 	const recommendedBump = await conventionalRecommendedBump({
-		preset: "conventional-changelog-conventionalcommits",
+		preset: {
+			name: "conventionalcommits",
+			preMajor,
+		},
 		path: options.changePath,
 		tagPrefix: options.tagPrefix,
 	});
 
 	if (recommendedBump.releaseType) {
 		return Object.assign(recommendedBump, {
+			preMajor,
 			version: semver.inc(currentVersion, recommendedBump.releaseType) || "",
 		});
 	}
@@ -92,6 +98,7 @@ export async function bumpVersion(
 
 	files: string[];
 	level?: number;
+	preMajor?: boolean;
 	reason?: string;
 	releaseType?: semver.ReleaseType;
 }> {
@@ -104,6 +111,7 @@ export async function bumpVersion(
 
 		files: current.files,
 		level: next.level,
+		preMajor: next.preMajor,
 		reason: next.reason,
 		releaseType: next.releaseType,
 	};

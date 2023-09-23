@@ -3,7 +3,12 @@ declare module "conventional-recommended-bump" {
 		cwd: string;
 		lernaPackage: string;
 		path: string;
-		preset: string;
+		preset:
+			| string
+			| {
+					name: string;
+					preMajor?: boolean;
+			  };
 		tagPrefix: string;
 
 		ignoreReverted: boolean;
