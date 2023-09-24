@@ -31,6 +31,9 @@ function getFile(options: ForkConfigOptions, fileToGet: string) {
 	}
 }
 
+/**
+ * Get the current version from the given files and find their locations.
+ */
 function getCurrentVersion(options: ForkConfigOptions): {
 	files: string[];
 	version: string;
@@ -69,6 +72,66 @@ function getCurrentVersion(options: ForkConfigOptions): {
 	};
 }
 
+/**
+ * Get the priority of given type.
+ * @example
+ * - "patch" => 0
+ * - "minor" => 1
+ * - "major" => 2
+ */
+function getPriority(type?: string) {
+	return ["patch", "minor", "major"].indexOf(type || "");
+}
+
+/**
+ * Get the given versions highest state.
+ * @example
+ * - "patch"
+ * - "minor"
+ * - "major"
+ */
+function getVersionType(version: string) {
+	const parseVersion = semver.parse(version);
+	if (parseVersion?.major) {
+		return "major";
+	} else if (parseVersion?.minor) {
+		return "minor";
+	} else if (parseVersion?.patch) {
+		return "patch";
+	}
+	return undefined;
+}
+
+/**
+ * Get the recommended release type for the given version depending on if
+ * the user asks for a prerelease with or without a tag.
+ */
+function getReleaseType(
+	releaseType: "major" | "minor" | "patch",
+	currentVersion: string,
+	preReleaseTag?: string,
+): ReleaseType {
+	if (!preReleaseTag) {
+		return releaseType;
+	}
+
+	if (Array.isArray(semver.prerelease(currentVersion))) {
+		const currentReleaseType = getVersionType(currentVersion);
+
+		if (
+			currentReleaseType === releaseType ||
+			getPriority(currentReleaseType) > getPriority(releaseType)
+		) {
+			return "prerelease";
+		}
+	}
+
+	return `pre${releaseType}`;
+}
+
+/**
+ * Get the next version from the given files.
+ */
 async function getNextVersion(
 	options: ForkConfigOptions,
 	currentVersion: string,
@@ -97,9 +160,16 @@ async function getNextVersion(
 	});
 
 	if (recommendedBump.releaseType) {
+		const releaseType = getReleaseType(
+			recommendedBump.releaseType,
+			currentVersion,
+			options.preReleaseTag,
+		);
+
 		return Object.assign(recommendedBump, {
 			preMajor,
-			version: semver.inc(currentVersion, recommendedBump.releaseType) || "",
+			releaseType,
+			version: semver.inc(currentVersion, releaseType, options.preReleaseTag) || "",
 		});
 	}
 

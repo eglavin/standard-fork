@@ -13,7 +13,7 @@ const ForkConfigSchema = z.object({
 	 */
 	outFiles: z.array(z.string()),
 	/**
-	 * The path where the changes should be calculated from,
+	 * The path where the changes should be calculated from.
 	 * @default
 	 * ```js
 	 * process.cwd()
@@ -36,6 +36,10 @@ const ForkConfigSchema = z.object({
 	 * have to specify `tagPrefix: "version/"`.
 	 */
 	tagPrefix: z.string().optional(),
+	/**
+	 * Make a pre-release with optional label to specify a tag id.
+	 */
+	preReleaseTag: z.string().optional(),
 
 	/**
 	 * If true, no output will be written to disk.
