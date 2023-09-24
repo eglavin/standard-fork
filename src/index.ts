@@ -8,7 +8,7 @@ async function runFork() {
 	const options = await getForkConfig();
 
 	const bumpResult = await bumpVersion(options);
-	const changelogResult = await updateChangelog(options);
+	const changelogResult = await updateChangelog(options, bumpResult);
 
 	console.log({
 		options,
