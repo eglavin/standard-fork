@@ -13,13 +13,24 @@ const ForkConfigSchema = z.object({
 	 */
 	outFiles: z.array(z.string()),
 	/**
+	 * The header to be used in the changelog.
+	 * @default
+	 * ```markdown
+	 * # Changelog
+	 *
+	 * All notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.
+	 * ```
+	 */
+	header: z.string(),
+
+	/**
 	 * The path where the changes should be calculated from.
 	 * @default
 	 * ```js
 	 * process.cwd()
 	 * ```
 	 */
-	changePath: z.string().optional(),
+	changePath: z.string(),
 	/**
 	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
 	 */
@@ -35,7 +46,7 @@ const ForkConfigSchema = z.object({
 	 * For instance if your version tag is prefixed by `version/` instead of `v` you would
 	 * have to specify `tagPrefix: "version/"`.
 	 */
-	tagPrefix: z.string().optional(),
+	tagPrefix: z.string(),
 	/**
 	 * Make a pre-release with optional label to specify a tag id.
 	 */
@@ -56,6 +67,8 @@ export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
 const DEFAULT_CONFIG: ForkConfigOptions = {
 	changelog: "CHANGELOG.md",
 	outFiles: ["package.json", "package-lock.json"],
+	header:
+		"# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
 	changePath: process.cwd(),
 
 	tagPrefix: "v",

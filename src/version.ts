@@ -1,5 +1,5 @@
 import { resolve, extname } from "node:path";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, lstatSync } from "node:fs";
 import semver, { ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
@@ -143,10 +143,8 @@ async function getNextVersion(
 	reason?: string;
 	releaseType?: ReleaseType;
 }> {
-	if (semver.valid(options.nextVersion)) {
-		return {
-			version: options.nextVersion as string,
-		};
+	if (options.nextVersion && semver.valid(options.nextVersion)) {
+		return { version: options.nextVersion };
 	}
 
 	const preMajor = semver.lt(currentVersion, "1.0.0");
@@ -180,6 +178,8 @@ function updateFile(options: ForkConfigOptions, fileToUpdate: string, nextVersio
 	try {
 		switch (extname(fileToUpdate)) {
 			case ".json": {
+				if (!lstatSync(fileToUpdate).isFile()) return;
+
 				const fileContents = readFileSync(fileToUpdate, "utf8");
 				const indent = detectIndent(fileContents).indent;
 				const newline = detectNewLine(fileContents);
