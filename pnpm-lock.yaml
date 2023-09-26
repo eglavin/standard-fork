@@ -26,6 +26,9 @@ dependencies:
   esbuild:
     specifier: 0.19.3
     version: 0.19.3
+  git-semver-tags:
+    specifier: 7.0.1
+    version: 7.0.1
   joycon:
     specifier: 3.1.1
     version: 3.1.1

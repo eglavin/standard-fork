@@ -1,5 +1,6 @@
 import { resolve, extname } from "node:path";
 import { existsSync, readFileSync, writeFileSync, lstatSync } from "node:fs";
+import gitSemverTags from "git-semver-tags";
 import semver, { ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
@@ -7,7 +8,7 @@ import detectNewLine from "detect-newline";
 import { stringifyPackage } from "./libs/stringify-package.js";
 import type { ForkConfigOptions } from "./configuration.js";
 
-function getFile(options: ForkConfigOptions, fileToGet: string) {
+function getFile(fileToGet: string) {
 	try {
 		switch (extname(fileToGet)) {
 			case ".json": {
@@ -31,18 +32,34 @@ function getFile(options: ForkConfigOptions, fileToGet: string) {
 	}
 }
 
+async function getLatestGitTagVersion(tagPrefix: string | undefined) {
+	const gitTags = await gitSemverTags({ tagPrefix });
+	if (!gitTags.length) {
+		return "1.0.0";
+	}
+
+	const cleanedTags = [];
+
+	for (const tag of gitTags) {
+		const cleanedTag = semver.clean(tag.replace(new RegExp(`^${tagPrefix}`), ""));
+
+		if (cleanedTag) {
+			cleanedTags.push(cleanedTag);
+		}
+	}
+
+	return cleanedTags.sort(semver.rcompare)[0];
+}
+
 /**
  * Get the current version from the given files and find their locations.
  */
-function getCurrentVersion(options: ForkConfigOptions): {
-	files: string[];
-	version: string;
-} {
+async function getCurrentVersion(options: ForkConfigOptions) {
 	const files: string[] = [];
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
-		const fileState = getFile(options, file);
+		const fileState = getFile(file);
 		if (fileState) {
 			files.push(fileState.path);
 
@@ -61,6 +78,16 @@ function getCurrentVersion(options: ForkConfigOptions): {
 	}
 
 	if (versions.length === 0) {
+		if (options.gitTagFallback) {
+			const version = await getLatestGitTagVersion(options.tagPrefix);
+			if (version) {
+				return {
+					files: [],
+					version,
+				};
+			}
+		}
+
 		throw new Error("Unable to find current version");
 	} else if (versions.length > 1) {
 		throw new Error("Found multiple versions");
@@ -210,7 +237,7 @@ export async function bumpVersion(options: ForkConfigOptions): Promise<{
 	reason?: string;
 	releaseType?: ReleaseType;
 }> {
-	const current = getCurrentVersion(options);
+	const current = await getCurrentVersion(options);
 	const next = await getNextVersion(options, current.version);
 
 	for (const outFile of current.files) {

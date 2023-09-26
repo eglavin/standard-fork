@@ -60,6 +60,11 @@ const ForkConfigSchema = z.object({
 	 * If true, no output will be written to stdout.
 	 */
 	silent: z.boolean(),
+	/**
+	 * If true and we cant find a version in the `outFiles`, we'll fallback to the latest
+	 * git tag for the current version.
+	 */
+	gitTagFallback: z.boolean(),
 });
 
 export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
@@ -75,6 +80,7 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 
 	dry: false,
 	silent: false,
+	gitTagFallback: true,
 };
 
 export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {
