@@ -1,5 +1,5 @@
 import { defineConfig } from "./src/configuration";
 
 export default defineConfig({
-	header: "",
+	header: "# Standard Fork\n",
 });

@@ -89,7 +89,7 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	changelog: "CHANGELOG.md",
 	outFiles: ["package.json", "package-lock.json"],
 	header:
-		"# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
+		"# Changelog\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
 	changePath: process.cwd(),
 
 	tagPrefix: "v",

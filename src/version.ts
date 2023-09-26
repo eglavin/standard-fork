@@ -10,20 +10,20 @@ import type { ForkConfigOptions } from "./configuration.js";
 
 function getFile(options: ForkConfigOptions, fileToGet: string) {
 	try {
-		switch (extname(fileToGet)) {
-			case ".json": {
-				const filePath = resolve(options.changePath, fileToGet);
-				if (existsSync(filePath)) {
-					const fileContents = readFileSync(filePath, "utf8");
-					const parsedJson = JSON.parse(fileContents);
+		const fileExtension = extname(fileToGet);
+		if (fileExtension === ".json") {
+			const filePath = resolve(options.changePath, fileToGet);
+			if (existsSync(filePath)) {
+				const fileContents = readFileSync(filePath, "utf8");
+				const parsedJson = JSON.parse(fileContents);
 
-					// Return if version property exists
-					if (parsedJson.version) {
-						return {
-							path: filePath,
-							version: parsedJson.version,
-						};
-					}
+				// Return if version property exists
+				if (parsedJson.version) {
+					return {
+						path: filePath,
+						type: "package-file",
+						version: parsedJson.version,
+					};
 				}
 			}
 		}
@@ -55,13 +55,16 @@ async function getLatestGitTagVersion(tagPrefix: string | undefined) {
  * Get the current version from the given files and find their locations.
  */
 async function getCurrentVersion(options: ForkConfigOptions) {
-	const files: string[] = [];
+	const files: { path: string; type: string }[] = [];
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
 		const fileState = getFile(options, file);
 		if (fileState) {
-			files.push(fileState.path);
+			files.push({
+				path: fileState.path,
+				type: fileState.type,
+			});
 
 			if (options.currentVersion) {
 				continue;
@@ -206,25 +209,28 @@ async function getNextVersion(
 	throw new Error("Unable to find next version");
 }
 
-function updateFile(options: ForkConfigOptions, fileToUpdate: string, nextVersion: string) {
+function updateFile(
+	options: ForkConfigOptions,
+	fileToUpdate: string,
+	type: string,
+	nextVersion: string,
+) {
 	try {
-		switch (extname(fileToUpdate)) {
-			case ".json": {
-				if (!lstatSync(fileToUpdate).isFile()) return;
+		if (type === "package-file") {
+			if (!lstatSync(fileToUpdate).isFile()) return;
 
-				const fileContents = readFileSync(fileToUpdate, "utf8");
-				const indent = detectIndent(fileContents).indent;
-				const newline = detectNewLine(fileContents);
-				const parsedJson = JSON.parse(fileContents);
+			const fileContents = readFileSync(fileToUpdate, "utf8");
+			const indent = detectIndent(fileContents).indent;
+			const newline = detectNewLine(fileContents);
+			const parsedJson = JSON.parse(fileContents);
 
-				parsedJson.version = nextVersion;
-				if (parsedJson.packages && parsedJson.packages[""]) {
-					parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
-				}
+			parsedJson.version = nextVersion;
+			if (parsedJson.packages && parsedJson.packages[""]) {
+				parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
+			}
 
-				if (!options.dryRun) {
-					writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
-				}
+			if (!options.dryRun) {
+				writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
 			}
 		}
 	} catch (error) {
@@ -236,7 +242,10 @@ export async function bumpVersion(options: ForkConfigOptions): Promise<{
 	current: string;
 	next: string;
 
-	files: string[];
+	files: {
+		path: string;
+		type: string;
+	}[];
 	level?: number;
 	preMajor?: boolean;
 	reason?: string;
@@ -246,7 +255,7 @@ export async function bumpVersion(options: ForkConfigOptions): Promise<{
 	const next = await getNextVersion(options, current.version);
 
 	for (const outFile of current.files) {
-		updateFile(options, outFile, next.version);
+		updateFile(options, outFile.path, outFile.type, next.version);
 	}
 
 	return {
