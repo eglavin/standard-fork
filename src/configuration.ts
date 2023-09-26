@@ -6,12 +6,26 @@ import { z } from "zod";
 const ForkConfigSchema = z.object({
 	/**
 	 * The name of the changelog file.
+	 * @default "CHANGELOG.md"
 	 */
 	changelog: z.string(),
 	/**
 	 * Files to be updated.
+	 * @default
+	 * ```js
+	 * ["package.json", "package-lock.json"]
+	 * ```
 	 */
 	outFiles: z.array(z.string()),
+	/**
+	 * The path where the changes should be calculated from.
+	 * @default
+	 * ```js
+	 * process.cwd()
+	 * ```
+	 */
+	changePath: z.string(),
+
 	/**
 	 * The header to be used in the changelog.
 	 * @default
@@ -24,19 +38,15 @@ const ForkConfigSchema = z.object({
 	header: z.string(),
 
 	/**
-	 * The path where the changes should be calculated from.
-	 * @default
-	 * ```js
-	 * process.cwd()
-	 * ```
-	 */
-	changePath: z.string(),
-	/**
 	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
+	 * @example "1.0.0"
+	 * @default undefined
 	 */
 	currentVersion: z.string().optional(),
 	/**
 	 * If set, we'll attempt to update the version number to this version.
+	 * @example "2.0.0"
+	 * @default undefined
 	 */
 	nextVersion: z.string().optional(),
 
@@ -45,26 +55,32 @@ const ForkConfigSchema = z.object({
 	 *
 	 * For instance if your version tag is prefixed by `version/` instead of `v` you would
 	 * have to specify `tagPrefix: "version/"`.
+	 * @default `v`
 	 */
 	tagPrefix: z.string(),
 	/**
 	 * Make a pre-release with optional label to specify a tag id.
+	 * @example true, "alpha", "beta", "rc", etc.
+	 * @default undefined
 	 */
-	preReleaseTag: z.string().optional(),
+	preReleaseTag: z.string().or(z.boolean()).optional(),
 
 	/**
-	 * If true, no output will be written to disk.
+	 * If true, no output will be written to disk or committed.
+	 * @default false
 	 */
-	dry: z.boolean(),
+	dryRun: z.boolean(),
 	/**
-	 * If true, no output will be written to stdout.
-	 */
-	silent: z.boolean(),
-	/**
-	 * If true and we cant find a version in the `outFiles`, we'll fallback to the latest
-	 * git tag for the current version.
+	 * If true and we cant find a version in an `outFiles`, we'll fallback and attempt
+	 * to use the latest git tag for the current version.
+	 * @default true
 	 */
 	gitTagFallback: z.boolean(),
+	/**
+	 * If true, no output will be written to stdout.
+	 * @default false
+	 */
+	silent: z.boolean(),
 });
 
 export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
@@ -78,9 +94,9 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 
 	tagPrefix: "v",
 
-	dry: false,
-	silent: false,
+	dryRun: false,
 	gitTagFallback: true,
+	silent: false,
 };
 
 export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {

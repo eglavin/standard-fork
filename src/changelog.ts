@@ -10,7 +10,7 @@ function createChangelog(options: ForkConfigOptions) {
 	try {
 		accessSync(changelogPath, constants.F_OK);
 	} catch (err) {
-		if (!options.dry && (err as { code: string }).code === "ENOENT") {
+		if (!options.dryRun && (err as { code: string }).code === "ENOENT") {
 			console.log(`Creating Changelog: ${changelogPath}`);
 
 			writeFileSync(changelogPath, "\n", "utf8");
@@ -89,7 +89,7 @@ export async function updateChangelog(
 	const oldContent = getOldReleaseContent(changelogPath);
 	const newContent = await getChanges(options, bumpResult);
 
-	if (!options.dry) {
+	if (!options.dryRun) {
 		writeFileSync(changelogPath, `${options.header}\n${newContent}\n${oldContent}`, "utf8");
 	}
 

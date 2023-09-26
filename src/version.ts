@@ -8,11 +8,11 @@ import detectNewLine from "detect-newline";
 import { stringifyPackage } from "./libs/stringify-package.js";
 import type { ForkConfigOptions } from "./configuration.js";
 
-function getFile(fileToGet: string) {
+function getFile(options: ForkConfigOptions, fileToGet: string) {
 	try {
 		switch (extname(fileToGet)) {
 			case ".json": {
-				const filePath = resolve(process.cwd(), fileToGet);
+				const filePath = resolve(options.changePath, fileToGet);
 				if (existsSync(filePath)) {
 					const fileContents = readFileSync(filePath, "utf8");
 					const parsedJson = JSON.parse(fileContents);
@@ -59,7 +59,7 @@ async function getCurrentVersion(options: ForkConfigOptions) {
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
-		const fileState = getFile(file);
+		const fileState = getFile(options, file);
 		if (fileState) {
 			files.push(fileState.path);
 
@@ -136,7 +136,7 @@ function getVersionType(version: string) {
 function getReleaseType(
 	releaseType: "major" | "minor" | "patch",
 	currentVersion: string,
-	preReleaseTag?: string,
+	preReleaseTag?: string | boolean,
 ): ReleaseType {
 	if (!preReleaseTag) {
 		return releaseType;
@@ -194,7 +194,12 @@ async function getNextVersion(
 		return Object.assign(recommendedBump, {
 			preMajor,
 			releaseType,
-			version: semver.inc(currentVersion, releaseType, options.preReleaseTag) || "",
+			version:
+				semver.inc(
+					currentVersion,
+					releaseType,
+					typeof options.preReleaseTag === "string" ? options.preReleaseTag : undefined,
+				) || "",
 		});
 	}
 
@@ -217,7 +222,7 @@ function updateFile(options: ForkConfigOptions, fileToUpdate: string, nextVersio
 					parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
 				}
 
-				if (!options.dry) {
+				if (!options.dryRun) {
 					writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
 				}
 			}
