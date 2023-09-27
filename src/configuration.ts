@@ -87,7 +87,13 @@ export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
 
 const DEFAULT_CONFIG: ForkConfigOptions = {
 	changelog: "CHANGELOG.md",
-	outFiles: ["package.json", "package-lock.json"],
+	outFiles: [
+		"bower.json",
+		"manifest.json", // Chrome extensions
+		"npm-shrinkwrap.json",
+		"package-lock.json",
+		"package.json",
+	],
 	header:
 		"# Changelog\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
 	changePath: process.cwd(),
