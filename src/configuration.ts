@@ -5,6 +5,14 @@ import { z } from "zod";
 
 const ForkConfigSchema = z.object({
 	/**
+	 * The path where the changes should be calculated from.
+	 * @default
+	 * ```js
+	 * process.cwd()
+	 * ```
+	 */
+	changePath: z.string(),
+	/**
 	 * The name of the changelog file.
 	 * @default "CHANGELOG.md"
 	 */
@@ -18,15 +26,6 @@ const ForkConfigSchema = z.object({
 	 */
 	outFiles: z.array(z.string()),
 	/**
-	 * The path where the changes should be calculated from.
-	 * @default
-	 * ```js
-	 * process.cwd()
-	 * ```
-	 */
-	changePath: z.string(),
-
-	/**
 	 * The header to be used in the changelog.
 	 * @default
 	 * ```markdown
@@ -36,20 +35,6 @@ const ForkConfigSchema = z.object({
 	 * ```
 	 */
 	header: z.string(),
-
-	/**
-	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
-	 * @example "1.0.0"
-	 * @default undefined
-	 */
-	currentVersion: z.string().optional(),
-	/**
-	 * If set, we'll attempt to update the version number to this version.
-	 * @example "2.0.0"
-	 * @default undefined
-	 */
-	nextVersion: z.string().optional(),
-
 	/**
 	 * Specify a prefix for the git tag that will be taken into account during the comparison.
 	 *
@@ -81,11 +66,25 @@ const ForkConfigSchema = z.object({
 	 * @default false
 	 */
 	silent: z.boolean(),
+
+	/**
+	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
+	 * @example "1.0.0"
+	 * @default undefined
+	 */
+	currentVersion: z.string().optional(),
+	/**
+	 * If set, we'll attempt to update the version number to this version.
+	 * @example "2.0.0"
+	 * @default undefined
+	 */
+	nextVersion: z.string().optional(),
 });
 
 export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
 
 const DEFAULT_CONFIG: ForkConfigOptions = {
+	changePath: process.cwd(),
 	changelog: "CHANGELOG.md",
 	outFiles: [
 		"bower.json",
@@ -96,8 +95,6 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	],
 	header:
 		"# Changelog\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
-	changePath: process.cwd(),
-
 	tagPrefix: "v",
 
 	dryRun: false,
