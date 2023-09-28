@@ -181,6 +181,7 @@ async function getNextVersion(
 	const recommendedBump = await conventionalRecommendedBump({
 		preset: {
 			name: "conventionalcommits",
+			...(options.changelogPresetConfig || {}),
 			preMajor,
 		},
 		path: options.changePath,

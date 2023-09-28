@@ -8,6 +8,7 @@ declare module "conventional-recommended-bump" {
 			| {
 					name: string;
 					preMajor?: boolean;
+					[_: string]: unknown;
 			  };
 		tagPrefix: string;
 

@@ -2,6 +2,8 @@ import path from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { z } from "zod";
+import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
+import type { JSONSchema7 } from "json-schema";
 
 const ForkConfigSchema = z.object({
 	/**
@@ -79,6 +81,48 @@ const ForkConfigSchema = z.object({
 	 * @default undefined
 	 */
 	nextVersion: z.string().optional(),
+
+	/**
+	 * Override the default conventional-changelog preset configuration.
+	 */
+	changelogPresetConfig: z.object({
+		/**
+		 * An array of `type` objects representing the explicitly supported commit message types, and whether they should show up in generated `CHANGELOG`s.
+		 */
+		types: z
+			.array(
+				z.object({
+					type: z.string(),
+					section: z.string().optional(),
+					hidden: z.boolean().optional(),
+				}),
+			)
+			.optional(),
+		/**
+		 * A URL representing a specific commit at a hash.
+		 */
+		commitUrlFormat: z.string().optional(),
+		/**
+		 * A URL representing the comparison between two git SHAs.
+		 */
+		compareUrlFormat: z.string().optional(),
+		/**
+		 * A URL representing the issue format (allowing a different URL format to be swapped in for Gitlab, Bitbucket, etc).
+		 */
+		issueUrlFormat: z.string().optional(),
+		/**
+		 * A URL representing the a user's profile URL on GitHub, Gitlab, etc. This URL is used for substituting @bcoe with https://github.com/bcoe in commit messages.
+		 */
+		userUrlFormat: z.string().optional(),
+		/**
+		 * A string to be used to format the auto-generated release commit message.
+		 */
+		releaseCommitMessageFormat: z.string().optional(),
+		/**
+		 * An array of prefixes used to detect references to issues
+		 */
+		issuePrefixes: z.array(z.string()).optional(),
+	}),
 });
 
 export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
@@ -100,6 +144,8 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	dryRun: false,
 	gitTagFallback: true,
 	silent: false,
+
+	changelogPresetConfig: {},
 };
 
 export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {
@@ -108,6 +154,35 @@ export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkCo
 		return parsedConfig.data;
 	}
 	return DEFAULT_CONFIG;
+}
+
+function getPresetDefaults(
+	usersChangelogPresetConfig?: ForkConfigOptions["changelogPresetConfig"],
+) {
+	const preset: { name: string; [_: string]: unknown } = {
+		name: "conventionalcommits",
+	};
+
+	// First take any default values from the conventional-changelog-config-spec
+	if (typeof conventionalChangelogConfigSpec.properties === "object") {
+		Object.entries(conventionalChangelogConfigSpec.properties).forEach(([key, value]) => {
+			const _value = value as JSONSchema7;
+			if ("default" in _value && _value.default !== undefined) {
+				preset[key] = _value.default;
+			}
+		});
+	}
+
+	// Then overwrite with any values from the users config
+	if (usersChangelogPresetConfig && typeof usersChangelogPresetConfig === "object") {
+		Object.entries(usersChangelogPresetConfig).forEach(([key, value]) => {
+			if (value !== undefined) {
+				preset[key] = value;
+			}
+		});
+	}
+
+	return preset;
 }
 
 export async function getForkConfig(): Promise<ForkConfigOptions> {
@@ -129,11 +204,17 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 		if (parsedConfig.success) {
 			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
 
-			return Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, {
+			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, {
 				outFiles: Array.from(new Set(mergedOutFiles)),
+			});
+
+			return Object.assign(usersConfig, {
+				changelogPresetConfig: getPresetDefaults(usersConfig?.changelogPresetConfig),
 			});
 		}
 	}
 
-	return DEFAULT_CONFIG;
+	return Object.assign(DEFAULT_CONFIG, {
+		changelogPresetConfig: getPresetDefaults(),
+	});
 }

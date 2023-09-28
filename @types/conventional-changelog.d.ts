@@ -9,6 +9,7 @@ declare module "conventional-changelog" {
 			| {
 					name: string;
 					preMajor?: boolean;
+					[_: string]: unknown;
 			  };
 		tagPrefix?: string;
 		warn?: (...message: string[]) => void;

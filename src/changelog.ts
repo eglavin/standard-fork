@@ -52,6 +52,7 @@ function getChanges(
 			{
 				preset: {
 					name: "conventionalcommits",
+					...(options.changelogPresetConfig || {}),
 				},
 				tagPrefix: options.tagPrefix,
 				warn: (...message: string[]) => console.log(...message),
