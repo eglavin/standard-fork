@@ -23,7 +23,7 @@ const ForkConfigSchema = z.object({
 	 * Files to be updated.
 	 * @default
 	 * ```js
-	 * ["package.json", "package-lock.json"]
+	 * ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]
 	 * ```
 	 */
 	outFiles: z.array(z.string()),
