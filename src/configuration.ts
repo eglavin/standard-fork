@@ -125,7 +125,14 @@ const ForkConfigSchema = z.object({
 	}),
 });
 
-export type ForkConfigOptions = z.infer<typeof ForkConfigSchema>;
+export type ForkConfigOptions = z.infer<typeof ForkConfigSchema> & {
+	/**
+	 * Log function, can be used to override the default `console.log` function
+	 * to log to a file or another service.
+	 * @default console.log
+	 */
+	log: (...args: unknown[]) => void;
+};
 
 const DEFAULT_CONFIG: ForkConfigOptions = {
 	changePath: process.cwd(),
@@ -146,6 +153,8 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	silent: false,
 
 	changelogPresetConfig: {},
+
+	log: console.log, // eslint-disable-line no-console
 };
 
 export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {
@@ -207,6 +216,10 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, {
 				outFiles: Array.from(new Set(mergedOutFiles)),
 			});
+
+			if (usersConfig.silent) {
+				usersConfig.log = () => {};
+			}
 
 			return Object.assign(usersConfig, {
 				changelogPresetConfig: getPresetDefaults(usersConfig?.changelogPresetConfig),

@@ -11,7 +11,7 @@ function createChangelog(options: ForkConfigOptions) {
 		accessSync(changelogPath, constants.F_OK);
 	} catch (err) {
 		if (!options.dryRun && (err as { code: string }).code === "ENOENT") {
-			console.log(`Creating Changelog: ${changelogPath}`);
+			options.log(`Creating Changelog: ${changelogPath}`);
 
 			writeFileSync(changelogPath, "\n", "utf8");
 		}
@@ -55,7 +55,7 @@ function getChanges(
 					...(options.changelogPresetConfig || {}),
 				},
 				tagPrefix: options.tagPrefix,
-				warn: (...message: string[]) => console.log(...message),
+				warn: (...message: string[]) => options.log("conventional-changelog: ", ...message),
 			},
 			{
 				version: bumpResult.next,

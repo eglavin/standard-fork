@@ -10,7 +10,7 @@ async function runFork() {
 	const bumpResult = await bumpVersion(options);
 	const changelogResult = await updateChangelog(options, bumpResult);
 
-	console.log(
+	options.log(
 		JSON.stringify(
 			{
 				options,

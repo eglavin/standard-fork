@@ -28,7 +28,7 @@ function getFile(options: ForkConfigOptions, fileToGet: string) {
 			}
 		}
 	} catch (error) {
-		console.log(`Error reading file: ${fileToGet}`, error);
+		options.log(`Error reading file: ${fileToGet}`, error);
 	}
 }
 
@@ -235,7 +235,7 @@ function updateFile(
 			}
 		}
 	} catch (error) {
-		console.log(`Error writing file: ${fileToUpdate}`, error);
+		options.log(`Error writing file: ${fileToUpdate}`, error);
 	}
 }
 
