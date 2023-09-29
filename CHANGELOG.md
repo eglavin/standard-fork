@@ -1,5 +1,13 @@
 # Standard Fork
 
+## [1.4.3](https://github.com/eglavin/standard-fork/compare/v1.4.2...v1.4.3) (2023-09-29)
+
+
+### Refactor
+
+* add cwd prop to conventional config ([a74fccb](https://github.com/eglavin/standard-fork/commit/a74fccb51a6450bc1fa759c13c7ff039d932e96b))
+
+
 ## [1.4.2](https://github.com/eglavin/standard-fork/compare/v1.4.1...v1.4.2) (2023-09-29)
 
 
