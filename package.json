@@ -1,6 +1,6 @@
 {
 	"name": "standard-fork",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"description": "Replacement for standard version written with modern syntax",
 	"author": {
 		"name": "Eanna Glavin",
