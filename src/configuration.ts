@@ -53,6 +53,11 @@ const ForkConfigSchema = z.object({
 	preReleaseTag: z.string().or(z.boolean()).optional(),
 
 	/**
+	 * Commit all staged changes, not just files updated by standard-fork.
+	 * @default false
+	 */
+	commitAll: z.boolean(),
+	/**
 	 * If true, no output will be written to disk or committed.
 	 * @default false
 	 */
@@ -64,10 +69,21 @@ const ForkConfigSchema = z.object({
 	 */
 	gitTagFallback: z.boolean(),
 	/**
+	 * Should we sign the git commit using GPG?
+	 * @see {@link https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--Sltkeyidgt GPG Sign Commits}
+	 * @default false
+	 */
+	sign: z.boolean(),
+	/**
 	 * If true, no output will be written to stdout.
 	 * @default false
 	 */
 	silent: z.boolean(),
+	/**
+	 * If true, allow git to run git commit hooks.
+	 * @default false
+	 */
+	verify: z.boolean(),
 
 	/**
 	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
@@ -148,9 +164,12 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 		"# Changelog\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
 	tagPrefix: "v",
 
+	commitAll: false,
 	dryRun: false,
 	gitTagFallback: true,
+	sign: false,
 	silent: false,
+	verify: false,
 
 	changelogPresetConfig: {},
 
