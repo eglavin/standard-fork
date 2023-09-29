@@ -201,6 +201,7 @@ async function getNextVersion(
 		},
 		path: options.changePath,
 		tagPrefix: options.tagPrefix,
+		cwd: options.changePath,
 	});
 
 	if (recommendedBump.releaseType) {

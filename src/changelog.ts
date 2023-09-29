@@ -53,6 +53,7 @@ function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promis
 				},
 				tagPrefix: options.tagPrefix,
 				warn: (...message: string[]) => options.log("conventional-changelog: ", ...message),
+				cwd: options.changePath,
 			},
 			{
 				version: bumpResult.nextVersion,

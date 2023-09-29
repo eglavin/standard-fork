@@ -1,4 +1,6 @@
 declare module "conventional-recommended-bump" {
+	import gitRawCommits from "git-raw-commits";
+
 	interface Options {
 		cwd: string;
 		lernaPackage: string;
@@ -16,7 +18,7 @@ declare module "conventional-recommended-bump" {
 		skipUnstable: boolean;
 
 		config: Record<string, unknown>;
-		gitRawCommitsOpts: Record<string, unknown>;
+		gitRawCommitsOpts: gitRawCommits.GitOptions;
 
 		whatBump: (commits: string[]) => {
 			level: number;
