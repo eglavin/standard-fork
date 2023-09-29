@@ -29,8 +29,8 @@ export function stringifyPackage(
 	const stringified = JSON.stringify(data, null, indent || (indent === 0 ? 0 : DEFAULT_INDENT));
 
 	if (newline === CRLF) {
-		return stringified.replace(/\n/g, CRLF) + CRLF;
+		return stringified.replace(new RegExp(LF, "g"), CRLF);
 	}
 
-	return stringified + LF;
+	return stringified;
 }

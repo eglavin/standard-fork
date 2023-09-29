@@ -55,13 +55,14 @@ async function getLatestGitTagVersion(tagPrefix: string | undefined) {
  * Get the current version from the given files and find their locations.
  */
 async function getCurrentVersion(options: ForkConfigOptions) {
-	const files: { path: string; type: string }[] = [];
+	const files: { path: string; name: string; type: string }[] = [];
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
 		const fileState = getFile(options, file);
 		if (fileState) {
 			files.push({
+				name: file,
 				path: fileState.path,
 				type: fileState.type,
 			});
@@ -244,6 +245,7 @@ export async function bumpVersion(options: ForkConfigOptions): Promise<{
 	next: string;
 
 	files: {
+		name: string;
 		path: string;
 		type: string;
 	}[];
