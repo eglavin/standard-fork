@@ -8,7 +8,15 @@ import detectNewLine from "detect-newline";
 import { stringifyPackage } from "./libs/stringify-package.js";
 import type { ForkConfigOptions } from "./configuration.js";
 
-function getFile(options: ForkConfigOptions, fileToGet: string) {
+type FileState = {
+	name: string;
+	path: string;
+	type: "package-file" | ({} & string); // eslint-disable-line @typescript-eslint/ban-types
+	version: string;
+	isPrivate: boolean;
+};
+
+function getFile(options: ForkConfigOptions, fileToGet: string): FileState | undefined {
 	try {
 		const fileExtension = extname(fileToGet);
 		if (fileExtension === ".json") {
@@ -20,9 +28,13 @@ function getFile(options: ForkConfigOptions, fileToGet: string) {
 				// Return if version property exists
 				if (parsedJson.version) {
 					return {
+						name: fileToGet,
 						path: filePath,
 						type: "package-file",
 						version: parsedJson.version,
+						isPrivate:
+							"private" in parsedJson &&
+							(typeof parsedJson.private === "boolean" ? parsedJson.private : false),
 					};
 				}
 			}
@@ -32,7 +44,7 @@ function getFile(options: ForkConfigOptions, fileToGet: string) {
 	}
 }
 
-async function getLatestGitTagVersion(tagPrefix: string | undefined) {
+async function getLatestGitTagVersion(tagPrefix: string | undefined): Promise<string> {
 	const gitTags = await gitSemverTags({ tagPrefix });
 	if (!gitTags.length) {
 		return "1.0.0";
@@ -51,21 +63,22 @@ async function getLatestGitTagVersion(tagPrefix: string | undefined) {
 	return cleanedTags.sort(semver.rcompare)[0];
 }
 
+type CurrentVersion = {
+	currentVersion: string;
+	files: FileState[];
+};
+
 /**
  * Get the current version from the given files and find their locations.
  */
-async function getCurrentVersion(options: ForkConfigOptions) {
-	const files: { path: string; name: string; type: string }[] = [];
+async function getCurrentVersion(options: ForkConfigOptions): Promise<CurrentVersion> {
+	const files: FileState[] = [];
 	const versions: string[] = [];
 
 	for (const file of options.outFiles) {
 		const fileState = getFile(options, file);
 		if (fileState) {
-			files.push({
-				name: file,
-				path: fileState.path,
-				type: fileState.type,
-			});
+			files.push(fileState);
 
 			if (options.currentVersion) {
 				continue;
@@ -87,7 +100,7 @@ async function getCurrentVersion(options: ForkConfigOptions) {
 			if (version) {
 				return {
 					files: [],
-					version,
+					currentVersion: version,
 				};
 			}
 		}
@@ -99,7 +112,7 @@ async function getCurrentVersion(options: ForkConfigOptions) {
 
 	return {
 		files,
-		version: versions[0],
+		currentVersion: versions[0],
 	};
 }
 
@@ -110,7 +123,7 @@ async function getCurrentVersion(options: ForkConfigOptions) {
  * - "minor" => 1
  * - "major" => 2
  */
-function getPriority(type?: string) {
+function getPriority(type?: string): number {
 	return ["patch", "minor", "major"].indexOf(type || "");
 }
 
@@ -121,7 +134,7 @@ function getPriority(type?: string) {
  * - "minor"
  * - "major"
  */
-function getVersionType(version: string) {
+function getVersionType(version: string): "patch" | "minor" | "major" | undefined {
 	const parseVersion = semver.parse(version);
 	if (parseVersion?.major) {
 		return "major";
@@ -160,22 +173,23 @@ function getReleaseType(
 	return `pre${releaseType}`;
 }
 
+type NextVersion = {
+	nextVersion: string;
+	level?: number;
+	preMajor?: boolean;
+	reason?: string;
+	releaseType?: ReleaseType;
+};
+
 /**
  * Get the next version from the given files.
  */
 async function getNextVersion(
 	options: ForkConfigOptions,
 	currentVersion: string,
-): Promise<{
-	version: string;
-
-	level?: number;
-	preMajor?: boolean;
-	reason?: string;
-	releaseType?: ReleaseType;
-}> {
+): Promise<NextVersion> {
 	if (options.nextVersion && semver.valid(options.nextVersion)) {
-		return { version: options.nextVersion };
+		return { nextVersion: options.nextVersion };
 	}
 
 	const preMajor = semver.lt(currentVersion, "1.0.0");
@@ -199,7 +213,7 @@ async function getNextVersion(
 		return Object.assign(recommendedBump, {
 			preMajor,
 			releaseType,
-			version:
+			nextVersion:
 				semver.inc(
 					currentVersion,
 					releaseType,
@@ -216,7 +230,7 @@ function updateFile(
 	fileToUpdate: string,
 	type: string,
 	nextVersion: string,
-) {
+): void {
 	try {
 		if (type === "package-file") {
 			if (!lstatSync(fileToUpdate).isFile()) return;
@@ -240,32 +254,21 @@ function updateFile(
 	}
 }
 
-export async function bumpVersion(options: ForkConfigOptions): Promise<{
-	current: string;
-	next: string;
+export type BumpVersion = CurrentVersion & NextVersion;
 
-	files: {
-		name: string;
-		path: string;
-		type: string;
-	}[];
-	level?: number;
-	preMajor?: boolean;
-	reason?: string;
-	releaseType?: ReleaseType;
-}> {
+export async function bumpVersion(options: ForkConfigOptions): Promise<BumpVersion> {
 	const current = await getCurrentVersion(options);
-	const next = await getNextVersion(options, current.version);
+	const next = await getNextVersion(options, current.currentVersion);
 
 	for (const outFile of current.files) {
-		updateFile(options, outFile.path, outFile.type, next.version);
+		updateFile(options, outFile.path, outFile.type, next.nextVersion);
 	}
 
 	return {
-		current: current.version,
-		next: next.version,
-
+		currentVersion: current.currentVersion,
 		files: current.files,
+
+		nextVersion: next.nextVersion,
 		level: next.level,
 		preMajor: next.preMajor,
 		reason: next.reason,

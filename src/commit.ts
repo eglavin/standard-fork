@@ -1,12 +1,18 @@
 import { createExecute } from "./utils/execute-file.js";
 import { formatCommitMessage } from "./utils/format-commit-message.js";
 import type { ForkConfigOptions } from "./configuration.js";
-import type { bumpVersion } from "./version.js";
+import type { BumpVersion } from "./version.js";
+
+type CommitChanges = {
+	filesToCommit: string[];
+	gitAddOutput?: string;
+	gitCommitOutput?: string;
+};
 
 export async function commitChanges(
 	options: ForkConfigOptions,
-	bumpResult: Awaited<ReturnType<typeof bumpVersion>>,
-) {
+	bumpResult: BumpVersion,
+): Promise<CommitChanges> {
 	const filesToCommit: string[] = [options.changelog];
 
 	for (const file of bumpResult.files) {
@@ -35,8 +41,8 @@ export async function commitChanges(
 		...shouldCommitAll,
 		"-m",
 		formatCommitMessage(
-			options.changelogPresetConfig?.releaseCommitMessageFormat || "chore(release): {{currentTag}}",
-			bumpResult.next,
+			options.changelogPresetConfig?.releaseCommitMessageFormat,
+			bumpResult.nextVersion,
 		),
 	);
 

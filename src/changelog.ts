@@ -2,9 +2,9 @@ import { resolve } from "node:path";
 import { constants, accessSync, writeFileSync, readFileSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
 import type { ForkConfigOptions } from "./configuration.js";
-import type { bumpVersion } from "./version.js";
+import type { BumpVersion } from "./version.js";
 
-function createChangelog(options: ForkConfigOptions) {
+function createChangelog(options: ForkConfigOptions): string {
 	const changelogPath = resolve(options.changelog);
 
 	try {
@@ -31,7 +31,7 @@ const RELEASE_PATTERN = /(^#+ \[?[0-9]+\.[0-9]+\.[0-9]+|<a name=)/m;
  * Gets the rest of the changelog from the latest release onwards.
  * @see {@link RELEASE_PATTERN}
  */
-function getOldReleaseContent(changelogPath: string) {
+function getOldReleaseContent(changelogPath: string): string {
 	const fileContents = readFileSync(changelogPath, "utf-8");
 	const oldContentStart = fileContents.search(RELEASE_PATTERN);
 
@@ -41,10 +41,7 @@ function getOldReleaseContent(changelogPath: string) {
 	return "";
 }
 
-function getChanges(
-	options: ForkConfigOptions,
-	bumpResult: Awaited<ReturnType<typeof bumpVersion>>,
-) {
+function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		let newContent = "";
 
@@ -58,7 +55,7 @@ function getChanges(
 				warn: (...message: string[]) => options.log("conventional-changelog: ", ...message),
 			},
 			{
-				version: bumpResult.next,
+				version: bumpResult.nextVersion,
 			},
 			{
 				merges: null,
@@ -78,10 +75,16 @@ function getChanges(
 	});
 }
 
+type UpdateChangelog = {
+	changelogPath: string;
+	oldContent: string;
+	newContent: string;
+};
+
 export async function updateChangelog(
 	options: ForkConfigOptions,
-	bumpResult: Awaited<ReturnType<typeof bumpVersion>>,
-) {
+	bumpResult: BumpVersion,
+): Promise<UpdateChangelog> {
 	if (options.header.search(RELEASE_PATTERN) !== -1) {
 		throw new Error("Header cannot contain release pattern"); // Need to ensure the header doesn't contain the release pattern
 	}

@@ -1,3 +1,13 @@
-export function formatCommitMessage(message: string, newVersion: string): string {
+/**
+ * Formats the commit message by replacing the `{{currentTag}}` placeholder
+ * globally with the new version.
+ *
+ * Falls back to `chore(release): {{currentTag}}` if message is argument is falsy.
+ */
+export function formatCommitMessage(message: string | undefined, newVersion: string): string {
+	if (!message) {
+		message = "chore(release): {{currentTag}}";
+	}
+
 	return message.replace(new RegExp("{{currentTag}}", "g"), newVersion);
 }
