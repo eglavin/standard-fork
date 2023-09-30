@@ -1,4 +1,12 @@
-# Standard Fork
+# Fork Version
+
+## [1.4.5](https://github.com/eglavin/standard-fork/compare/v1.4.4...v1.4.5) (2023-09-30)
+
+
+### Refactor
+
+* rename config type ([6e05b5c](https://github.com/eglavin/standard-fork/commit/6e05b5c098045ade8ac65ff37f3d8681e115eb6e))
+
 
 ## [1.4.4](https://github.com/eglavin/standard-fork/compare/v1.4.3...v1.4.4) (2023-09-30)
 
