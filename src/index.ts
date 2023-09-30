@@ -9,7 +9,9 @@ import { tagChanges } from "./tag.js";
 async function runFork() {
 	const options = await getForkConfig();
 
-	options.log(`Running Fork: ${new Date().toLocaleString()}\n`);
+	options.log(`Running Fork: ${new Date().toLocaleString()}
+${options.dryRun ? "Dry run, no changes will be written to disk." : ""}
+`);
 
 	const bumpResult = await bumpVersion(options);
 	const changelogResult = await updateChangelog(options, bumpResult);

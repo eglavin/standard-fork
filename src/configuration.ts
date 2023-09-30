@@ -260,10 +260,6 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 				usersConfig.debug = parsedConfig.debug as ForkConfigOptions["debug"];
 			}
 
-			if (usersConfig.dryRun) {
-				usersConfig.log("Running in dry mode, no changes will be written to disk.");
-			}
-
 			return Object.assign(usersConfig, {
 				changelogPresetConfig: getPresetDefaults(usersConfig?.changelogPresetConfig),
 			});
