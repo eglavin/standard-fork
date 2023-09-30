@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.9 (2023-09-30)
+
+
+### Docs
+
+* add badges ([4a6ad5d](https://github.com/eglavin/fork-version/commit/4a6ad5d4187eb1926092dcaf3a996cc79137049d))
+
+
 ## 1.4.8 (2023-09-30)
 
 
