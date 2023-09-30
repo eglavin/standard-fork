@@ -1,6 +1,6 @@
 import { createExecute } from "../utils/execute-file.js";
 import { formatCommitMessage } from "../utils/format-commit-message.js";
-import type { ForkConfigOptions } from "../configuration.js";
+import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
 type TagChanges = {
@@ -12,7 +12,7 @@ type TagChanges = {
 };
 
 export async function tagChanges(
-	options: ForkConfigOptions,
+	options: ForkConfig,
 	bumpResult: BumpVersion,
 ): Promise<TagChanges> {
 	const { executeGit } = createExecute(options);

@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
-import type { ForkConfigOptions } from "../configuration.js";
+import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
 type CreateChangelog = {
@@ -9,7 +9,7 @@ type CreateChangelog = {
 	exists: boolean;
 };
 
-function createChangelog(options: ForkConfigOptions): CreateChangelog {
+function createChangelog(options: ForkConfig): CreateChangelog {
 	const changelogPath = resolve(options.changelog);
 
 	try {
@@ -52,10 +52,7 @@ function getOldReleaseContent(changelog: CreateChangelog): string {
 	return "";
 }
 
-function getNewReleaseContent(
-	options: ForkConfigOptions,
-	bumpResult: BumpVersion,
-): Promise<string> {
+function getNewReleaseContent(options: ForkConfig, bumpResult: BumpVersion): Promise<string> {
 	return new Promise<string>((resolve) => {
 		let newContent = "";
 
@@ -97,7 +94,7 @@ type UpdateChangelog = {
 };
 
 export async function updateChangelog(
-	options: ForkConfigOptions,
+	options: ForkConfig,
 	bumpResult: BumpVersion,
 ): Promise<UpdateChangelog> {
 	if (options.header.search(RELEASE_PATTERN) !== -1) {

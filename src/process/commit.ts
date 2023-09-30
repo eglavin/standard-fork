@@ -1,6 +1,6 @@
 import { createExecute } from "../utils/execute-file.js";
 import { formatCommitMessage } from "../utils/format-commit-message.js";
-import type { ForkConfigOptions } from "../configuration.js";
+import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
 type CommitChanges = {
@@ -10,7 +10,7 @@ type CommitChanges = {
 };
 
 export async function commitChanges(
-	options: ForkConfigOptions,
+	options: ForkConfig,
 	bumpResult: BumpVersion,
 ): Promise<CommitChanges> {
 	const { executeGit } = createExecute(options);

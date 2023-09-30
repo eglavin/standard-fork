@@ -6,7 +6,7 @@ import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
 import detectNewLine from "detect-newline";
 import { stringifyPackage } from "../libs/stringify-package.js";
-import type { ForkConfigOptions } from "../configuration.js";
+import type { ForkConfig } from "../configuration.js";
 
 type FileState = {
 	name: string;
@@ -16,7 +16,7 @@ type FileState = {
 	isPrivate: boolean;
 };
 
-function getFile(options: ForkConfigOptions, fileToGet: string): FileState | undefined {
+function getFile(options: ForkConfig, fileToGet: string): FileState | undefined {
 	try {
 		const fileExtension = extname(fileToGet);
 		if (fileExtension === ".json") {
@@ -73,7 +73,7 @@ type CurrentVersion = {
 /**
  * Get the current version from the given files and find their locations.
  */
-async function getCurrentVersion(options: ForkConfigOptions): Promise<CurrentVersion> {
+async function getCurrentVersion(options: ForkConfig): Promise<CurrentVersion> {
 	const files: FileState[] = [];
 	const versions: string[] = [];
 
@@ -186,10 +186,7 @@ type NextVersion = {
 /**
  * Get the next version from the given files.
  */
-async function getNextVersion(
-	options: ForkConfigOptions,
-	currentVersion: string,
-): Promise<NextVersion> {
+async function getNextVersion(options: ForkConfig, currentVersion: string): Promise<NextVersion> {
 	if (options.nextVersion && semver.valid(options.nextVersion)) {
 		return { nextVersion: options.nextVersion };
 	}
@@ -229,7 +226,7 @@ async function getNextVersion(
 }
 
 function updateFile(
-	options: ForkConfigOptions,
+	options: ForkConfig,
 	fileToUpdate: string,
 	type: string,
 	nextVersion: string,
@@ -259,7 +256,7 @@ function updateFile(
 
 export type BumpVersion = CurrentVersion & NextVersion;
 
-export async function bumpVersion(options: ForkConfigOptions): Promise<BumpVersion> {
+export async function bumpVersion(options: ForkConfig): Promise<BumpVersion> {
 	const current = await getCurrentVersion(options);
 	const next = await getNextVersion(options, current.currentVersion);
 

@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
-import type { ForkConfigOptions } from "../configuration.js";
+import type { ForkConfig } from "../configuration.js";
 
-export function createExecute(options: ForkConfigOptions) {
+export function createExecute(options: ForkConfig) {
 	/**
 	 * Executes a git command with the given arguments and returns the output.
 	 */

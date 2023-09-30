@@ -141,7 +141,7 @@ const ForkConfigSchema = z.object({
 	}),
 });
 
-export type ForkConfigOptions = z.infer<typeof ForkConfigSchema> & {
+export type ForkConfig = z.infer<typeof ForkConfigSchema> & {
 	/**
 	 * Log function, can be used to override the default `console.log` function
 	 * to log to a file or another service.
@@ -162,7 +162,7 @@ export type ForkConfigOptions = z.infer<typeof ForkConfigSchema> & {
 	debug: (...args: unknown[]) => void;
 };
 
-const DEFAULT_CONFIG: ForkConfigOptions = {
+const DEFAULT_CONFIG: ForkConfig = {
 	changePath: process.cwd(),
 	changelog: "CHANGELOG.md",
 	outFiles: [
@@ -190,7 +190,7 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	debug: () => {},
 };
 
-export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {
+export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
 	const parsedConfig = ForkConfigSchema.partial().safeParse(config);
 	if (parsedConfig.success) {
 		return parsedConfig.data;
@@ -198,9 +198,7 @@ export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkCo
 	return DEFAULT_CONFIG;
 }
 
-function getPresetDefaults(
-	usersChangelogPresetConfig?: ForkConfigOptions["changelogPresetConfig"],
-) {
+function getPresetDefaults(usersChangelogPresetConfig?: ForkConfig["changelogPresetConfig"]) {
 	const preset: { name: string; [_: string]: unknown } = {
 		name: "conventionalcommits",
 	};
@@ -227,7 +225,7 @@ function getPresetDefaults(
 	return preset;
 }
 
-export async function getForkConfig(): Promise<ForkConfigOptions> {
+export async function getForkConfig(): Promise<ForkConfig> {
 	const cwd = process.cwd();
 
 	const joycon = new JoyCon.default();
@@ -257,7 +255,7 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 			}
 
 			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
-				usersConfig.debug = parsedConfig.debug as ForkConfigOptions["debug"];
+				usersConfig.debug = parsedConfig.debug as ForkConfig["debug"];
 			}
 
 			return Object.assign(usersConfig, {
