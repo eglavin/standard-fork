@@ -6,6 +6,7 @@ on:
     paths:
       - "src/**"
       - "pnpm-lock.yaml"
+      - "README.md"
 
 jobs:
   version:
