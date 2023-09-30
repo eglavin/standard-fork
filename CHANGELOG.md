@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.6 (2023-09-30)
+
+
+### Refactor
+
+* add comment to config ([9d950ad](https://github.com/eglavin/standard-fork/commit/9d950ad883d4be73fe964ff441cf57d5b2e65d90))
+
+
 ## [1.4.5](https://github.com/eglavin/standard-fork/compare/v1.4.4...v1.4.5) (2023-09-30)
 
 
