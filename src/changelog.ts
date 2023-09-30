@@ -1,23 +1,31 @@
 import { resolve } from "node:path";
-import { constants, accessSync, writeFileSync, readFileSync } from "node:fs";
+import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
 import type { ForkConfigOptions } from "./configuration.js";
 import type { BumpVersion } from "./version.js";
 
-function createChangelog(options: ForkConfigOptions): string {
+type CreateChangelog = {
+	path: string;
+	exists: boolean;
+};
+
+function createChangelog(options: ForkConfigOptions): CreateChangelog {
 	const changelogPath = resolve(options.changelog);
 
 	try {
 		accessSync(changelogPath, constants.F_OK);
 	} catch (err) {
 		if (!options.dryRun && (err as { code: string }).code === "ENOENT") {
-			options.log(`Creating Changelog: ${changelogPath}`);
+			options.log(`Creating Changelog file: ${changelogPath}`);
 
 			writeFileSync(changelogPath, "\n", "utf8");
 		}
 	}
 
-	return changelogPath;
+	return {
+		path: changelogPath,
+		exists: existsSync(changelogPath),
+	};
 }
 
 /**
@@ -31,18 +39,24 @@ const RELEASE_PATTERN = /(^#+ \[?[0-9]+\.[0-9]+\.[0-9]+|<a name=)/m;
  * Gets the rest of the changelog from the latest release onwards.
  * @see {@link RELEASE_PATTERN}
  */
-function getOldReleaseContent(changelogPath: string): string {
-	const fileContents = readFileSync(changelogPath, "utf-8");
-	const oldContentStart = fileContents.search(RELEASE_PATTERN);
+function getOldReleaseContent(changelog: CreateChangelog): string {
+	if (changelog.exists) {
+		const fileContents = readFileSync(changelog.path, "utf-8");
+		const oldContentStart = fileContents.search(RELEASE_PATTERN);
 
-	if (oldContentStart !== -1) {
-		return fileContents.substring(oldContentStart);
+		if (oldContentStart !== -1) {
+			return fileContents.substring(oldContentStart);
+		}
 	}
+
 	return "";
 }
 
-function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
+function getNewReleaseContent(
+	options: ForkConfigOptions,
+	bumpResult: BumpVersion,
+): Promise<string> {
+	return new Promise<string>((resolve) => {
 		let newContent = "";
 
 		conventionalChangelog(
@@ -52,7 +66,7 @@ function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promis
 					...(options.changelogPresetConfig || {}),
 				},
 				tagPrefix: options.tagPrefix,
-				warn: (...message: string[]) => options.log("conventional-changelog: ", ...message),
+				warn: (...message: string[]) => options.error("conventional-changelog: ", ...message),
 				cwd: options.changePath,
 			},
 			{
@@ -64,8 +78,8 @@ function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promis
 			},
 		)
 			.on("error", (error) => {
-				reject("");
-				throw new Error("Unable to generate changelog", error);
+				options.error("conventional-changelog: Unable to parse changes");
+				throw error;
 			})
 			.on("data", (chunk) => {
 				newContent += chunk.toString();
@@ -77,7 +91,7 @@ function getChanges(options: ForkConfigOptions, bumpResult: BumpVersion): Promis
 }
 
 type UpdateChangelog = {
-	changelogPath: string;
+	changelog: CreateChangelog;
 	oldContent: string;
 	newContent: string;
 };
@@ -87,19 +101,23 @@ export async function updateChangelog(
 	bumpResult: BumpVersion,
 ): Promise<UpdateChangelog> {
 	if (options.header.search(RELEASE_PATTERN) !== -1) {
-		throw new Error("Header cannot contain release pattern"); // Need to ensure the header doesn't contain the release pattern
+		// Need to ensure the header doesn't contain the release pattern
+		throw new Error("Header cannot contain release pattern");
 	}
 
-	const changelogPath = createChangelog(options);
-	const oldContent = getOldReleaseContent(changelogPath);
-	const newContent = await getChanges(options, bumpResult);
+	const changelog = createChangelog(options);
+	const oldContent = getOldReleaseContent(changelog);
+	const newContent = await getNewReleaseContent(options, bumpResult);
 
-	if (!options.dryRun) {
-		writeFileSync(changelogPath, `${options.header}\n${newContent}\n${oldContent}`, "utf8");
+	options.log(`Updating Changelog:
+\t${changelog.path}`);
+
+	if (!options.dryRun && newContent) {
+		writeFileSync(changelog.path, `${options.header}\n${newContent}\n${oldContent}`, "utf8");
 	}
 
 	return {
-		changelogPath,
+		changelog,
 		oldContent,
 		newContent,
 	};

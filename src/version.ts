@@ -36,11 +36,13 @@ function getFile(options: ForkConfigOptions, fileToGet: string): FileState | und
 							"private" in parsedJson &&
 							(typeof parsedJson.private === "boolean" ? parsedJson.private : false),
 					};
+				} else {
+					options.log(`Unable to find version in file: ${fileToGet}`);
 				}
 			}
 		}
 	} catch (error) {
-		options.log(`Error reading file: ${fileToGet}`, error);
+		options.error(`Error reading file: ${fileToGet}`, error);
 	}
 }
 
@@ -251,7 +253,7 @@ function updateFile(
 			}
 		}
 	} catch (error) {
-		options.log(`Error writing file: ${fileToUpdate}`, error);
+		options.error("Error writing: ", error);
 	}
 }
 
@@ -261,7 +263,13 @@ export async function bumpVersion(options: ForkConfigOptions): Promise<BumpVersi
 	const current = await getCurrentVersion(options);
 	const next = await getNextVersion(options, current.currentVersion);
 
+	options.log(`Current version: ${current.currentVersion}
+Next version: ${next.nextVersion} (${next.releaseType})
+Updating Files: `);
+
 	for (const outFile of current.files) {
+		options.log(`\t${outFile.path}`);
+
 		updateFile(options, outFile.path, outFile.type, next.nextVersion);
 	}
 

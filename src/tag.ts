@@ -6,7 +6,7 @@ import type { BumpVersion } from "./version.js";
 type TagChanges = {
 	gitTagOutput: string;
 	currentBranchName: string;
-	hasPackageJson: boolean;
+	hasPublicPackageFile: boolean;
 	pushMessage: string;
 	publishMessage: string;
 };
@@ -21,6 +21,8 @@ export async function tagChanges(
 	/** @example "v1.2.3" or "version/1.2.3" */
 	const tag = `${options.tagPrefix}${bumpResult.nextVersion}`;
 
+	options.log(`Creating Tag: ${tag}`);
+
 	const gitTagOutput = await executeGit(
 		"tag",
 		shouldSign,
@@ -34,20 +36,24 @@ export async function tagChanges(
 
 	const currentBranchName = await executeGit("rev-parse", "--abbrev-ref", "HEAD");
 
-	const pushMessage = `Run \`git push --follow-tags origin ${currentBranchName.trim()}\` to push the tag.`;
-
-	const hasPackageJson = bumpResult.files.some((file) => file.name === "package.json");
+	const hasPublicPackageFile = bumpResult.files.some(
+		(file) => file.name === "package.json" && file.isPrivate === false,
+	);
 	const isPreRelease = `${bumpResult.releaseType}`.startsWith("pre");
+
+	const pushMessage = `Run \`git push --follow-tags origin ${currentBranchName.trim()}\` to push the changes and the tag.`;
 	const publishMessage = isPreRelease
 		? `Run \`npm publish --tag ${
 				typeof options.preReleaseTag === "string" ? options.preReleaseTag : "prerelease"
 		  }\` to publish the package.`
-		: `Run \`npm publish\` to publish the package.`;
+		: "Run `npm publish` to publish the package.";
+
+	options.log(`\n${pushMessage}\n${hasPublicPackageFile ? publishMessage : ""}`);
 
 	return {
 		gitTagOutput,
 		currentBranchName,
-		hasPackageJson,
+		hasPublicPackageFile,
 		pushMessage,
 		publishMessage,
 	};

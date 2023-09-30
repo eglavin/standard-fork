@@ -9,24 +9,24 @@ import { tagChanges } from "./tag.js";
 async function runFork() {
 	const options = await getForkConfig();
 
+	options.log(`Running Fork: ${new Date().toLocaleString()}\n`);
+
 	const bumpResult = await bumpVersion(options);
 	const changelogResult = await updateChangelog(options, bumpResult);
 	const commitResult = await commitChanges(options, bumpResult);
 	const tagResult = await tagChanges(options, bumpResult);
 
-	options.log(
-		JSON.stringify(
-			{
-				options,
-				bumpResult,
-				changelogResult,
-				commitResult,
-				tagResult,
-			},
-			null,
-			2,
-		),
-	);
+	const result = {
+		options,
+		bumpResult,
+		changelogResult,
+		commitResult,
+		tagResult,
+	};
+
+	options.debug(JSON.stringify(result, null, 2));
+
+	return result;
 }
 
 runFork();

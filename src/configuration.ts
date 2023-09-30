@@ -148,6 +148,18 @@ export type ForkConfigOptions = z.infer<typeof ForkConfigSchema> & {
 	 * @default console.log
 	 */
 	log: (...args: unknown[]) => void;
+	/**
+	 * Error logger function, can be used to override the default `console.error`
+	 * function to log to a file or another service.
+	 * @default console.error
+	 */
+	error: (...args: unknown[]) => void;
+	/**
+	 * Debug logger function, by default this is a noop function, but can be replaced
+	 * with a custom logger function or `console.info` to print output.
+	 * @default  () => {}
+	 */
+	debug: (...args: unknown[]) => void;
 };
 
 const DEFAULT_CONFIG: ForkConfigOptions = {
@@ -174,6 +186,8 @@ const DEFAULT_CONFIG: ForkConfigOptions = {
 	changelogPresetConfig: {},
 
 	log: console.log, // eslint-disable-line no-console
+	error: console.error, // eslint-disable-line no-console
+	debug: () => {},
 };
 
 export function defineConfig(config: Partial<ForkConfigOptions>): Partial<ForkConfigOptions> {
@@ -230,6 +244,7 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 		);
 
 		if (parsedConfig.success) {
+			// Allow users to add additional outFiles
 			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
 
 			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, {
@@ -238,6 +253,15 @@ export async function getForkConfig(): Promise<ForkConfigOptions> {
 
 			if (usersConfig.silent) {
 				usersConfig.log = () => {};
+				usersConfig.error = () => {};
+			}
+
+			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
+				usersConfig.debug = parsedConfig.debug as ForkConfigOptions["debug"];
+			}
+
+			if (usersConfig.dryRun) {
+				usersConfig.log("Running in dry mode, no changes will be written to disk.");
 			}
 
 			return Object.assign(usersConfig, {

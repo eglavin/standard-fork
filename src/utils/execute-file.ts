@@ -8,14 +8,14 @@ export function createExecute(options: ForkConfigOptions) {
 	async function executeGit(...execArgs: (string | undefined)[]): Promise<string> {
 		const args = execArgs.filter(Boolean) as string[];
 
-		options.log(`Executing: git ${args.join(" ")}`);
+		options.debug(`Executing: git ${args.join(" ")}`);
 
 		if (!options.dryRun) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				execFile("git", args, (error, stdout, stderr) => {
 					if (error) {
-						reject(error);
-						return;
+						options.error(`git ${args[0]}:`);
+						throw error;
 					}
 
 					resolve(stdout ? stdout : stderr);

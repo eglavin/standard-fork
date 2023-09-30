@@ -13,8 +13,11 @@ export async function commitChanges(
 	options: ForkConfigOptions,
 	bumpResult: BumpVersion,
 ): Promise<CommitChanges> {
-	const filesToCommit: string[] = [options.changelog];
+	const { executeGit } = createExecute(options);
 
+	options.log("Committing changes");
+
+	const filesToCommit: string[] = [options.changelog];
 	for (const file of bumpResult.files) {
 		filesToCommit.push(file.name);
 	}
@@ -25,8 +28,6 @@ export async function commitChanges(
 			filesToCommit,
 		};
 	}
-
-	const { executeGit } = createExecute(options);
 
 	const gitAddOutput = await executeGit("add", ...filesToCommit);
 
