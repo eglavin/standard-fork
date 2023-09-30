@@ -3,13 +3,13 @@
 	"version": "1.4.6",
 	"license": "ISC",
 	"description": "Replacement for standard version written with modern syntax",
-	"homepage": "https://github.com/eglavin/standard-fork",
+	"homepage": "https://github.com/eglavin/fork-version",
 	"bugs": {
-		"url": "https://github.com/eglavin/standard-fork/issues"
+		"url": "https://github.com/eglavin/fork-version/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/eglavin/standard-fork.git"
+		"url": "https://github.com/eglavin/fork-version.git"
 	},
 	"author": {
 		"name": "Eanna Glavin",

@@ -1,4 +1,4 @@
-name: Version Library
+name: Version Package
 
 on:
   push:

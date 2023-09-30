@@ -33,7 +33,7 @@ const ForkConfigSchema = z.object({
 	 * ```markdown
 	 * # Changelog
 	 *
-	 * All notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.
+	 * All notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.
 	 * ```
 	 */
 	header: z.string(),
@@ -53,7 +53,7 @@ const ForkConfigSchema = z.object({
 	preReleaseTag: z.string().or(z.boolean()).optional(),
 
 	/**
-	 * Commit all staged changes, not just files updated by standard-fork.
+	 * Commit all staged changes, not just files updated by fork-version.
 	 * @default false
 	 */
 	commitAll: z.boolean(),
@@ -173,7 +173,7 @@ const DEFAULT_CONFIG: ForkConfig = {
 		"package.json",
 	],
 	header:
-		"# Changelog\nAll notable changes to this project will be documented in this file. See [standard-fork](https://github.com/eglavin/standard-fork) for commit guidelines.\n",
+		"# Changelog\n\nAll notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.\n",
 	tagPrefix: "v",
 
 	commitAll: false,
