@@ -1,5 +1,14 @@
 # Standard Fork
 
+## [1.4.4](https://github.com/eglavin/standard-fork/compare/v1.4.3...v1.4.4) (2023-09-30)
+
+
+### Refactor
+
+* improve logging ([975e716](https://github.com/eglavin/standard-fork/commit/975e7169fc3ed95fcb0b8fb17d5b6cb4bed08237))
+* move dry run log from config ([17b1194](https://github.com/eglavin/standard-fork/commit/17b119417bf1982af702f8ce1c6529e6a3f75277))
+
+
 ## [1.4.3](https://github.com/eglavin/standard-fork/compare/v1.4.2...v1.4.3) (2023-09-29)
 
 
