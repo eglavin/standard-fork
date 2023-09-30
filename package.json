@@ -1,12 +1,20 @@
 {
 	"name": "@eglavin/fork-version",
 	"version": "1.4.5",
+	"license": "ISC",
 	"description": "Replacement for standard version written with modern syntax",
+	"homepage": "https://github.com/eglavin/standard-fork",
+	"bugs": {
+		"url": "https://github.com/eglavin/standard-fork/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/eglavin/standard-fork.git"
+	},
 	"author": {
 		"name": "Eanna Glavin",
 		"url": "https://eglavin.com"
 	},
-	"license": "ISC",
 	"type": "module",
 	"main": "dist/index.cjs",
 	"module": "dist/index.js",
