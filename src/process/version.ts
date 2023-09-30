@@ -5,8 +5,8 @@ import semver, { ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
 import detectNewLine from "detect-newline";
-import { stringifyPackage } from "./libs/stringify-package.js";
-import type { ForkConfigOptions } from "./configuration.js";
+import { stringifyPackage } from "../libs/stringify-package.js";
+import type { ForkConfigOptions } from "../configuration.js";
 
 type FileState = {
 	name: string;

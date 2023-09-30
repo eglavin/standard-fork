@@ -1,5 +1,5 @@
 {
-	"name": "standard-fork",
+	"name": "@eglavin/fork-version",
 	"version": "1.4.4",
 	"description": "Replacement for standard version written with modern syntax",
 	"author": {
@@ -8,12 +8,32 @@
 	},
 	"license": "ISC",
 	"type": "module",
-	"main": "./dist/index.cjs",
-	"types": "./dist/index.d.cts",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		},
+		"./cli": {
+			"import": "./dist/cli.js",
+			"require": "./dist/cli.cjs",
+			"types": "./dist/cli.d.ts"
+		},
+		"./package.json": "./package.json"
+	},
+	"bin": {
+		"fork-version": "./dist/cli.js"
+	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"start": "node dist/index.cjs",
+		"start": "node dist/cli.js",
 		"lint:style": "prettier --write \"src/**/*.ts\"",
 		"lint:code": "eslint --fix \"src/**/*.ts\""
 	},

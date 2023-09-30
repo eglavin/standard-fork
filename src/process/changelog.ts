@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
-import type { ForkConfigOptions } from "./configuration.js";
+import type { ForkConfigOptions } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
 type CreateChangelog = {

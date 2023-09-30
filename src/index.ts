@@ -1,34 +1,5 @@
-#!/usr/bin/env node
-
-import { getForkConfig } from "./configuration.js";
-import { bumpVersion } from "./version.js";
-import { updateChangelog } from "./changelog.js";
-import { commitChanges } from "./commit.js";
-import { tagChanges } from "./tag.js";
-
-async function runFork() {
-	const options = await getForkConfig();
-
-	options.log(`Running Fork: ${new Date().toLocaleString()}
-${options.dryRun ? "Dry run, no changes will be written to disk." : ""}
-`);
-
-	const bumpResult = await bumpVersion(options);
-	const changelogResult = await updateChangelog(options, bumpResult);
-	const commitResult = await commitChanges(options, bumpResult);
-	const tagResult = await tagChanges(options, bumpResult);
-
-	const result = {
-		options,
-		bumpResult,
-		changelogResult,
-		commitResult,
-		tagResult,
-	};
-
-	options.debug(JSON.stringify(result, null, 2));
-
-	return result;
-}
-
-runFork();
+export { defineConfig, type ForkConfigOptions } from "./configuration.js";
+export * from "./process/version.js";
+export * from "./process/changelog.js";
+export * from "./process/commit.js";
+export * from "./process/tag.js";
