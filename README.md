@@ -11,3 +11,9 @@ To install the package locally to your project you can use one of the following 
 | npm     | `npm install fork-version --save-exact --save-dev` |
 | yarn    | `yarn add fork-version --exact --dev`              |
 | pnpm    | `pnpm add fork-version --save-exact --save-dev`    |
+
+Otherwise you can use `npx` to run the package without installation like so:
+
+```bash
+npx fork-version
+```
