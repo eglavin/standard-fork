@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.8 (2023-09-30)
+
+
+### Docs
+
+* add npx command ([59a7263](https://github.com/eglavin/fork-version/commit/59a7263d3e3b6b0ff6be1fe18c6a2969d212ce1a))
+
+
 ## 1.4.7 (2023-09-30)
 
 
