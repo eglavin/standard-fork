@@ -254,6 +254,7 @@ export async function getForkConfig(): Promise<ForkConfig> {
 				usersConfig.error = () => {};
 			}
 
+			// Allow users to override the default log function
 			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
 				usersConfig.debug = parsedConfig.debug as ForkConfig["debug"];
 			}
