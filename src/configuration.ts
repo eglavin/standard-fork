@@ -140,28 +140,28 @@ const ForkConfigSchema = z.object({
 		 */
 		issuePrefixes: z.array(z.string()).optional(),
 	}),
-});
 
-export type ForkConfig = z.infer<typeof ForkConfigSchema> & {
 	/**
 	 * Log function, can be used to override the default `console.log` function
 	 * to log to a file or another service.
 	 * @default console.log
 	 */
-	log: (...args: unknown[]) => void;
+	log: z.function().args(z.string()).returns(z.void()),
 	/**
 	 * Error logger function, can be used to override the default `console.error`
 	 * function to log to a file or another service.
 	 * @default console.error
 	 */
-	error: (...args: unknown[]) => void;
+	error: z.function().args(z.string()).returns(z.void()),
 	/**
 	 * Debug logger function, by default this is a noop function, but can be replaced
 	 * with a custom logger function or `console.info` to print output.
 	 * @default  () => {}
 	 */
-	debug: (...args: unknown[]) => void;
-};
+	debug: z.function().args(z.string()).returns(z.void()),
+});
+
+export type ForkConfig = z.infer<typeof ForkConfigSchema>;
 
 const DEFAULT_CONFIG: ForkConfig = {
 	changePath: process.cwd(),
@@ -192,11 +192,7 @@ const DEFAULT_CONFIG: ForkConfig = {
 };
 
 export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
-	const parsedConfig = ForkConfigSchema.partial().safeParse(config);
-	if (parsedConfig.success) {
-		return parsedConfig.data;
-	}
-	return DEFAULT_CONFIG;
+	return config;
 }
 
 function getPresetDefaults(usersChangelogPresetConfig?: ForkConfig["changelogPresetConfig"]) {
@@ -331,30 +327,32 @@ export async function getForkConfig(): Promise<ForkConfig> {
 		);
 
 		if (parsedConfig.success) {
-			// Allow users to add additional outFiles
-			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(
-				parsedConfig.data?.outFiles || [],
-				cliArguments.flags?.outFiles || [],
-			);
+			const usersConfig = Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags);
 
-			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags, {
-				outFiles: Array.from(new Set(mergedOutFiles)),
-			});
+			// Allow users to override the default debug function
+			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
+				usersConfig.debug = parsedConfig.debug as ForkConfig["debug"];
+			}
 
+			// If silent is true, override the default log functions.
 			if (usersConfig.silent) {
 				usersConfig.log = () => {};
 				usersConfig.error = () => {};
 				usersConfig.debug = () => {};
 			}
 
-			// Allow users to override the default log function
-			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
-				usersConfig.debug = parsedConfig.debug as ForkConfig["debug"];
-			}
+			// Allow users to add additional outFiles
+			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(
+				parsedConfig.data?.outFiles || [],
+				cliArguments.flags?.outFiles || [],
+			);
 
 			return Object.assign(usersConfig, {
 				changelogPresetConfig: getPresetDefaults(usersConfig?.changelogPresetConfig),
+				outFiles: Array.from(new Set(mergedOutFiles)),
 			});
+		} else {
+			throw parsedConfig.error;
 		}
 	}
 
