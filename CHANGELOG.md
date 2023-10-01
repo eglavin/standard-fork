@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.14 (2023-10-01)
+
+
+### Refactor
+
+* move logger functions to zod schema ([3ad1a85](https://github.com/eglavin/fork-version/commit/3ad1a85652e6314ac3683af67d0c24dd9f26ad1f))
+
+
 ## 1.4.13 (2023-10-01)
 
 
