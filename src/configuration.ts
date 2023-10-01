@@ -3,6 +3,7 @@ import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { z } from "zod";
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
+import meow from "meow";
 import type { JSONSchema7 } from "json-schema";
 
 const ForkConfigSchema = z.object({
@@ -225,6 +226,92 @@ function getPresetDefaults(usersChangelogPresetConfig?: ForkConfig["changelogPre
 	return preset;
 }
 
+function getCliArguments() {
+	return meow(
+		`
+Usage:
+	$ fork-version
+
+Options:
+	--changelog
+		Name of the changelog file. [Default: "CHANGELOG.md"]
+	--outFiles
+		Files to be updated. [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+	--header, -H
+		The header to be used in the changelog.
+
+	--tagPrefix
+		Specify a prefix for the git tag that will be taken into account during the comparison. [Default: "v"]
+	--preReleaseTag
+		Make a pre-release with optional label to specify a tag id [Default: undefined]
+
+	--commitAll
+		Commit all staged changes, not just files updated by fork-version.
+	--dryRun
+		If true, no output will be written to disk or committed.
+	--gitTagFallback
+		If true and we cant find a version in an outFiles, we'll fallback and attempt to use the latest git tag for the current version. [Default: true]
+	--sign
+		Should we sign the git commit using GPG?
+	--silent
+		If true, no output will be written to stdout.
+	--verify
+		If true, allow git to run git commit hooks.
+
+	--currentVersion
+		If set, we'll use this current version number instead of trying to find it in an outFiles.
+	--nextVersion
+		If set, we'll attempt to update to this version.
+`,
+		{
+			importMeta: import.meta,
+			flags: {
+				changelog: {
+					type: "string",
+				},
+				outFiles: {
+					type: "string",
+					isMultiple: true,
+				},
+				header: {
+					type: "string",
+					shortFlag: "H",
+				},
+				tagPrefix: {
+					type: "string",
+				},
+				preReleaseTag: {
+					type: "string",
+				},
+				commitAll: {
+					type: "boolean",
+				},
+				dryRun: {
+					type: "boolean",
+				},
+				gitTagFallback: {
+					type: "boolean",
+				},
+				sign: {
+					type: "boolean",
+				},
+				silent: {
+					type: "boolean",
+				},
+				verify: {
+					type: "boolean",
+				},
+				currentVersion: {
+					type: "string",
+				},
+				nextVersion: {
+					type: "string",
+				},
+			},
+		},
+	);
+}
+
 export async function getForkConfig(): Promise<ForkConfig> {
 	const cwd = process.cwd();
 
@@ -235,6 +322,8 @@ export async function getForkConfig(): Promise<ForkConfig> {
 		stopDir: path.parse(cwd).root,
 	});
 
+	const cliArguments = getCliArguments();
+
 	if (configPath) {
 		const foundConfig = await bundleRequire({ filepath: configPath });
 		const parsedConfig = ForkConfigSchema.partial().safeParse(
@@ -243,15 +332,19 @@ export async function getForkConfig(): Promise<ForkConfig> {
 
 		if (parsedConfig.success) {
 			// Allow users to add additional outFiles
-			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(parsedConfig.data?.outFiles || []);
+			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(
+				parsedConfig.data?.outFiles || [],
+				cliArguments.flags?.outFiles || [],
+			);
 
-			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, {
+			const usersConfig = Object.assign(DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags, {
 				outFiles: Array.from(new Set(mergedOutFiles)),
 			});
 
 			if (usersConfig.silent) {
 				usersConfig.log = () => {};
 				usersConfig.error = () => {};
+				usersConfig.debug = () => {};
 			}
 
 			// Allow users to override the default log function
@@ -265,7 +358,7 @@ export async function getForkConfig(): Promise<ForkConfig> {
 		}
 	}
 
-	return Object.assign(DEFAULT_CONFIG, {
+	return Object.assign(DEFAULT_CONFIG, cliArguments.flags, {
 		changelogPresetConfig: getPresetDefaults(),
 	});
 }
