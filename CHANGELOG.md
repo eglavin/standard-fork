@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.13 (2023-10-01)
+
+
+### Docs
+
+* add full stop ([d839985](https://github.com/eglavin/fork-version/commit/d839985d8d2d5c603fff59135fb4cd46c13c48bb))
+
+
 ## [1.4.12](https://github.com/eglavin/fork-version/compare/v1.4.11...v1.4.12) (2023-10-01)
 
 
