@@ -243,7 +243,7 @@ Options:
 	--tagPrefix
 		Specify a prefix for the git tag that will be taken into account during the comparison. [Default: "v"]
 	--preReleaseTag
-		Make a pre-release with optional label to specify a tag id [Default: undefined]
+		Make a pre-release with optional label to specify a tag id. [Default: undefined]
 
 	--commitAll
 		Commit all staged changes, not just files updated by fork-version.
