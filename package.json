@@ -1,6 +1,6 @@
 {
 	"name": "fork-version",
-	"version": "1.4.9",
+	"version": "1.4.10",
 	"license": "ISC",
 	"description": "Replacement for standard version written with modern syntax",
 	"homepage": "https://github.com/eglavin/fork-version",
@@ -56,6 +56,7 @@
 		"esbuild": "0.19.3",
 		"git-semver-tags": "7.0.1",
 		"joycon": "3.1.1",
+		"meow": "12.1.1",
 		"semver": "7.5.4",
 		"zod": "3.22.2"
 	},
