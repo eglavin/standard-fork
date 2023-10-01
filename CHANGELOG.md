@@ -1,5 +1,8 @@
 # Fork Version
 
+## [1.4.12](https://github.com/eglavin/fork-version/compare/v1.4.11...v1.4.12) (2023-10-01)
+
+
 ## [1.4.11](https://github.com/eglavin/fork-version/compare/v1.4.10...v1.4.11) (2023-10-01)
 
 
