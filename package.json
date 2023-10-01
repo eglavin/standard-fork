@@ -39,9 +39,9 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
+		"fork-version": "node dist/cli.js",
 		"dev": "tsup --watch",
-		"start": "node dist/cli.js",
+		"build": "tsup",
 		"lint:style": "prettier --write \"src/**/*.ts\"",
 		"lint:code": "eslint --fix \"src/**/*.ts\""
 	},
