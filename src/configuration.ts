@@ -6,7 +6,7 @@ import conventionalChangelogConfigSpec from "conventional-changelog-config-spec"
 import meow from "meow";
 import type { JSONSchema7 } from "json-schema";
 
-const ForkConfigSchema = z.object({
+export const ForkConfigSchema = z.object({
 	/**
 	 * The path where the changes should be calculated from.
 	 * @default
