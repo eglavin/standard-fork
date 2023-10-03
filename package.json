@@ -58,7 +58,7 @@
 		"joycon": "3.1.1",
 		"meow": "12.1.1",
 		"semver": "7.5.4",
-		"zod": "3.22.2"
+		"zod": "3.22.3"
 	},
 	"devDependencies": {
 		"@types/conventional-changelog-config-spec": "2.1.3",
