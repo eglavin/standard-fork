@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.15 (2023-10-03)
+
+
+### Chore
+
+* update zod ([e0fea9e](https://github.com/eglavin/fork-version/commit/e0fea9e7c26614f2d39a52b0f113d73e77a6d01a))
+
+
 ## 1.4.14 (2023-10-01)
 
 
