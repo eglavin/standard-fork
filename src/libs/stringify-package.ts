@@ -22,7 +22,7 @@ const CRLF = "\r\n";
 const LF = "\n";
 
 export function stringifyPackage(
-	data: string,
+	data: object,
 	indent?: string | number,
 	newline?: typeof CRLF | typeof LF,
 ): string {
