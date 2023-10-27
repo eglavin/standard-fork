@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.16 (2023-10-27)
+
+
+### Test
+
+* add vitest for unit testing ([383c767](https://github.com/eglavin/fork-version/commit/383c767f7cd70bc8d70f9c2ab929f0df264aebe9))
+
+
 ## 1.4.15 (2023-10-03)
 
 
