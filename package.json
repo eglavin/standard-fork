@@ -43,7 +43,9 @@
 		"dev": "tsup --watch",
 		"build": "tsup",
 		"lint:style": "prettier --write \"src/**/*.ts\"",
-		"lint:code": "eslint --fix \"src/**/*.ts\""
+		"lint:code": "eslint --fix \"src/**/*.ts\"",
+		"test": "vitest",
+		"test:ci": "vitest run"
 	},
 	"dependencies": {
 		"bundle-require": "4.0.1",
@@ -74,6 +76,7 @@
 		"globals": "13.21.0",
 		"prettier": "3.0.3",
 		"tsup": "7.2.0",
-		"typescript": "5.2.2"
+		"typescript": "5.2.2",
+		"vitest": "0.34.6"
 	}
 }
