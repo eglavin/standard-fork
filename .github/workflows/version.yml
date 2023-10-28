@@ -57,6 +57,13 @@ jobs:
         run: |
           pnpm test:ci
 
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 7
+
       - name: Build
         run: |
           pnpm build

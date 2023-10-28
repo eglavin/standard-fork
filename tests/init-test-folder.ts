@@ -16,7 +16,7 @@ export function createTestFolder(testName: string) {
 		mkdirSync(tempDir, { recursive: true });
 
 		if (!existsSync(tempDir)) throw new Error("Unable to create test folder.");
-	} else throw new Error("Test folder already exists.");
+	} else throw new Error(`Test folder already exists: ${tempDir}`);
 
 	function setupGitRepo() {
 		execSync("git init", execSyncOptions);
@@ -24,11 +24,11 @@ export function createTestFolder(testName: string) {
 		execSync("git config core.autocrlf false", execSyncOptions);
 	}
 
-	function createPackageJson(packageJson?: object) {
-		const stringifiedPackage = JSON.stringify(packageJson || { version: "1.0.0" }, null, 2);
+	function createJSONFile(jsonObject?: object, file = "package.json") {
+		const stringifiedPackage = JSON.stringify(jsonObject || { version: "1.0.0" }, null, 2);
 
-		writeFileSync(join(tempDir, "package.json"), stringifiedPackage, "utf-8");
-		execSync("git add package.json", execSyncOptions);
+		writeFileSync(join(tempDir, file), stringifiedPackage, "utf-8");
+		execSync(`git add ${file}`, execSyncOptions);
 	}
 
 	function createCommits(commits?: string[]) {
@@ -50,7 +50,7 @@ export function createTestFolder(testName: string) {
 		}
 	}
 
-	function deleteTempFolder() {
+	function deleteTestFolder() {
 		rmSync(tempDir, { recursive: true, force: true });
 	}
 
@@ -59,8 +59,8 @@ export function createTestFolder(testName: string) {
 		tempDir,
 
 		setupGitRepo,
-		createPackageJson,
+		createJSONFile,
 		createCommits,
-		deleteTempFolder,
+		deleteTestFolder,
 	};
 }
