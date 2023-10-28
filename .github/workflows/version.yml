@@ -5,8 +5,10 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "tests/**"
       - "pnpm-lock.yaml"
       - "README.md"
+      - ".github/workflows/version.yml"
 
 jobs:
   version:
