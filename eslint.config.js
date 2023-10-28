@@ -52,6 +52,7 @@ export default [
 	},
 	{
 		files: ["src/**/*.ts"],
+		ignores: ["src/**/*.test.ts"],
 		rules: {
 			"no-console": 2,
 		},

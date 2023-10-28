@@ -2,9 +2,9 @@ import { join } from "node:path";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
 
-export function createTestFolder() {
+export function createTestFolder(testName: string) {
 	const tempDirLocation = join(process.cwd(), "..", ".temp");
-	const tempFolderName = `fork-version-${Date.now()}`;
+	const tempFolderName = `fork-version-${Date.now()}-${testName}`;
 	const tempDir = join(tempDirLocation, tempFolderName);
 
 	const execSyncOptions: ExecSyncOptionsWithBufferEncoding = {
