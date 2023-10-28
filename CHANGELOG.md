@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.17 (2023-10-28)
+
+
+### Test
+
+* change path to use join ([9fa7ff4](https://github.com/eglavin/fork-version/commit/9fa7ff44bf7294e542108811a0fbbebfbb71fc40))
+
+
 ## 1.4.16 (2023-10-27)
 
 
