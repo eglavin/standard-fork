@@ -9,7 +9,7 @@ export function createTestFolder(testName: string) {
 
 	const execSyncOptions: ExecSyncOptionsWithBufferEncoding = {
 		cwd: tempDir,
-		stdio: "inherit",
+		stdio: "ignore",
 	};
 
 	if (!existsSync(tempDir)) {

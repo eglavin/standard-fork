@@ -37,5 +37,5 @@ describe("version", () => {
 		deleteTempFolder();
 	});
 
-	it('should read and update version from "package-lock.json" file', async () => {});
+	it('should read and update version from "package-lock.json" file', () => {});
 });
