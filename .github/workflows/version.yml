@@ -48,8 +48,8 @@ jobs:
 
       - name: Configure git user
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
 
       - name: Run Tests
         run: |
