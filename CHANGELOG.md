@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.18 (2023-10-28)
+
+
+### Test
+
+* add tests to update package-lock version ([892f1d1](https://github.com/eglavin/fork-version/commit/892f1d101eb9534682ebd2f9e566ea0f0f4303a5))
+
+
 ## 1.4.17 (2023-10-28)
 
 
