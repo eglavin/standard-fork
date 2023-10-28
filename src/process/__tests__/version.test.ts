@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { createTestFolder } from "../../../tests/init-test-folder.js";
 
@@ -22,7 +23,7 @@ describe("version", () => {
 				{
 					isPrivate: false,
 					name: "package.json",
-					path: `${tempDir}\\package.json`,
+					path: join(tempDir, "package.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
