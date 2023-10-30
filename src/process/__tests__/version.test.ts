@@ -1,9 +1,8 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { createTestFolder } from "../../../tests/init-test-folder.js";
-
-import { bumpVersion } from "../version.js";
 import { createTestConfig } from "../../../tests/init-test-options.js";
+import { bumpVersion } from "../version.js";
 
 describe("version", () => {
 	it('should read and update "package.json"', async () => {

@@ -11,15 +11,22 @@ export function createExecute(config: ForkConfig) {
 		config.debug(`Executing: git ${args.join(" ")}`);
 
 		if (!config.dryRun) {
-			return new Promise((resolve) => {
-				execFile("git", args, (error, stdout, stderr) => {
-					if (error) {
-						config.error(`git ${args[0]}:`);
-						throw error;
-					}
+			return new Promise((resolve, reject) => {
+				execFile(
+					"git",
+					args,
+					{
+						cwd: config.workingDirectory,
+					},
+					(error, stdout, stderr) => {
+						if (error) {
+							config.error(`git ${args[0]}:`);
+							reject(error);
+						}
 
-					resolve(stdout ? stdout : stderr);
-				});
+						resolve(stdout ? stdout : stderr);
+					},
+				);
 			});
 		}
 

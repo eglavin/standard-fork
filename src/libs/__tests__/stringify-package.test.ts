@@ -24,4 +24,8 @@ describe("stringifyPackage", () => {
 			'{\n    "name": "fork-version",\n    "version": "1.4.15"\n}',
 		);
 	});
+
+	it("should return a string with 0 space indentation", () => {
+		expect(stringifyPackage(TEST_JSON, 0)).toBe('{"name":"fork-version","version":"1.4.15"}');
+	});
 });

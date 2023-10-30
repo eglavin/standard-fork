@@ -236,8 +236,8 @@ function updateFile(
 			if (!lstatSync(fileToUpdate).isFile()) return;
 
 			const fileContents = readFileSync(fileToUpdate, "utf8");
-			const indent = detectIndent(fileContents).indent;
-			const newline = detectNewLine(fileContents);
+			const detectedIndentation = detectIndent(fileContents).amount;
+			const detectedNewline = detectNewLine(fileContents);
 			const parsedJson = JSON.parse(fileContents);
 
 			parsedJson.version = nextVersion;
@@ -246,7 +246,11 @@ function updateFile(
 			}
 
 			if (!config.dryRun) {
-				writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
+				writeFileSync(
+					fileToUpdate,
+					stringifyPackage(parsedJson, detectedIndentation, detectedNewline),
+					"utf8",
+				);
 			}
 		}
 	} catch (error) {
