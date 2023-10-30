@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.20 (2023-10-30)
+
+
+### Refactor
+
+* cleaning up config prop names + improve jsdocs details ([4bfae9e](https://github.com/eglavin/fork-version/commit/4bfae9e70aee6b29d2801c8784eca46f50226682))
+
+
 ## 1.4.19 (2023-10-28)
 
 
