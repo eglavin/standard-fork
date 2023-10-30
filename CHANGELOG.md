@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.21 (2023-10-30)
+
+
+### Test
+
+* add utils tests + fix for git promise not resolving ([5bac594](https://github.com/eglavin/fork-version/commit/5bac594643b21554d8c787b2f31ec6b2ffad666f))
+
+
 ## 1.4.20 (2023-10-30)
 
 
