@@ -8,26 +8,18 @@ import type { JSONSchema7 } from "json-schema";
 
 export const ForkConfigSchema = z.object({
 	/**
-	 * The path where the changes should be calculated from.
+	 * The path fork-version will run from.
 	 * @default
 	 * ```js
 	 * process.cwd()
 	 * ```
 	 */
-	changePath: z.string(),
+	workingDirectory: z.string(),
 	/**
-	 * The name of the changelog file.
+	 * Name of the changelog file.
 	 * @default "CHANGELOG.md"
 	 */
 	changelog: z.string(),
-	/**
-	 * Files to be updated.
-	 * @default
-	 * ```js
-	 * ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]
-	 * ```
-	 */
-	outFiles: z.array(z.string()),
 	/**
 	 * The header to be used in the changelog.
 	 * @default
@@ -39,16 +31,44 @@ export const ForkConfigSchema = z.object({
 	 */
 	header: z.string(),
 	/**
-	 * Specify a prefix for the git tag that will be taken into account during the comparison.
+	 * Files to be updated, Currently only JSON files with a version key are supported.
+	 * @default
+	 * ```js
+	 * ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]
+	 * ```
+	 */
+	bumpFiles: z.array(z.string()),
+	/**
+	 * Specify a prefix for the git tag fork-version will create.
 	 *
-	 * For instance if your version tag is prefixed by `version/` instead of `v` you would
-	 * have to specify `tagPrefix: "version/"`.
-	 * @default `v`
+	 * For instance if your version tag is prefixed by "version/" instead of "v" you have to specify
+	 * `tagPrefix: "version/"`.
+	 *
+	 * `tagPrefix` can also be used for a monorepo environment where you might want to deploy
+	 * multiple package from the same repository. In this case you can specify a prefix for
+	 * each package:
+	 *
+	 * | Value                    | Tag Created                   |
+	 * |:-------------------------|:------------------------------|
+	 * | ""                       | `1.2.3`                       |
+	 * | "version/"               | `version/1.2.3`               |
+	 * | "@eglavin/fork-version-" | `@eglavin/fork-version-1.2.3` |
+	 *
+	 * @example "", "version/", "@eglavin/fork-version-"
+	 * @default "v"
 	 */
 	tagPrefix: z.string(),
 	/**
-	 * Make a pre-release with optional label to specify a tag id.
-	 * @example true, "alpha", "beta", "rc", etc.
+	 * Make a pre-release with optional label, if value is a string it will be used as the
+	 * pre-release tag.
+	 *
+	 * | Value     | Version         |
+	 * |:----------|:----------------|
+	 * | true      | "1.2.3-0"       |
+	 * | "alpha"   | "1.2.3-alpha-0" |
+	 * | "beta"    | "1.2.3-beta-0"  |
+	 *
+	 * @example true, "alpha", "beta", "rc"
 	 * @default undefined
 	 */
 	preReleaseTag: z.string().or(z.boolean()).optional(),
@@ -64,8 +84,8 @@ export const ForkConfigSchema = z.object({
 	 */
 	dryRun: z.boolean(),
 	/**
-	 * If true and we cant find a version in an `outFiles`, we'll fallback and attempt
-	 * to use the latest git tag for the current version.
+	 * If true and we cant find a version in a `bumpFiles`, we'll fallback and attempt to use
+	 * the latest git tag for the current version.
 	 * @default true
 	 */
 	gitTagFallback: z.boolean(),
@@ -87,13 +107,14 @@ export const ForkConfigSchema = z.object({
 	verify: z.boolean(),
 
 	/**
-	 * If set, we'll use this version number instead of trying to find it in an `outFiles`.
+	 * If set, we'll use this version number instead of trying to find a version in a `bumpFiles`.
 	 * @example "1.0.0"
 	 * @default undefined
 	 */
 	currentVersion: z.string().optional(),
 	/**
-	 * If set, we'll attempt to update the version number to this version.
+	 * If set, we'll attempt to update the version number to this version, instead of incrementing
+	 * using "conventional-commit".
 	 * @example "2.0.0"
 	 * @default undefined
 	 */
@@ -104,7 +125,8 @@ export const ForkConfigSchema = z.object({
 	 */
 	changelogPresetConfig: z.object({
 		/**
-		 * An array of `type` objects representing the explicitly supported commit message types, and whether they should show up in generated `CHANGELOG`s.
+		 * An array of `type` objects representing the explicitly supported commit message types,
+		 * and whether they should show up in generated `CHANGELOG`s.
 		 */
 		types: z
 			.array(
@@ -124,11 +146,13 @@ export const ForkConfigSchema = z.object({
 		 */
 		compareUrlFormat: z.string().optional(),
 		/**
-		 * A URL representing the issue format (allowing a different URL format to be swapped in for Gitlab, Bitbucket, etc).
+		 * A URL representing the issue format (allowing a different URL format to be swapped in
+		 * for Gitlab, Bitbucket, etc).
 		 */
 		issueUrlFormat: z.string().optional(),
 		/**
-		 * A URL representing the a user's profile URL on GitHub, Gitlab, etc. This URL is used for substituting @bcoe with https://github.com/bcoe in commit messages.
+		 * A URL representing the a user's profile URL on GitHub, Gitlab, etc. This URL is used
+		 * for substituting @bcoe with https://github.com/bcoe in commit messages.
 		 */
 		userUrlFormat: z.string().optional(),
 		/**
@@ -164,17 +188,19 @@ export const ForkConfigSchema = z.object({
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;
 
 const DEFAULT_CONFIG: ForkConfig = {
-	changePath: process.cwd(),
+	workingDirectory: process.cwd(),
 	changelog: "CHANGELOG.md",
-	outFiles: [
-		"bower.json",
-		"manifest.json", // Chrome extensions
-		"npm-shrinkwrap.json",
-		"package-lock.json",
+	bumpFiles: [
 		"package.json",
+		"package-lock.json",
+		"npm-shrinkwrap.json",
+		"manifest.json", // Chrome extensions
+		"bower.json",
 	],
-	header:
-		"# Changelog\n\nAll notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.\n",
+	header: `# Changelog
+
+All notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.
+`,
 	tagPrefix: "v",
 
 	commitAll: false,
@@ -226,52 +252,60 @@ function getCliArguments() {
 	return meow(
 		`
 Usage:
-	$ fork-version
+  $ fork-version [options]
 
 Options:
-	--changelog
-		Name of the changelog file. [Default: "CHANGELOG.md"]
-	--outFiles
-		Files to be updated. [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
-	--header, -H
-		The header to be used in the changelog.
+  --workingDirectory [Default: process.cwd()]
+    The path fork-version will run from.
+  --changelog [Default: "CHANGELOG.md"]
+    Name of the changelog file.
+  --header, -H
+    The header to be used in the changelog.
+  --bumpFiles [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+    Files to be updated.
+  --tagPrefix [Default: "v"]
+    Specify a prefix for the git tag "fork-version" will create.
+  --preReleaseTag [Default: undefined]
+    Make a pre-release with optional label, If value is a string it will be used as
+    the pre-release tag.
 
-	--tagPrefix
-		Specify a prefix for the git tag that will be taken into account during the comparison. [Default: "v"]
-	--preReleaseTag
-		Make a pre-release with optional label to specify a tag id. [Default: undefined]
+  --commitAll
+    Commit all staged changes, not just files updated by fork-version.
+  --dryRun
+    If true, no output will be written to disk or committed.
+  --gitTagFallback [Default: true]
+    If true and we cant find a version in an bumpFiles, we'll fallback and attempt
+    to use the latest git tag for the current version.
+  --sign
+    Should we sign the git commit using GPG?
+  --silent
+    If true, no output will be written to stdout.
+  --verify
+    If true, allow git to run git commit hooks.
 
-	--commitAll
-		Commit all staged changes, not just files updated by fork-version.
-	--dryRun
-		If true, no output will be written to disk or committed.
-	--gitTagFallback
-		If true and we cant find a version in an outFiles, we'll fallback and attempt to use the latest git tag for the current version. [Default: true]
-	--sign
-		Should we sign the git commit using GPG?
-	--silent
-		If true, no output will be written to stdout.
-	--verify
-		If true, allow git to run git commit hooks.
-
-	--currentVersion
-		If set, we'll use this current version number instead of trying to find it in an outFiles.
-	--nextVersion
-		If set, we'll attempt to update to this version.
+  --currentVersion
+    If set, we'll use this version number instead of trying to find a version in a
+    "bumpFiles".
+  --nextVersion
+    If set, we'll attempt to update the version number to this version, instead of
+    incrementing using "conventional-commit".
 `,
 		{
 			importMeta: import.meta,
 			flags: {
-				changelog: {
+				workingDirectory: {
 					type: "string",
 				},
-				outFiles: {
+				changelog: {
 					type: "string",
-					isMultiple: true,
 				},
 				header: {
 					type: "string",
 					shortFlag: "H",
+				},
+				bumpFiles: {
+					type: "string",
+					isMultiple: true,
 				},
 				tagPrefix: {
 					type: "string",
@@ -309,19 +343,18 @@ Options:
 }
 
 export async function getForkConfig(): Promise<ForkConfig> {
-	const cwd = process.cwd();
+	const cliArguments = getCliArguments();
 
+	const cwd = process.cwd();
 	const joycon = new JoyCon.default();
-	const configPath = await joycon.resolve({
+	const configFilePath = await joycon.resolve({
 		files: ["fork.config.js"],
-		cwd: cwd,
+		cwd,
 		stopDir: path.parse(cwd).root,
 	});
 
-	const cliArguments = getCliArguments();
-
-	if (configPath) {
-		const foundConfig = await bundleRequire({ filepath: configPath });
+	if (configFilePath) {
+		const foundConfig = await bundleRequire({ filepath: configFilePath });
 		const parsedConfig = ForkConfigSchema.partial().safeParse(
 			foundConfig.mod.default || foundConfig.mod,
 		);
@@ -341,15 +374,15 @@ export async function getForkConfig(): Promise<ForkConfig> {
 				usersConfig.debug = () => {};
 			}
 
-			// Allow users to add additional outFiles
-			const mergedOutFiles = DEFAULT_CONFIG.outFiles.concat(
-				parsedConfig.data?.outFiles || [],
-				cliArguments.flags?.outFiles || [],
+			// Allow users to add additional bumpFiles
+			const mergedBumpFiles = DEFAULT_CONFIG.bumpFiles.concat(
+				parsedConfig.data?.bumpFiles || [],
+				cliArguments.flags?.bumpFiles || [],
 			);
 
 			return Object.assign(usersConfig, {
 				changelogPresetConfig: getPresetDefaults(usersConfig?.changelogPresetConfig),
-				outFiles: Array.from(new Set(mergedOutFiles)),
+				bumpFiles: Array.from(new Set(mergedBumpFiles)),
 			});
 		} else {
 			throw parsedConfig.error;

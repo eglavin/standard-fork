@@ -14,9 +14,9 @@ describe("version", () => {
 		createJSONFile();
 		createCommits();
 
-		const options = await createTestConfig(tempDir);
+		const config = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(options);
+		const result = await bumpVersion(config);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [
@@ -58,23 +58,23 @@ describe("version", () => {
 		);
 		createCommits();
 
-		const options = await createTestConfig(tempDir);
+		const config = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(options);
+		const result = await bumpVersion(config);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [
 				{
 					isPrivate: false,
-					name: "package-lock.json",
-					path: join(tempDir, "package-lock.json"),
+					name: "package.json",
+					path: join(tempDir, "package.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
 				{
 					isPrivate: false,
-					name: "package.json",
-					path: join(tempDir, "package.json"),
+					name: "package-lock.json",
+					path: join(tempDir, "package-lock.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
@@ -97,9 +97,9 @@ describe("version", () => {
 		createJSONFile({ version: "1.0.0", private: true });
 		createCommits();
 
-		const options = await createTestConfig(tempDir);
+		const config = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(options);
+		const result = await bumpVersion(config);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [

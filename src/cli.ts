@@ -7,25 +7,25 @@ import { commitChanges } from "./process/commit.js";
 import { tagChanges } from "./process/tag.js";
 
 async function runFork() {
-	const options = await getForkConfig();
+	const config = await getForkConfig();
 
-	options.log(`Running Fork: ${new Date().toLocaleString()}
-${options.dryRun ? "Dry run, no changes will be written to disk.\n" : ""}`);
+	config.log(`Running Fork: ${new Date().toLocaleString()}
+${config.dryRun ? "Dry run, no changes will be written to disk.\n" : ""}`);
 
-	const bumpResult = await bumpVersion(options);
-	const changelogResult = await updateChangelog(options, bumpResult);
-	const commitResult = await commitChanges(options, bumpResult);
-	const tagResult = await tagChanges(options, bumpResult);
+	const bumpResult = await bumpVersion(config);
+	const changelogResult = await updateChangelog(config, bumpResult);
+	const commitResult = await commitChanges(config, bumpResult);
+	const tagResult = await tagChanges(config, bumpResult);
 
 	const result = {
-		options,
+		config,
 		bumpResult,
 		changelogResult,
 		commitResult,
 		tagResult,
 	};
 
-	options.debug(JSON.stringify(result, null, 2));
+	config.debug(JSON.stringify(result, null, 2));
 
 	return result;
 }

@@ -9,14 +9,14 @@ type CreateChangelog = {
 	exists: boolean;
 };
 
-function createChangelog(options: ForkConfig): CreateChangelog {
-	const changelogPath = resolve(options.changelog);
+function createChangelog(config: ForkConfig): CreateChangelog {
+	const changelogPath = resolve(config.changelog);
 
 	try {
 		accessSync(changelogPath, constants.F_OK);
 	} catch (err) {
-		if (!options.dryRun && (err as { code: string }).code === "ENOENT") {
-			options.log(`Creating Changelog file: ${changelogPath}`);
+		if (!config.dryRun && (err as { code: string }).code === "ENOENT") {
+			config.log(`Creating Changelog file: ${changelogPath}`);
 
 			writeFileSync(changelogPath, "\n", "utf8");
 		}
@@ -52,7 +52,7 @@ function getOldReleaseContent(changelog: CreateChangelog): string {
 	return "";
 }
 
-function getNewReleaseContent(options: ForkConfig, bumpResult: BumpVersion): Promise<string> {
+function getNewReleaseContent(config: ForkConfig, bumpResult: BumpVersion): Promise<string> {
 	return new Promise<string>((resolve) => {
 		let newContent = "";
 
@@ -60,22 +60,22 @@ function getNewReleaseContent(options: ForkConfig, bumpResult: BumpVersion): Pro
 			{
 				preset: {
 					name: "conventionalcommits",
-					...(options.changelogPresetConfig || {}),
+					...(config.changelogPresetConfig || {}),
 				},
-				tagPrefix: options.tagPrefix,
-				warn: (...message: string[]) => options.error("conventional-changelog: ", ...message),
-				cwd: options.changePath,
+				tagPrefix: config.tagPrefix,
+				warn: (...message: string[]) => config.error("conventional-changelog: ", ...message),
+				cwd: config.workingDirectory,
 			},
 			{
 				version: bumpResult.nextVersion,
 			},
 			{
 				merges: null,
-				path: options.changePath,
+				path: config.workingDirectory,
 			},
 		)
 			.on("error", (error) => {
-				options.error("conventional-changelog: Unable to parse changes");
+				config.error("conventional-changelog: Unable to parse changes");
 				throw error;
 			})
 			.on("data", (chunk) => {
@@ -94,23 +94,23 @@ type UpdateChangelog = {
 };
 
 export async function updateChangelog(
-	options: ForkConfig,
+	config: ForkConfig,
 	bumpResult: BumpVersion,
 ): Promise<UpdateChangelog> {
-	if (options.header.search(RELEASE_PATTERN) !== -1) {
+	if (config.header.search(RELEASE_PATTERN) !== -1) {
 		// Need to ensure the header doesn't contain the release pattern
 		throw new Error("Header cannot contain release pattern");
 	}
 
-	const changelog = createChangelog(options);
+	const changelog = createChangelog(config);
 	const oldContent = getOldReleaseContent(changelog);
-	const newContent = await getNewReleaseContent(options, bumpResult);
+	const newContent = await getNewReleaseContent(config, bumpResult);
 
-	options.log(`Updating Changelog:
+	config.log(`Updating Changelog:
 \t${changelog.path}`);
 
-	if (!options.dryRun && newContent) {
-		writeFileSync(changelog.path, `${options.header}\n${newContent}\n${oldContent}`, "utf8");
+	if (!config.dryRun && newContent) {
+		writeFileSync(changelog.path, `${config.header}\n${newContent}\n${oldContent}`, "utf8");
 	}
 
 	return {

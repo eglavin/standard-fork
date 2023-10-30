@@ -4,10 +4,10 @@
  *
  * Falls back to `chore(release): {{currentTag}}` if message is argument is falsy.
  */
-export function formatCommitMessage(message: string | undefined, newVersion: string): string {
+export function formatCommitMessage(message: string | undefined, version: string): string {
 	if (!message) {
 		message = "chore(release): {{currentTag}}";
 	}
 
-	return message.replace(new RegExp("{{currentTag}}", "g"), newVersion);
+	return message.replace(new RegExp("{{currentTag}}", "g"), version);
 }

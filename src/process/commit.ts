@@ -10,14 +10,14 @@ type CommitChanges = {
 };
 
 export async function commitChanges(
-	options: ForkConfig,
+	config: ForkConfig,
 	bumpResult: BumpVersion,
 ): Promise<CommitChanges> {
-	const { executeGit } = createExecute(options);
+	const { git } = createExecute(config);
 
-	options.log("Committing changes");
+	config.log("Committing changes");
 
-	const filesToCommit: string[] = [options.changelog];
+	const filesToCommit: string[] = [config.changelog];
 	for (const file of bumpResult.files) {
 		filesToCommit.push(file.name);
 	}
@@ -29,20 +29,20 @@ export async function commitChanges(
 		};
 	}
 
-	const gitAddOutput = await executeGit("add", ...filesToCommit);
+	const gitAddOutput = await git("add", ...filesToCommit);
 
-	const shouldVerify = options.verify ? undefined : "--no-verify";
-	const shouldSign = options.sign ? "-S" : undefined;
-	const shouldCommitAll = options.commitAll ? [] : filesToCommit;
+	const shouldVerify = config.verify ? undefined : "--no-verify";
+	const shouldSign = config.sign ? "-S" : undefined;
+	const shouldCommitAll = config.commitAll ? [] : filesToCommit;
 
-	const gitCommitOutput = await executeGit(
+	const gitCommitOutput = await git(
 		"commit",
 		shouldVerify,
 		shouldSign,
 		...shouldCommitAll,
 		"-m",
 		formatCommitMessage(
-			options.changelogPresetConfig?.releaseCommitMessageFormat,
+			config.changelogPresetConfig?.releaseCommitMessageFormat,
 			bumpResult.nextVersion,
 		),
 	);

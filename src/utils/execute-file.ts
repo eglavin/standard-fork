@@ -1,20 +1,20 @@
 import { execFile } from "node:child_process";
 import type { ForkConfig } from "../configuration.js";
 
-export function createExecute(options: ForkConfig) {
+export function createExecute(config: ForkConfig) {
 	/**
 	 * Executes a git command with the given arguments and returns the output.
 	 */
-	async function executeGit(...execArgs: (string | undefined)[]): Promise<string> {
+	async function git(...execArgs: (string | undefined)[]): Promise<string> {
 		const args = execArgs.filter(Boolean) as string[];
 
-		options.debug(`Executing: git ${args.join(" ")}`);
+		config.debug(`Executing: git ${args.join(" ")}`);
 
-		if (!options.dryRun) {
+		if (!config.dryRun) {
 			return new Promise((resolve) => {
 				execFile("git", args, (error, stdout, stderr) => {
 					if (error) {
-						options.error(`git ${args[0]}:`);
+						config.error(`git ${args[0]}:`);
 						throw error;
 					}
 
@@ -27,6 +27,6 @@ export function createExecute(options: ForkConfig) {
 	}
 
 	return {
-		executeGit,
+		git,
 	};
 }

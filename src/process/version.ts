@@ -16,11 +16,11 @@ type FileState = {
 	isPrivate: boolean;
 };
 
-function getFile(options: ForkConfig, fileToGet: string): FileState | undefined {
+function getFile(config: ForkConfig, fileToGet: string): FileState | undefined {
 	try {
 		const fileExtension = extname(fileToGet);
 		if (fileExtension === ".json") {
-			const filePath = resolve(options.changePath, fileToGet);
+			const filePath = resolve(config.workingDirectory, fileToGet);
 			if (existsSync(filePath)) {
 				const fileContents = readFileSync(filePath, "utf8");
 				const parsedJson = JSON.parse(fileContents);
@@ -37,12 +37,12 @@ function getFile(options: ForkConfig, fileToGet: string): FileState | undefined 
 							(typeof parsedJson.private === "boolean" ? parsedJson.private : false),
 					};
 				} else {
-					options.log(`Unable to find version in file: ${fileToGet}`);
+					config.log(`Unable to find version in file: ${fileToGet}`);
 				}
 			}
 		}
 	} catch (error) {
-		options.error(`Error reading file: ${fileToGet}`, error);
+		config.error(`Error reading file: ${fileToGet}`, error);
 	}
 }
 
@@ -73,16 +73,16 @@ type CurrentVersion = {
 /**
  * Get the current version from the given files and find their locations.
  */
-async function getCurrentVersion(options: ForkConfig): Promise<CurrentVersion> {
+async function getCurrentVersion(config: ForkConfig): Promise<CurrentVersion> {
 	const files: FileState[] = [];
 	const versions: string[] = [];
 
-	for (const file of options.outFiles) {
-		const fileState = getFile(options, file);
+	for (const file of config.bumpFiles) {
+		const fileState = getFile(config, file);
 		if (fileState) {
 			files.push(fileState);
 
-			if (options.currentVersion) {
+			if (config.currentVersion) {
 				continue;
 			}
 
@@ -92,13 +92,13 @@ async function getCurrentVersion(options: ForkConfig): Promise<CurrentVersion> {
 		}
 	}
 
-	if (options.currentVersion) {
-		versions.push(options.currentVersion);
+	if (config.currentVersion) {
+		versions.push(config.currentVersion);
 	}
 
 	if (versions.length === 0) {
-		if (options.gitTagFallback) {
-			const version = await getLatestGitTagVersion(options.tagPrefix);
+		if (config.gitTagFallback) {
+			const version = await getLatestGitTagVersion(config.tagPrefix);
 			if (version) {
 				return {
 					files: [],
@@ -186,28 +186,28 @@ type NextVersion = {
 /**
  * Get the next version from the given files.
  */
-async function getNextVersion(options: ForkConfig, currentVersion: string): Promise<NextVersion> {
-	if (options.nextVersion && semver.valid(options.nextVersion)) {
-		return { nextVersion: options.nextVersion };
+async function getNextVersion(config: ForkConfig, currentVersion: string): Promise<NextVersion> {
+	if (config.nextVersion && semver.valid(config.nextVersion)) {
+		return { nextVersion: config.nextVersion };
 	}
 
 	const preMajor = semver.lt(currentVersion, "1.0.0");
 	const recommendedBump = await conventionalRecommendedBump({
 		preset: {
 			name: "conventionalcommits",
-			...(options.changelogPresetConfig || {}),
+			...(config.changelogPresetConfig || {}),
 			preMajor,
 		},
-		path: options.changePath,
-		tagPrefix: options.tagPrefix,
-		cwd: options.changePath,
+		path: config.workingDirectory,
+		tagPrefix: config.tagPrefix,
+		cwd: config.workingDirectory,
 	});
 
 	if (recommendedBump.releaseType) {
 		const releaseType = getReleaseType(
 			recommendedBump.releaseType,
 			currentVersion,
-			options.preReleaseTag,
+			config.preReleaseTag,
 		);
 
 		return Object.assign(recommendedBump, {
@@ -217,7 +217,7 @@ async function getNextVersion(options: ForkConfig, currentVersion: string): Prom
 				semver.inc(
 					currentVersion,
 					releaseType,
-					typeof options.preReleaseTag === "string" ? options.preReleaseTag : undefined,
+					typeof config.preReleaseTag === "string" ? config.preReleaseTag : undefined,
 				) || "",
 		});
 	}
@@ -226,7 +226,7 @@ async function getNextVersion(options: ForkConfig, currentVersion: string): Prom
 }
 
 function updateFile(
-	options: ForkConfig,
+	config: ForkConfig,
 	fileToUpdate: string,
 	type: string,
 	nextVersion: string,
@@ -245,29 +245,29 @@ function updateFile(
 				parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
 			}
 
-			if (!options.dryRun) {
+			if (!config.dryRun) {
 				writeFileSync(fileToUpdate, stringifyPackage(parsedJson, indent, newline), "utf8");
 			}
 		}
 	} catch (error) {
-		options.error("Error writing: ", error);
+		config.error("Error writing: ", error);
 	}
 }
 
 export type BumpVersion = CurrentVersion & NextVersion;
 
-export async function bumpVersion(options: ForkConfig): Promise<BumpVersion> {
-	const current = await getCurrentVersion(options);
-	const next = await getNextVersion(options, current.currentVersion);
+export async function bumpVersion(config: ForkConfig): Promise<BumpVersion> {
+	const current = await getCurrentVersion(config);
+	const next = await getNextVersion(config, current.currentVersion);
 
-	options.log(`Current version: ${current.currentVersion}
+	config.log(`Current version: ${current.currentVersion}
 Next version: ${next.nextVersion} (${next.releaseType})
 Updating Files: `);
 
 	for (const outFile of current.files) {
-		options.log(`\t${outFile.path}`);
+		config.log(`\t${outFile.path}`);
 
-		updateFile(options, outFile.path, outFile.type, next.nextVersion);
+		updateFile(config, outFile.path, outFile.type, next.nextVersion);
 	}
 
 	return {
