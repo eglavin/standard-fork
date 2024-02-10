@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.22 (2024-02-10)
+
+
+### Bug Fixes
+
+* undo change to stringify package to ensure tabs work ([d7d2415](https://github.com/eglavin/fork-version/commit/d7d2415c30ba822ce6728d37a2b75cb98a4c7f37))
+
+
 ## 1.4.21 (2023-10-30)
 
 
