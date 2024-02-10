@@ -28,4 +28,10 @@ describe("stringifyPackage", () => {
 	it("should return a string with 0 space indentation", () => {
 		expect(stringifyPackage(TEST_JSON, 0)).toBe('{"name":"fork-version","version":"1.4.15"}');
 	});
+
+	it("should return a string with tab indentation", () => {
+		expect(stringifyPackage(TEST_JSON, "\t")).toBe(
+			'{\n\t"name": "fork-version",\n\t"version": "1.4.15"\n}',
+		);
+	});
 });

@@ -23,14 +23,10 @@ const LF = "\n";
 
 export function stringifyPackage(
 	data: object,
-	indent?: number,
+	indent?: string | number,
 	newline?: typeof CRLF | typeof LF,
 ): string {
-	const stringified = JSON.stringify(
-		data,
-		null,
-		typeof indent === "number" ? indent : DEFAULT_INDENT,
-	);
+	const stringified = JSON.stringify(data, null, indent || (indent === 0 ? 0 : DEFAULT_INDENT));
 
 	if (newline === CRLF) {
 		return stringified.replace(new RegExp(LF, "g"), CRLF);
