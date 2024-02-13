@@ -6,6 +6,7 @@ export default defineConfig({
 		coverage: {
 			include: ["src/**/*"],
 			all: true,
+			reporter: ["cobertura", "html", "text"],
 		},
 	},
 });
