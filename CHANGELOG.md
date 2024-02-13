@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.23 (2024-02-13)
+
+
+### Refactor
+
+* extract release type functions from version + test ([c946538](https://github.com/eglavin/fork-version/commit/c946538e4ab435e87f533c818206703cde4107f2))
+
+
 ## 1.4.22 (2024-02-10)
 
 
