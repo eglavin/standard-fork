@@ -6,6 +6,7 @@ import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
 import detectNewLine from "detect-newline";
 import { stringifyPackage } from "../libs/stringify-package.js";
+import { getReleaseType } from "../utils/release-type.js";
 import type { ForkConfig } from "../configuration.js";
 
 type FileState = {
@@ -116,63 +117,6 @@ async function getCurrentVersion(config: ForkConfig): Promise<CurrentVersion> {
 		files,
 		currentVersion: versions[0],
 	};
-}
-
-/**
- * Get the priority of given type.
- * @example
- * - "patch" => 0
- * - "minor" => 1
- * - "major" => 2
- */
-function getPriority(type?: string): number {
-	return ["patch", "minor", "major"].indexOf(type || "");
-}
-
-/**
- * Get the given versions highest state.
- * @example
- * - "patch"
- * - "minor"
- * - "major"
- */
-function getVersionType(version: string): "patch" | "minor" | "major" | undefined {
-	const parseVersion = semver.parse(version);
-	if (parseVersion?.major) {
-		return "major";
-	} else if (parseVersion?.minor) {
-		return "minor";
-	} else if (parseVersion?.patch) {
-		return "patch";
-	}
-	return undefined;
-}
-
-/**
- * Get the recommended release type for the given version depending on if
- * the user asks for a prerelease with or without a tag.
- */
-function getReleaseType(
-	releaseType: "major" | "minor" | "patch",
-	currentVersion: string,
-	preReleaseTag?: string | boolean,
-): ReleaseType {
-	if (!preReleaseTag) {
-		return releaseType;
-	}
-
-	if (Array.isArray(semver.prerelease(currentVersion))) {
-		const currentReleaseType = getVersionType(currentVersion);
-
-		if (
-			currentReleaseType === releaseType ||
-			getPriority(currentReleaseType) > getPriority(releaseType)
-		) {
-			return "prerelease";
-		}
-	}
-
-	return `pre${releaseType}`;
 }
 
 type NextVersion = {
