@@ -81,6 +81,11 @@ jobs:
         run: |
           pnpm fork-version
 
+      - name: Show Coverage Report File
+        run: |
+          ls -la
+          cat code-coverage-results.md
+
       - name: Push changes
         run: |
           git push --follow-tags origin main
