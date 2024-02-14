@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.27 (2024-02-14)
+
+
+### Chore
+
+* rename scripts folder ([cd07fa7](https://github.com/eglavin/fork-version/commit/cd07fa727ccdcf9c216d455787bca585e132ffb6))
+
+
 ## 1.4.26 (2024-02-14)
 
 
