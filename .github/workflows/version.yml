@@ -83,8 +83,9 @@ jobs:
 
       - name: Show Coverage Report File
         run: |
-          ls -la
-          cat code-coverage-results.md
+          node script/update-readme-code-coverage.js
+          git add README.md
+          git commit --amend --no-edit
 
       - name: Push changes
         run: |
