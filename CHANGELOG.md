@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.26 (2024-02-14)
+
+
+### Refactor
+
+* add script to update readme with coverage report ([895da35](https://github.com/eglavin/fork-version/commit/895da355107d094a4a513345460993958b90bf6c))
+
+
 ## 1.4.25 (2024-02-14)
 
 

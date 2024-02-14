@@ -27,6 +27,7 @@ npx fork-version
 <!-- Code Coverage Table Start -->
 
 ![Code Coverage](https://img.shields.io/badge/Code%20Coverage-68%25-yellow?style=flat)
+
 Package | Line Rate | Branch Rate | Complexity | Health
 -------- | --------- | ----------- | ---------- | ------
 src | 88% | 36% | 0 | ✔
