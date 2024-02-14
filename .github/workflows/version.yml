@@ -81,7 +81,7 @@ jobs:
         run: |
           pnpm fork-version
 
-      - name: Show Coverage Report File
+      - name: Update README Code Coverage
         run: |
           node scripts/update-readme-code-coverage.js
           git add README.md
