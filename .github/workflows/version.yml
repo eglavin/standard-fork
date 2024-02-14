@@ -83,7 +83,7 @@ jobs:
 
       - name: Show Coverage Report File
         run: |
-          node script/update-readme-code-coverage.js
+          node scripts/update-readme-code-coverage.js
           git add README.md
           git commit --amend --no-edit
 
