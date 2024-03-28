@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.29 (2024-03-28)
+
+
+### Chore
+
+* modernise tsconfig ([89ba7c9](https://github.com/eglavin/fork-version/commit/89ba7c96e047f297f447868d2957bf6ad180995f))
+
+
 ## 1.4.28 (2024-03-28)
 
 
