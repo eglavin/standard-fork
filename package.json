@@ -1,6 +1,6 @@
 {
   "name": "fork-version",
-  "version": "1.4.29",
+  "version": "1.4.30",
   "license": "ISC",
   "description": "Replacement for standard version written with modern syntax",
   "homepage": "https://github.com/eglavin/fork-version",
