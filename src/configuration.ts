@@ -6,7 +6,6 @@ import { bundleRequire } from "bundle-require";
 import { z } from "zod";
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
 import meow from "meow";
-import type { JSONSchema7 } from "json-schema";
 
 export const ForkConfigSchema = z.object({
 	/**
@@ -231,9 +230,8 @@ function getPresetDefaults(usersChangelogPresetConfig?: ForkConfig["changelogPre
 	// First take any default values from the conventional-changelog-config-spec
 	if (typeof conventionalChangelogConfigSpec.properties === "object") {
 		Object.entries(conventionalChangelogConfigSpec.properties).forEach(([key, value]) => {
-			const _value = value as JSONSchema7;
-			if ("default" in _value && _value.default !== undefined) {
-				preset[key] = _value.default;
+			if ("default" in value && value.default !== undefined) {
+				preset[key] = value.default;
 			}
 		});
 	}
@@ -348,7 +346,7 @@ export async function getForkConfig(): Promise<ForkConfig> {
 	const cliArguments = getCliArguments();
 
 	const cwd = process.cwd();
-	const joycon = new JoyCon.default();
+	const joycon = new JoyCon();
 	const configFilePath = await joycon.resolve({
 		files: ["fork.config.js"],
 		cwd,

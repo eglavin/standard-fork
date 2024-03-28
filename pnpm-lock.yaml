@@ -46,9 +46,6 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
-  '@types/conventional-changelog-config-spec':
-    specifier: 2.1.5
-    version: 2.1.5
   '@types/git-raw-commits':
     specifier: 2.0.4
     version: 2.0.4
@@ -807,12 +804,6 @@ packages:
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
-    dev: true
-
-  /@types/conventional-changelog-config-spec@2.1.5:
-    resolution: {integrity: sha512-OWmGg25U1syXv0GWBqlIbAtV2TZat8pBX5RLY3B5EP4EJ/LF0bvkuvpxq+QPex++QfRftf+EozK1DCD13V3elA==}
-    dependencies:
-      '@types/json-schema': 7.0.15
     dev: true
 
   /@types/estree@1.0.5:
