@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.28 (2024-03-28)
+
+
+### Chore
+
+* bump dependencies ([a633fec](https://github.com/eglavin/fork-version/commit/a633fece2b7c00a5b9434eeb5fec35c5d7317d9f))
+
+
 ## 1.4.27 (2024-02-14)
 
 
