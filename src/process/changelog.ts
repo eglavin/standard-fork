@@ -4,10 +4,10 @@ import conventionalChangelog from "conventional-changelog";
 import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
-type CreateChangelog = {
+interface CreateChangelog {
 	path: string;
 	exists: boolean;
-};
+}
 
 function createChangelog(config: ForkConfig): CreateChangelog {
 	const changelogPath = resolve(config.changelog);
@@ -87,11 +87,11 @@ function getNewReleaseContent(config: ForkConfig, bumpResult: BumpVersion): Prom
 	});
 }
 
-type UpdateChangelog = {
+interface UpdateChangelog {
 	changelog: CreateChangelog;
 	oldContent: string;
 	newContent: string;
-};
+}
 
 export async function updateChangelog(
 	config: ForkConfig,

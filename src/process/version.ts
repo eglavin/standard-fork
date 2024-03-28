@@ -4,18 +4,18 @@ import gitSemverTags from "git-semver-tags";
 import semver, { ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
-import detectNewLine from "detect-newline";
+import { detectNewline } from "detect-newline";
 import { stringifyPackage } from "../libs/stringify-package.js";
 import { getReleaseType } from "../utils/release-type.js";
 import type { ForkConfig } from "../configuration.js";
 
-type FileState = {
+interface FileState {
 	name: string;
 	path: string;
 	type: "package-file" | ({} & string); // eslint-disable-line @typescript-eslint/ban-types
 	version: string;
 	isPrivate: boolean;
-};
+}
 
 function getFile(config: ForkConfig, fileToGet: string): FileState | undefined {
 	try {
@@ -66,10 +66,10 @@ async function getLatestGitTagVersion(tagPrefix: string | undefined): Promise<st
 	return cleanedTags.sort(semver.rcompare)[0];
 }
 
-type CurrentVersion = {
+interface CurrentVersion {
 	currentVersion: string;
 	files: FileState[];
-};
+}
 
 /**
  * Get the current version from the given files and find their locations.
@@ -119,13 +119,13 @@ async function getCurrentVersion(config: ForkConfig): Promise<CurrentVersion> {
 	};
 }
 
-type NextVersion = {
+interface NextVersion {
 	nextVersion: string;
 	level?: number;
 	preMajor?: boolean;
 	reason?: string;
 	releaseType?: ReleaseType;
-};
+}
 
 /**
  * Get the next version from the given files.
@@ -162,7 +162,7 @@ async function getNextVersion(config: ForkConfig, currentVersion: string): Promi
 					currentVersion,
 					releaseType,
 					typeof config.preReleaseTag === "string" ? config.preReleaseTag : undefined,
-				) || "",
+				) ?? "",
 		});
 	}
 
@@ -181,11 +181,11 @@ function updateFile(
 
 			const fileContents = readFileSync(fileToUpdate, "utf8");
 			const detectedIndentation = detectIndent(fileContents).amount;
-			const detectedNewline = detectNewLine(fileContents);
+			const detectedNewline = detectNewline(fileContents);
 			const parsedJson = JSON.parse(fileContents);
 
 			parsedJson.version = nextVersion;
-			if (parsedJson.packages && parsedJson.packages[""]) {
+			if (parsedJson.packages?.[""]) {
 				parsedJson.packages[""].version = nextVersion; // package-lock v2 stores version there too
 			}
 

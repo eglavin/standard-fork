@@ -3,11 +3,11 @@ import { formatCommitMessage } from "../utils/format-commit-message.js";
 import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
-type CommitChanges = {
+interface CommitChanges {
 	filesToCommit: string[];
 	gitAddOutput?: string;
 	gitCommitOutput?: string;
-};
+}
 
 export async function commitChanges(
 	config: ForkConfig,

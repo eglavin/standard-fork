@@ -8,7 +8,7 @@ import semver, { ReleaseType } from "semver";
  * - "major" => 2
  */
 function getPriority(type?: string): number {
-	return ["patch", "minor", "major"].indexOf(type || "");
+	return ["patch", "minor", "major"].indexOf(type ?? "");
 }
 
 /**

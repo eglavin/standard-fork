@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 import path from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
@@ -376,8 +378,8 @@ export async function getForkConfig(): Promise<ForkConfig> {
 
 			// Allow users to add additional bumpFiles
 			const mergedBumpFiles = DEFAULT_CONFIG.bumpFiles.concat(
-				parsedConfig.data?.bumpFiles || [],
-				cliArguments.flags?.bumpFiles || [],
+				Array.isArray(parsedConfig.data?.bumpFiles) ? parsedConfig.data.bumpFiles : [],
+				Array.isArray(cliArguments.flags?.bumpFiles) ? cliArguments.flags.bumpFiles : [],
 			);
 
 			return Object.assign(usersConfig, {

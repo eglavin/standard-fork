@@ -3,13 +3,13 @@ import { formatCommitMessage } from "../utils/format-commit-message.js";
 import type { ForkConfig } from "../configuration.js";
 import type { BumpVersion } from "./version.js";
 
-type TagChanges = {
+interface TagChanges {
 	gitTagOutput: string;
 	currentBranchName: string;
 	hasPublicPackageFile: boolean;
 	pushMessage: string;
 	publishMessage: string;
-};
+}
 
 export async function tagChanges(config: ForkConfig, bumpResult: BumpVersion): Promise<TagChanges> {
 	const { git } = createExecute(config);
@@ -42,7 +42,7 @@ export async function tagChanges(config: ForkConfig, bumpResult: BumpVersion): P
 	const publishMessage = isPreRelease
 		? `Run \`npm publish --tag ${
 				typeof config.preReleaseTag === "string" ? config.preReleaseTag : "prerelease"
-		  }\` to publish the package.`
+			}\` to publish the package.`
 		: "Run `npm publish` to publish the package.";
 
 	config.log(`\n${pushMessage}\n${hasPublicPackageFile ? publishMessage : ""}`);

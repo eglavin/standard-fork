@@ -1,41 +1,28 @@
-import js from "@eslint/js";
+// @ts-check
+
 import globals from "globals";
+import tsEslint from "typescript-eslint";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
-import typescriptParser from "@typescript-eslint/parser";
-import typescriptPlugin from "@typescript-eslint/eslint-plugin";
-import eslintConfigPrettier from "eslint-config-prettier";
-import prettierPlugin from "eslint-plugin-prettier";
-
-/** @type {import('eslint').Linter.FlatConfig[]} */
-export default [
-	js.configs.recommended,
+export default tsEslint.config(
+	...tsEslint.configs.stylisticTypeChecked,
 	{
+		ignores: ["dist/**/*", "node_modules/**/*"],
 		languageOptions: {
 			globals: {
 				...globals.node,
 				...globals.es2021,
 			},
-			parser: typescriptParser,
-		},
-		plugins: {
-			"@typescript-eslint": typescriptPlugin,
-			prettier: prettierPlugin,
-		},
-	},
-	{
-		ignores: ["dist/**/*", "node_modules/**/*"],
-		rules: {
-			"no-console": 0,
-			"no-unused-vars": 1,
-
-			"prettier/prettier": 1,
+			parserOptions: {
+				project: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
 		},
 	},
 	{
 		files: ["**/*.ts"],
 		rules: {
-			...typescriptPlugin.configs.recommended.rules,
-
+			"no-console": 0,
 			"no-undef": 0,
 			"no-unused-vars": 0,
 
@@ -51,11 +38,8 @@ export default [
 		},
 	},
 	{
-		files: ["src/**/*.ts"],
-		ignores: ["src/**/*.test.ts"],
-		rules: {
-			"no-console": 2,
-		},
+		files: ["*.js"],
+		...tsEslint.configs.disableTypeChecked,
 	},
-	eslintConfigPrettier,
-];
+	eslintPluginPrettierRecommended,
+);
