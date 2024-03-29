@@ -25,7 +25,7 @@ export function createTestFolder(testName: string) {
 	}
 
 	function createJSONFile(jsonObject?: object, file = "package.json") {
-		const stringifiedPackage = JSON.stringify(jsonObject || { version: "1.0.0" }, null, 2);
+		const stringifiedPackage = JSON.stringify(jsonObject ?? { version: "1.0.0" }, null, 2);
 
 		writeFileSync(join(tempDir, file), stringifiedPackage, "utf-8");
 		execSync(`git add ${file}`, execSyncOptions);
@@ -41,11 +41,9 @@ export function createTestFolder(testName: string) {
 					"chore: A chore commit.",
 					"ci: A ci commit.",
 					"custom: A custom commit.",
-			  ];
+				];
 
-		for (let index = 0; index < TestCommits.length; index++) {
-			const commitMessage = TestCommits[index];
-
+		for (const commitMessage of TestCommits) {
 			execSync(`git commit --allow-empty -m "${commitMessage}"`, execSyncOptions);
 		}
 	}

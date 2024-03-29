@@ -1,6 +1,6 @@
 import { createExecute } from "../utils/execute-file.js";
 import { formatCommitMessage } from "../utils/format-commit-message.js";
-import type { ForkConfig } from "../configuration.js";
+import type { ForkConfig } from "../configuration/schema.js";
 import type { BumpVersion } from "./version.js";
 
 interface CommitChanges {

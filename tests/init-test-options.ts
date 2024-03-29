@@ -1,5 +1,6 @@
 import { vi } from "vitest";
-import { ForkConfig, getForkConfig } from "../src/configuration.js";
+import { ForkConfig } from "../src/configuration/schema.js";
+import { getForkConfig } from "../src/configuration/user-config.js";
 
 export async function createTestConfig(testPath: string): Promise<ForkConfig> {
 	const config = await getForkConfig();

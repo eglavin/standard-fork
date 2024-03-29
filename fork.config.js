@@ -1,4 +1,4 @@
-import { defineConfig } from "./src/configuration";
+import { defineConfig } from "./src/configuration/user-config";
 
 export default defineConfig({
 	header: "# Fork Version\n",

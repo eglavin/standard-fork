@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { getForkConfig } from "./configuration.js";
+import { getForkConfig } from "./configuration/user-config.js";
 import { bumpVersion } from "./process/version.js";
 import { updateChangelog } from "./process/changelog.js";
 import { commitChanges } from "./process/commit.js";

@@ -7,7 +7,7 @@ import detectIndent from "detect-indent";
 import { detectNewline } from "detect-newline";
 import { stringifyPackage } from "../libs/stringify-package.js";
 import { getReleaseType } from "../utils/release-type.js";
-import type { ForkConfig } from "../configuration.js";
+import type { ForkConfig } from "../configuration/schema.js";
 
 interface FileState {
 	name: string;

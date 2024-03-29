@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import type { ForkConfig } from "../configuration.js";
+import type { ForkConfig } from "../configuration/schema.js";
 
 export function createExecute(config: ForkConfig) {
 	/**
