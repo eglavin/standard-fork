@@ -53,6 +53,14 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
 
+      - name: Run Typecheck
+        run: |
+          pnpm typecheck
+
+      - name: Run Lint Check
+        run: |
+          pnpm lint:check
+
       - name: Run Tests
         run: |
           pnpm test:ci
