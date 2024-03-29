@@ -7,7 +7,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 export default tsEslint.config(
 	...tsEslint.configs.stylisticTypeChecked,
 	{
-		ignores: ["dist/**/*", "node_modules/**/*"],
+		ignores: ["coverage/**/*", "dist/**/*", "node_modules/**/*"],
 		languageOptions: {
 			globals: {
 				...globals.node,
@@ -26,6 +26,7 @@ export default tsEslint.config(
 			"no-undef": 0,
 			"no-unused-vars": 0,
 
+			"@typescript-eslint/no-empty-function": 0,
 			"@typescript-eslint/no-explicit-any": 1,
 			"@typescript-eslint/no-non-null-assertion": 1,
 			"@typescript-eslint/no-unused-vars": [
@@ -38,7 +39,7 @@ export default tsEslint.config(
 		},
 	},
 	{
-		files: ["*.js"],
+		files: ["**/*.js"],
 		...tsEslint.configs.disableTypeChecked,
 	},
 	eslintPluginPrettierRecommended,
