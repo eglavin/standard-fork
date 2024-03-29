@@ -2,7 +2,7 @@ import path from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 
-import { ForkConfigSchema, ForkConfig } from "./schema.js";
+import { ForkConfigSchema, type ForkConfig } from "./schema.js";
 import { DEFAULT_CONFIG } from "./defaults.js";
 import { getCliArguments } from "./cli-arguments.js";
 import { getChangelogPresetConfig } from "./changelog-preset-config.js";

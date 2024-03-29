@@ -1,4 +1,4 @@
-import semver, { ReleaseType } from "semver";
+import semver, { type ReleaseType } from "semver";
 
 /**
  * Get the priority of given type.

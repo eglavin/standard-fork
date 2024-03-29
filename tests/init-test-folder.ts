@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
+import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
 
 export function createTestFolder(testName: string) {
 	const tempDirLocation = join(process.cwd(), "..", ".temp");

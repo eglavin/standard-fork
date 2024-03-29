@@ -10,25 +10,25 @@ export class Logger {
 		this.debug = this.debug.bind(this);
 	}
 
-	log(message?: any, ...optionalParams: any[]) {
+	public log(message?: any, ...optionalParams: any[]) {
 		if (!this.config.silent) {
 			console.log(message, optionalParams);
 		}
 	}
 
-	warn(message?: any, ...optionalParams: any[]) {
+	public warn(message?: any, ...optionalParams: any[]) {
 		if (!this.config.silent) {
 			console.warn(message, optionalParams);
 		}
 	}
 
-	error(message?: any, ...optionalParams: any[]) {
+	public error(message?: any, ...optionalParams: any[]) {
 		if (!this.config.silent) {
 			console.error(message, optionalParams);
 		}
 	}
 
-	debug(message?: any, ...optionalParams: any[]) {
+	public debug(message?: any, ...optionalParams: any[]) {
 		if (!this.config.silent) {
 			console.debug(message, optionalParams);
 		}
