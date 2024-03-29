@@ -1,4 +1,4 @@
-import { ForkConfig } from "./schema";
+import type { ForkConfig } from "./schema";
 
 export const DEFAULT_CONFIG: ForkConfig = {
 	workingDirectory: process.cwd(),
