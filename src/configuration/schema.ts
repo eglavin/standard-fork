@@ -158,25 +158,6 @@ export const ForkConfigSchema = z.object({
 		 */
 		issuePrefixes: z.array(z.string()).optional(),
 	}),
-
-	/**
-	 * Log function, can be used to override the default `console.log` function
-	 * to log to a file or another service.
-	 * @default console.log
-	 */
-	log: z.function().args(z.string()).returns(z.void()),
-	/**
-	 * Error logger function, can be used to override the default `console.error`
-	 * function to log to a file or another service.
-	 * @default console.error
-	 */
-	error: z.function().args(z.string()).returns(z.void()),
-	/**
-	 * Debug logger function, by default this is a noop function, but can be replaced
-	 * with a custom logger function or `console.info` to print output.
-	 * @default  () => {}
-	 */
-	debug: z.function().args(z.string()).returns(z.void()),
 });
 
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;

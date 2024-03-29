@@ -13,9 +13,9 @@ describe("version", () => {
 		createJSONFile();
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(config);
+		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [
@@ -57,9 +57,9 @@ describe("version", () => {
 		);
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(config);
+		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [
@@ -96,9 +96,9 @@ describe("version", () => {
 		createJSONFile({ version: "1.0.0", private: true });
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(tempDir);
 
-		const result = await bumpVersion(config);
+		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
 			currentVersion: "1.0.0",
 			files: [

@@ -24,8 +24,4 @@ All notable changes to this project will be documented in this file. See [fork-v
 	verify: false,
 
 	changelogPresetConfig: {},
-
-	log: console.log,
-	error: console.error,
-	debug: () => {},
 };

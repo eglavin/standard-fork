@@ -3,20 +3,21 @@ import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "
 import conventionalChangelog from "conventional-changelog";
 import type { ForkConfig } from "../configuration/schema.js";
 import type { BumpVersion } from "./version.js";
+import type { Logger } from "../utils/logger.js";
 
 interface CreateChangelog {
 	path: string;
 	exists: boolean;
 }
 
-function createChangelog(config: ForkConfig): CreateChangelog {
+function createChangelog(config: ForkConfig, logger: Logger): CreateChangelog {
 	const changelogPath = resolve(config.changelog);
 
 	try {
 		accessSync(changelogPath, constants.F_OK);
 	} catch (err) {
 		if (!config.dryRun && (err as { code: string }).code === "ENOENT") {
-			config.log(`Creating Changelog file: ${changelogPath}`);
+			logger.log(`Creating Changelog file: ${changelogPath}`);
 
 			writeFileSync(changelogPath, "\n", "utf8");
 		}
@@ -52,7 +53,11 @@ function getOldReleaseContent(changelog: CreateChangelog): string {
 	return "";
 }
 
-function getNewReleaseContent(config: ForkConfig, bumpResult: BumpVersion): Promise<string> {
+function getNewReleaseContent(
+	config: ForkConfig,
+	logger: Logger,
+	bumpResult: BumpVersion,
+): Promise<string> {
 	return new Promise<string>((resolve) => {
 		let newContent = "";
 
@@ -63,7 +68,7 @@ function getNewReleaseContent(config: ForkConfig, bumpResult: BumpVersion): Prom
 					...(config.changelogPresetConfig || {}),
 				},
 				tagPrefix: config.tagPrefix,
-				warn: (...message: string[]) => config.error("conventional-changelog: ", ...message),
+				warn: (...message: string[]) => logger.error("conventional-changelog: ", ...message),
 				cwd: config.workingDirectory,
 			},
 			{
@@ -75,7 +80,7 @@ function getNewReleaseContent(config: ForkConfig, bumpResult: BumpVersion): Prom
 			},
 		)
 			.on("error", (error) => {
-				config.error("conventional-changelog: Unable to parse changes");
+				logger.error("conventional-changelog: Unable to parse changes");
 				throw error;
 			})
 			.on("data", (chunk) => {
@@ -95,6 +100,7 @@ interface UpdateChangelog {
 
 export async function updateChangelog(
 	config: ForkConfig,
+	logger: Logger,
 	bumpResult: BumpVersion,
 ): Promise<UpdateChangelog> {
 	if (config.header.search(RELEASE_PATTERN) !== -1) {
@@ -102,11 +108,11 @@ export async function updateChangelog(
 		throw new Error("Header cannot contain release pattern");
 	}
 
-	const changelog = createChangelog(config);
+	const changelog = createChangelog(config, logger);
 	const oldContent = getOldReleaseContent(changelog);
-	const newContent = await getNewReleaseContent(config, bumpResult);
+	const newContent = await getNewReleaseContent(config, logger, bumpResult);
 
-	config.log(`Updating Changelog:
+	logger.log(`Updating Changelog:
 \t${changelog.path}`);
 
 	if (!config.dryRun && newContent) {

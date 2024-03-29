@@ -1,13 +1,14 @@
 import { resolve, extname } from "node:path";
 import { existsSync, readFileSync, writeFileSync, lstatSync } from "node:fs";
 import gitSemverTags from "git-semver-tags";
-import semver, { ReleaseType } from "semver";
+import semver, { type ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
 import { detectNewline } from "detect-newline";
 import { stringifyPackage } from "../libs/stringify-package.js";
 import { getReleaseType } from "../utils/release-type.js";
 import type { ForkConfig } from "../configuration/schema.js";
+import type { Logger } from "../utils/logger.js";
 
 interface FileState {
 	name: string;
@@ -17,7 +18,7 @@ interface FileState {
 	isPrivate: boolean;
 }
 
-function getFile(config: ForkConfig, fileToGet: string): FileState | undefined {
+function getFile(config: ForkConfig, logger: Logger, fileToGet: string): FileState | undefined {
 	try {
 		const fileExtension = extname(fileToGet);
 		if (fileExtension === ".json") {
@@ -38,12 +39,12 @@ function getFile(config: ForkConfig, fileToGet: string): FileState | undefined {
 							(typeof parsedJson.private === "boolean" ? parsedJson.private : false),
 					};
 				} else {
-					config.log(`Unable to find version in file: ${fileToGet}`);
+					logger.log(`Unable to find version in file: ${fileToGet}`);
 				}
 			}
 		}
 	} catch (error) {
-		config.error(`Error reading file: ${fileToGet}`, error);
+		logger.error(`Error reading file: ${fileToGet}`, error);
 	}
 }
 
@@ -74,12 +75,12 @@ interface CurrentVersion {
 /**
  * Get the current version from the given files and find their locations.
  */
-async function getCurrentVersion(config: ForkConfig): Promise<CurrentVersion> {
+async function getCurrentVersion(config: ForkConfig, logger: Logger): Promise<CurrentVersion> {
 	const files: FileState[] = [];
 	const versions: string[] = [];
 
 	for (const file of config.bumpFiles) {
-		const fileState = getFile(config, file);
+		const fileState = getFile(config, logger, file);
 		if (fileState) {
 			files.push(fileState);
 
@@ -171,6 +172,7 @@ async function getNextVersion(config: ForkConfig, currentVersion: string): Promi
 
 function updateFile(
 	config: ForkConfig,
+	logger: Logger,
 	fileToUpdate: string,
 	type: string,
 	nextVersion: string,
@@ -198,24 +200,24 @@ function updateFile(
 			}
 		}
 	} catch (error) {
-		config.error("Error writing: ", error);
+		logger.error("Error writing: ", error);
 	}
 }
 
 export type BumpVersion = CurrentVersion & NextVersion;
 
-export async function bumpVersion(config: ForkConfig): Promise<BumpVersion> {
-	const current = await getCurrentVersion(config);
+export async function bumpVersion(config: ForkConfig, logger: Logger): Promise<BumpVersion> {
+	const current = await getCurrentVersion(config, logger);
 	const next = await getNextVersion(config, current.currentVersion);
 
-	config.log(`Current version: ${current.currentVersion}
+	logger.log(`Current version: ${current.currentVersion}
 Next version: ${next.nextVersion} (${next.releaseType})
 Updating Files: `);
 
 	for (const outFile of current.files) {
-		config.log(`\t${outFile.path}`);
+		logger.log(`\t${outFile.path}`);
 
-		updateFile(config, outFile.path, outFile.type, next.nextVersion);
+		updateFile(config, logger, outFile.path, outFile.type, next.nextVersion);
 	}
 
 	return {

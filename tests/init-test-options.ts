@@ -1,14 +1,18 @@
-import { vi } from "vitest";
-import { ForkConfig } from "../src/configuration/schema.js";
 import { getForkConfig } from "../src/configuration/user-config.js";
+import { Logger } from "../src/utils/logger.js";
 
-export async function createTestConfig(testPath: string): Promise<ForkConfig> {
+export async function createTestConfig(testPath: string) {
 	const config = await getForkConfig();
-
 	config.workingDirectory = testPath;
-	config.log = vi.fn(() => {});
-	config.error = vi.fn(() => {});
-	config.debug = vi.fn(() => {});
 
-	return config;
+	const logger = new Logger({ silent: true });
+	logger.log = vi.fn();
+	logger.warn = vi.fn();
+	logger.error = vi.fn();
+	logger.debug = vi.fn();
+
+	return {
+		config,
+		logger,
+	};
 }

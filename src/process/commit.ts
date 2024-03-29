@@ -2,6 +2,7 @@ import { createExecute } from "../utils/execute-file.js";
 import { formatCommitMessage } from "../utils/format-commit-message.js";
 import type { ForkConfig } from "../configuration/schema.js";
 import type { BumpVersion } from "./version.js";
+import type { Logger } from "../utils/logger.js";
 
 interface CommitChanges {
 	filesToCommit: string[];
@@ -11,11 +12,12 @@ interface CommitChanges {
 
 export async function commitChanges(
 	config: ForkConfig,
+	logger: Logger,
 	bumpResult: BumpVersion,
 ): Promise<CommitChanges> {
-	const { git } = createExecute(config);
+	const { git } = createExecute(config, logger);
 
-	config.log("Committing changes");
+	logger.log("Committing changes");
 
 	const filesToCommit: string[] = [config.changelog];
 	for (const file of bumpResult.files) {

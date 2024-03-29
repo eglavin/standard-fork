@@ -31,18 +31,6 @@ export async function getForkConfig(): Promise<ForkConfig> {
 		if (parsedConfig.success) {
 			const usersConfig = Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags);
 
-			// Allow users to override the default debug function
-			if ("debug" in parsedConfig && typeof parsedConfig.debug === "function") {
-				usersConfig.debug = parsedConfig.debug as ForkConfig["debug"];
-			}
-
-			// If silent is true, override the default log functions.
-			if (usersConfig.silent) {
-				usersConfig.log = () => {};
-				usersConfig.error = () => {};
-				usersConfig.debug = () => {};
-			}
-
 			// Allow users to add additional bumpFiles
 			const mergedBumpFiles = DEFAULT_CONFIG.bumpFiles.concat(
 				Array.isArray(parsedConfig.data?.bumpFiles) ? parsedConfig.data.bumpFiles : [],

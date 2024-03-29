@@ -13,8 +13,8 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
-		const { git } = createExecute(config);
+		const { config, logger } = await createTestConfig(tempDir);
+		const { git } = createExecute(config, logger);
 
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
@@ -34,9 +34,9 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(tempDir);
 		config.dryRun = true;
-		const { git } = createExecute(config);
+		const { git } = createExecute(config, logger);
 
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
@@ -56,13 +56,13 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
-		const { git } = createExecute(config);
+		const { config, logger } = await createTestConfig(tempDir);
+		const { git } = createExecute(config, logger);
 
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
-		expect(config.debug).toHaveBeenCalledTimes(1);
-		expect(config.debug).toHaveBeenCalledWith(
+		expect(logger.debug).toHaveBeenCalledTimes(1);
+		expect(logger.debug).toHaveBeenCalledWith(
 			expect.stringMatching(/git commit --allow-empty -m test: test arguments works$/),
 		);
 
@@ -77,8 +77,8 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 
-		const config = await createTestConfig(tempDir);
-		const { git } = createExecute(config);
+		const { config, logger } = await createTestConfig(tempDir);
+		const { git } = createExecute(config, logger);
 
 		try {
 			await git("add", "non-existing-file");
@@ -86,8 +86,8 @@ describe("execute-file", () => {
 			// Ignore error
 		}
 
-		expect(config.error).toHaveBeenCalledTimes(1);
-		expect(config.error).toHaveBeenCalledWith(expect.stringMatching(/add:$/));
+		expect(logger.error).toHaveBeenCalledTimes(1);
+		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/add:$/));
 
 		deleteTestFolder();
 	});

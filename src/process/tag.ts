@@ -2,6 +2,7 @@ import { createExecute } from "../utils/execute-file.js";
 import { formatCommitMessage } from "../utils/format-commit-message.js";
 import type { ForkConfig } from "../configuration/schema.js";
 import type { BumpVersion } from "./version.js";
+import type { Logger } from "../utils/logger.js";
 
 interface TagChanges {
 	gitTagOutput: string;
@@ -11,14 +12,18 @@ interface TagChanges {
 	publishMessage: string;
 }
 
-export async function tagChanges(config: ForkConfig, bumpResult: BumpVersion): Promise<TagChanges> {
-	const { git } = createExecute(config);
+export async function tagChanges(
+	config: ForkConfig,
+	logger: Logger,
+	bumpResult: BumpVersion,
+): Promise<TagChanges> {
+	const { git } = createExecute(config, logger);
 
 	const shouldSign = config.sign ? "-s" : "-a";
 	/** @example "v1.2.3" or "version/1.2.3" */
 	const tag = `${config.tagPrefix}${bumpResult.nextVersion}`;
 
-	config.log(`Creating Tag: ${tag}`);
+	logger.log(`Creating Tag: ${tag}`);
 
 	const gitTagOutput = await git(
 		"tag",
@@ -45,7 +50,7 @@ export async function tagChanges(config: ForkConfig, bumpResult: BumpVersion): P
 			}\` to publish the package.`
 		: "Run `npm publish` to publish the package.";
 
-	config.log(`\n${pushMessage}\n${hasPublicPackageFile ? publishMessage : ""}`);
+	logger.log(`\n${pushMessage}\n${hasPublicPackageFile ? publishMessage : ""}`);
 
 	return {
 		gitTagOutput,

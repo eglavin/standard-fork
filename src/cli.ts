@@ -5,17 +5,19 @@ import { bumpVersion } from "./process/version.js";
 import { updateChangelog } from "./process/changelog.js";
 import { commitChanges } from "./process/commit.js";
 import { tagChanges } from "./process/tag.js";
+import { Logger } from "./utils/logger.js";
 
 async function runFork() {
 	const config = await getForkConfig();
+	const logger = new Logger(config);
 
-	config.log(`Running Fork: ${new Date().toLocaleString()}
+	logger.log(`Running Fork: ${new Date().toLocaleString()}
 ${config.dryRun ? "Dry run, no changes will be written to disk.\n" : ""}`);
 
-	const bumpResult = await bumpVersion(config);
-	const changelogResult = await updateChangelog(config, bumpResult);
-	const commitResult = await commitChanges(config, bumpResult);
-	const tagResult = await tagChanges(config, bumpResult);
+	const bumpResult = await bumpVersion(config, logger);
+	const changelogResult = await updateChangelog(config, logger, bumpResult);
+	const commitResult = await commitChanges(config, logger, bumpResult);
+	const tagResult = await tagChanges(config, logger, bumpResult);
 
 	const result = {
 		config,
@@ -25,7 +27,7 @@ ${config.dryRun ? "Dry run, no changes will be written to disk.\n" : ""}`);
 		tagResult,
 	};
 
-	config.debug(JSON.stringify(result, null, 2));
+	logger.debug(JSON.stringify(result, null, 2));
 
 	return result;
 }
