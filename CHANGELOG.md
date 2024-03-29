@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.31 (2024-03-29)
+
+
+### Refactor
+
+* split config for readability ([aafb9d9](https://github.com/eglavin/fork-version/commit/aafb9d9c46c3ff13fd8e11734c5cd039f75f4f4b))
+
+
 ## 1.4.30 (2024-03-28)
 
 
