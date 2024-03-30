@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.33 (2024-03-30)
+
+
+### Refactor
+
+* remove ternary from stringify package ([07ef932](https://github.com/eglavin/fork-version/commit/07ef932c4b73186629ce504e40e649b0c03affbd))
+
+
 ## 1.4.32 (2024-03-30)
 
 
