@@ -31,10 +31,10 @@ npx fork-version
 | Package           | Line Rate            | Branch Rate       | Complexity | Health |
 | ----------------- | -------------------- | ----------------- | ---------- | ------ |
 | src               | 0%                   | 0%                | 0          | ❌     |
-| src.configuration | 96%                  | 38%               | 0          | ✔     |
+| src.configuration | 98%                  | 50%               | 0          | ✔     |
 | src.libs          | 100%                 | 80%               | 0          | ✔     |
-| src.process       | 40%                  | 42%               | 0          | ❌     |
+| src.process       | 39%                  | 42%               | 0          | ❌     |
 | src.utils         | 100%                 | 100%              | 0          | ✔     |
-| **Summary**       | **68%** (723 / 1056) | **63%** (50 / 79) | **0**      | ➖     |
+| **Summary**       | **68%** (739 / 1081) | **69%** (59 / 85) | **0**      | ➖     |
 
 <!-- Code Coverage Table End -->

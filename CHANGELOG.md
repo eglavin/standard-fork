@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.32 (2024-03-30)
+
+
+### Refactor
+
+* rename config + move defineConfig function to schema definition ([33b6100](https://github.com/eglavin/fork-version/commit/33b6100acfedee9d30fc3301aeeea5ec3390f06b))
+
+
 ## 1.4.31 (2024-03-29)
 
 
