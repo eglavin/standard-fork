@@ -13,7 +13,7 @@ export async function getUserConfig(): Promise<ForkConfig> {
 	const cwd = process.cwd();
 	const joycon = new JoyCon();
 	const configFilePath = await joycon.resolve({
-		files: ["fork.config.js"],
+		files: ["fork.config.ts", "fork.config.js", "fork.config.cjs", "fork.config.mjs"],
 		cwd,
 		stopDir: path.parse(cwd).root,
 	});
