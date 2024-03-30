@@ -1,20 +1,20 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { createTestFolder } from "../../../tests/init-test-folder";
-import { createTestConfig } from "../../../tests/init-test-options";
+import { createTestDir } from "../../../tests/create-test-directory";
+import { createTestConfig } from "../../../tests/create-test-config";
 import { bumpVersion } from "../version";
 
 describe("version", () => {
 	it('should read and update "package.json"', async () => {
-		const { createCommits, createJSONFile, setupGitRepo, deleteTestFolder, tempDir } =
-			createTestFolder("version");
+		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+			createTestDir("version");
 
-		setupGitRepo();
+		initGitRepo();
 		createJSONFile();
 		createCommits();
 
-		const { config, logger } = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(testDir);
 
 		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
@@ -23,7 +23,7 @@ describe("version", () => {
 				{
 					isPrivate: false,
 					name: "package.json",
-					path: join(tempDir, "package.json"),
+					path: join(testDir, "package.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
@@ -35,14 +35,14 @@ describe("version", () => {
 			releaseType: "patch",
 		});
 
-		deleteTestFolder();
+		deleteTestDir();
 	});
 
 	it('should read and update "package-lock.json"', async () => {
-		const { createCommits, createJSONFile, setupGitRepo, deleteTestFolder, tempDir } =
-			createTestFolder("version");
+		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+			createTestDir("version");
 
-		setupGitRepo();
+		initGitRepo();
 		createJSONFile();
 		createJSONFile(
 			{
@@ -58,7 +58,7 @@ describe("version", () => {
 		);
 		createCommits();
 
-		const { config, logger } = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(testDir);
 
 		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
@@ -67,14 +67,14 @@ describe("version", () => {
 				{
 					isPrivate: false,
 					name: "package.json",
-					path: join(tempDir, "package.json"),
+					path: join(testDir, "package.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
 				{
 					isPrivate: false,
 					name: "package-lock.json",
-					path: join(tempDir, "package-lock.json"),
+					path: join(testDir, "package-lock.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
@@ -86,18 +86,18 @@ describe("version", () => {
 			releaseType: "patch",
 		});
 
-		deleteTestFolder();
+		deleteTestDir();
 	});
 
 	it("should determine if the package is private", async () => {
-		const { createCommits, createJSONFile, setupGitRepo, deleteTestFolder, tempDir } =
-			createTestFolder("version");
+		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+			createTestDir("version");
 
-		setupGitRepo();
+		initGitRepo();
 		createJSONFile({ version: "1.0.0", private: true });
 		createCommits();
 
-		const { config, logger } = await createTestConfig(tempDir);
+		const { config, logger } = await createTestConfig(testDir);
 
 		const result = await bumpVersion(config, logger);
 		expect(result).toEqual({
@@ -106,7 +106,7 @@ describe("version", () => {
 				{
 					isPrivate: true,
 					name: "package.json",
-					path: join(tempDir, "package.json"),
+					path: join(testDir, "package.json"),
 					type: "package-file",
 					version: "1.0.0",
 				},
@@ -118,6 +118,6 @@ describe("version", () => {
 			releaseType: "patch",
 		});
 
-		deleteTestFolder();
+		deleteTestDir();
 	});
 });
