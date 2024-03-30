@@ -7,11 +7,7 @@ import { DEFAULT_CONFIG } from "./defaults.js";
 import { getCliArguments } from "./cli-arguments.js";
 import { getChangelogPresetConfig } from "./changelog-preset-config.js";
 
-export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
-	return config;
-}
-
-export async function getForkConfig(): Promise<ForkConfig> {
+export async function getUserConfig(): Promise<ForkConfig> {
 	const cliArguments = getCliArguments();
 
 	const cwd = process.cwd();

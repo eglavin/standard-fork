@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { getForkConfig } from "./configuration/user-config.js";
+import { getUserConfig } from "./configuration/user-config.js";
 import { bumpVersion } from "./process/version.js";
 import { updateChangelog } from "./process/changelog.js";
 import { commitChanges } from "./process/commit.js";
@@ -8,7 +8,7 @@ import { tagChanges } from "./process/tag.js";
 import { Logger } from "./utils/logger.js";
 
 async function runFork() {
-	const config = await getForkConfig();
+	const config = await getUserConfig();
 	const logger = new Logger(config);
 
 	logger.log(`Running Fork: ${new Date().toLocaleString()}
