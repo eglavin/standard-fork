@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
-import type { ForkConfig } from "../configuration/schema.js";
-import type { Logger } from "./logger.js";
+
+import type { ForkConfig } from "../configuration/schema";
+import type { Logger } from "./logger";
 
 export function createExecute(config: ForkConfig, logger: Logger) {
 	/**

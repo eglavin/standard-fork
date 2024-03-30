@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { stringifyPackage } from "../stringify-package.js";
+
+import { stringifyPackage } from "../stringify-package";
 
 const TEST_JSON = {
 	name: "fork-version",

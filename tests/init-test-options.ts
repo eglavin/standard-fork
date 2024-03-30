@@ -1,5 +1,5 @@
-import { getUserConfig } from "../src/configuration/user-config.js";
-import { Logger } from "../src/utils/logger.js";
+import { getUserConfig } from "../src/configuration/user-config";
+import { Logger } from "../src/utils/logger";
 
 export async function createTestConfig(testPath: string) {
 	const config = await getUserConfig();

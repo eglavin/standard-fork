@@ -1,8 +1,8 @@
-import { createExecute } from "../utils/execute-file.js";
-import { formatCommitMessage } from "../utils/format-commit-message.js";
-import type { ForkConfig } from "../configuration/schema.js";
-import type { BumpVersion } from "./version.js";
-import type { Logger } from "../utils/logger.js";
+import { createExecute } from "../utils/execute-file";
+import { formatCommitMessage } from "../utils/format-commit-message";
+import type { ForkConfig } from "../configuration/schema";
+import type { BumpVersion } from "./version";
+import type { Logger } from "../utils/logger";
 
 interface CommitChanges {
 	filesToCommit: string[];

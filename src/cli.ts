@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-import { getUserConfig } from "./configuration/user-config.js";
-import { bumpVersion } from "./process/version.js";
-import { updateChangelog } from "./process/changelog.js";
-import { commitChanges } from "./process/commit.js";
-import { tagChanges } from "./process/tag.js";
-import { Logger } from "./utils/logger.js";
+import { getUserConfig } from "./configuration/user-config";
+import { bumpVersion } from "./process/version";
+import { updateChangelog } from "./process/changelog";
+import { commitChanges } from "./process/commit";
+import { tagChanges } from "./process/tag";
+import { Logger } from "./utils/logger";
 
 async function runFork() {
 	const config = await getUserConfig();

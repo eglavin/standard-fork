@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatCommitMessage } from "../format-commit-message.js";
+
+import { formatCommitMessage } from "../format-commit-message";
 
 describe("format-commit-message", () => {
 	it("should return message with the version replaced", () => {

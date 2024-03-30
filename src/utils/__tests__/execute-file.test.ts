@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { execSync } from "child_process";
-import { createTestFolder } from "../../../tests/init-test-folder.js";
-import { createTestConfig } from "../../../tests/init-test-options.js";
-import { createExecute } from "../execute-file.js";
+
+import { createTestFolder } from "../../../tests/init-test-folder";
+import { createTestConfig } from "../../../tests/init-test-options";
+import { createExecute } from "../execute-file";
 
 describe("execute-file", () => {
 	it("should accept arguments", async () => {

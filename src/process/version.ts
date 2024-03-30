@@ -5,10 +5,11 @@ import semver, { type ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 import detectIndent from "detect-indent";
 import { detectNewline } from "detect-newline";
-import { stringifyPackage } from "../libs/stringify-package.js";
-import { getReleaseType } from "../utils/release-type.js";
-import type { ForkConfig } from "../configuration/schema.js";
-import type { Logger } from "../utils/logger.js";
+
+import { stringifyPackage } from "../libs/stringify-package";
+import { getReleaseType } from "../utils/release-type";
+import type { ForkConfig } from "../configuration/schema";
+import type { Logger } from "../utils/logger";
 
 interface FileState {
 	name: string;
