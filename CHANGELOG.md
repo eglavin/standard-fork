@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.34 (2024-03-30)
+
+
+### Refactor
+
+* remove js extensions from local imports ([ee62499](https://github.com/eglavin/fork-version/commit/ee6249963c57e12fc83c6f554268e30b88a2e1e8))
+
+
 ## 1.4.33 (2024-03-30)
 
 

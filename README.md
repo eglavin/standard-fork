@@ -35,6 +35,6 @@ npx fork-version
 | src.libs          | 100%                 | 100%              | 0          | ✔     |
 | src.process       | 39%                  | 42%               | 0          | ❌     |
 | src.utils         | 100%                 | 100%              | 0          | ✔     |
-| **Summary**       | **68%** (739 / 1081) | **70%** (59 / 84) | **0**      | ➖     |
+| **Summary**       | **68%** (741 / 1084) | **70%** (59 / 84) | **0**      | ➖     |
 
 <!-- Code Coverage Table End -->
