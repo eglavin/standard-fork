@@ -8,7 +8,7 @@ import { detectNewline } from "detect-newline";
 
 import { stringifyPackage } from "../libs/stringify-package";
 import { getReleaseType } from "../utils/release-type";
-import type { ForkConfig } from "../configuration/schema";
+import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
 
 interface FileState {

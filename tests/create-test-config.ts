@@ -1,4 +1,4 @@
-import { getUserConfig } from "../src/configuration/user-config";
+import { getUserConfig } from "../src/config/user-config";
 import { Logger } from "../src/utils/logger";
 
 export async function createTestConfig(testPath: string) {

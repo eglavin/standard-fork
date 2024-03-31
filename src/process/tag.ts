@@ -1,6 +1,6 @@
 import { createExecute } from "../utils/execute-file";
 import { formatCommitMessage } from "../utils/format-commit-message";
-import type { ForkConfig } from "../configuration/schema";
+import type { ForkConfig } from "../config/schema";
 import type { BumpVersion } from "./version";
 import type { Logger } from "../utils/logger";
 

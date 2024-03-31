@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { ForkConfig } from "../configuration/schema";
+import type { ForkConfig } from "../config/schema";
 
 export class Logger {
 	constructor(private config: Pick<ForkConfig, "silent">) {

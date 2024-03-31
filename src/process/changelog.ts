@@ -2,7 +2,7 @@ import { resolve } from "node:path";
 import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 
 import conventionalChangelog from "conventional-changelog";
-import type { ForkConfig } from "../configuration/schema";
+import type { ForkConfig } from "../config/schema";
 import type { BumpVersion } from "./version";
 import type { Logger } from "../utils/logger";
 

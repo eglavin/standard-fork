@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { getUserConfig } from "./configuration/user-config";
+import { getUserConfig } from "./config/user-config";
 import { bumpVersion } from "./process/version";
 import { updateChangelog } from "./process/changelog";
 import { commitChanges } from "./process/commit";
