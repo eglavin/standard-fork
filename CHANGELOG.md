@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.35 (2024-03-31)
+
+
+### Test
+
+* remove global vitest imports ([4e80524](https://github.com/eglavin/fork-version/commit/4e80524de42e5593b6bcfdc78d9afa2ae839157a))
+
+
 ## 1.4.34 (2024-03-30)
 
 
