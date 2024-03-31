@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { formatCommitMessage } from "../format-commit-message";
 
 describe("format-commit-message", () => {

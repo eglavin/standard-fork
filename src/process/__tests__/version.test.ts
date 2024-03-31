@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
 
 import { createTestDir } from "../../../tests/create-test-directory";
 import { createTestConfig } from "../../../tests/create-test-config";

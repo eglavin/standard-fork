@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { execSync } from "child_process";
 
 import { createTestDir } from "../../../tests/create-test-directory";

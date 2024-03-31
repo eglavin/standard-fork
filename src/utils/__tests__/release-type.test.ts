@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { getReleaseType } from "../release-type";
 
 describe("release-type", () => {
