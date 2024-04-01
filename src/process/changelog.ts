@@ -6,40 +6,20 @@ import { fileExists } from "../utils/file-state";
 import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
 
-interface CreateChangelog {
-	path: string;
-	exists: boolean;
-}
-
-function createChangelog(config: ForkConfig, logger: Logger): CreateChangelog {
-	const changelogPath = resolve(config.workingDirectory, config.changelog);
-
-	if (!config.dryRun && !fileExists(changelogPath)) {
-		logger.log(`Creating Changelog file: ${changelogPath}`);
-
-		writeFileSync(changelogPath, "\n", "utf8");
-	}
-
-	return {
-		path: changelogPath,
-		exists: fileExists(changelogPath),
-	};
-}
-
 /**
- * Matches the following formats:
- * @example
- * `## [0.0.0]` or `<a name="0.0.0"></a>`
+ * Matches the following changelog header formats:
+ * - `## [1.2.3]`
+ * - `<a name="1.2.3"></a>`
  */
 const RELEASE_PATTERN = /(^#+ \[?[0-9]+\.[0-9]+\.[0-9]+|<a name=)/m;
 
 /**
- * Gets the rest of the changelog from the latest release onwards.
+ * Get the existing changelog content from the latest release onwards.
  * @see {@link RELEASE_PATTERN}
  */
-function getOldReleaseContent(changelog: CreateChangelog): string {
-	if (changelog.exists) {
-		const fileContents = readFileSync(changelog.path, "utf-8");
+function getOldReleaseContent(filePath: string, exists: boolean): string {
+	if (exists) {
+		const fileContents = readFileSync(filePath, "utf-8");
 		const oldContentStart = fileContents.search(RELEASE_PATTERN);
 
 		if (oldContentStart !== -1) {
@@ -50,6 +30,9 @@ function getOldReleaseContent(changelog: CreateChangelog): string {
 	return "";
 }
 
+/**
+ * Generate the new changelog content for this release.
+ */
 function getNewReleaseContent(
 	config: ForkConfig,
 	logger: Logger,
@@ -62,7 +45,7 @@ function getNewReleaseContent(
 			{
 				preset: {
 					name: "conventionalcommits",
-					...(config.changelogPresetConfig || {}),
+					...config.changelogPresetConfig,
 				},
 				tagPrefix: config.tagPrefix,
 				warn: (...message: string[]) => logger.error("conventional-changelog: ", ...message),
@@ -90,7 +73,7 @@ function getNewReleaseContent(
 }
 
 interface UpdateChangelog {
-	changelog: CreateChangelog;
+	changelogPath: string;
 	oldContent: string;
 	newContent: string;
 }
@@ -105,19 +88,30 @@ export async function updateChangelog(
 		throw new Error("Header cannot contain release pattern");
 	}
 
-	const changelog = createChangelog(config, logger);
-	const oldContent = getOldReleaseContent(changelog);
+	// Create the changelog file if it doesn't exist
+	const changelogPath = resolve(config.workingDirectory, config.changelog);
+	if (!config.dryRun && !fileExists(changelogPath)) {
+		logger.log(`Creating Changelog file: ${changelogPath}`);
+		writeFileSync(changelogPath, "\n", "utf8");
+	}
+
+	const oldContent = getOldReleaseContent(changelogPath, fileExists(changelogPath));
 	const newContent = await getNewReleaseContent(config, logger, nextVersion);
 
-	logger.log(`Updating Changelog:
-\t${changelog.path}`);
-
+	logger.log(`Updating Changelog: ${changelogPath}`);
 	if (!config.dryRun && newContent) {
-		writeFileSync(changelog.path, `${config.header}\n${newContent}\n${oldContent}`, "utf8");
+		writeFileSync(
+			changelogPath,
+			`${config.header}
+${newContent}
+${oldContent}
+`,
+			"utf8",
+		);
 	}
 
 	return {
-		changelog,
+		changelogPath,
 		oldContent,
 		newContent,
 	};

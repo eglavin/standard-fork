@@ -81,7 +81,7 @@ export async function getNextVersion(
 		recommendedBump = await conventionalRecommendedBump({
 			preset: {
 				name: "conventionalcommits",
-				...(config.changelogPresetConfig || {}),
+				...config.changelogPresetConfig,
 				preMajor: isPreMajor,
 			},
 			path: config.workingDirectory,

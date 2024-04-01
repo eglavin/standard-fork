@@ -59,9 +59,32 @@ export function createTestDir(testName: string) {
 			}
 		},
 
+		createCommit: function _createCommit(message: string, commitBody?: string) {
+			execSync(
+				commitBody
+					? `git commit --allow-empty -m "${message}" -m "${commitBody}"`
+					: `git commit --allow-empty -m "${message}"`,
+				execSyncOptions,
+			);
+		},
+
 		createTestConfig: async function _createTestConfig() {
 			const config = await getUserConfig();
 			config.workingDirectory = testDir;
+			config.header = "# Test Header\n";
+			config.changelogPresetConfig = {
+				...config.changelogPresetConfig,
+				types: [
+					{ type: "feat", section: "Features" },
+					{ type: "fix", section: "Bug Fixes" },
+					{ type: "chore", section: "Chore" },
+					{ type: "docs", section: "Docs" },
+					{ type: "style", section: "Style" },
+					{ type: "refactor", section: "Refactor" },
+					{ type: "perf", section: "Perf" },
+					{ type: "test", section: "Test" },
+				],
+			};
 
 			const logger = new Logger({ silent: true, debug: false });
 			logger.log = vi.fn();
