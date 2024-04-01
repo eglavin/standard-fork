@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. See [fork-v
 	debug: false,
 	dryRun: false,
 	gitTagFallback: true,
+	inspectVersion: false,
 	sign: false,
 	silent: false,
 	verify: false,

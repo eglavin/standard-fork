@@ -89,6 +89,11 @@ export const ForkConfigSchema = z.object({
 	 */
 	gitTagFallback: z.boolean(),
 	/**
+	 * If set, we'll gather information about the current version and exit.
+	 * @default false
+	 */
+	inspectVersion: z.boolean(),
+	/**
 	 * Should we sign the git commit using GPG?
 	 * @see {@link https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--Sltkeyidgt GPG Sign Commits}
 	 * @default false

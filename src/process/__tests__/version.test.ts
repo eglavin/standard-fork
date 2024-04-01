@@ -153,6 +153,30 @@ describe("version > getCurrentVersion", () => {
 
 		deleteTestDir();
 	});
+
+	it("should log the version and exit if inspectVersion set", async () => {
+		const spyOnConsole = vi.spyOn(console, "log").mockImplementation(() => undefined);
+		const spyOnProcess = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
+
+		const { createJSONFile, createCommits, deleteTestDir, createTestConfig } = createTestDir(
+			"version getCurrentVersion",
+		);
+
+		createJSONFile({ version: "1.2.3" });
+		createCommits();
+
+		const { config, logger } = await createTestConfig();
+		config.inspectVersion = true;
+		const fileManager = new FileManager(config, logger);
+
+		await getCurrentVersion(config, fileManager);
+		expect(spyOnConsole).toHaveBeenCalledWith("1.2.3");
+		expect(spyOnProcess).toHaveBeenCalledWith(0);
+		spyOnConsole.mockRestore();
+		spyOnProcess.mockRestore();
+
+		deleteTestDir();
+	});
 });
 
 describe("version > getNextVersion", () => {

@@ -30,6 +30,8 @@ Options:
   --git-tag-fallback [Default: true]
     If true and we cant find a version in a bumpFiles, we'll fallback
     and attempt to use the latest git tag for the current version.
+  --inspect-version
+    If set, we'll gather information about the current version and exit.
   --sign
     Should we sign the git commit using GPG?
   --silent
@@ -58,6 +60,7 @@ Options:
 				debug: { type: "boolean" },
 				dryRun: { type: "boolean" },
 				gitTagFallback: { type: "boolean" },
+				inspectVersion: { type: "boolean" },
 				sign: { type: "boolean" },
 				silent: { type: "boolean" },
 				verify: { type: "boolean" },

@@ -52,6 +52,12 @@ export async function getCurrentVersion(
 		throw new Error("Found multiple versions");
 	}
 
+	// If we're just inspecting the version, output the version and exit
+	if (config.inspectVersion) {
+		console.log(versions.entries().next().value[0]);
+		process.exit(0);
+	}
+
 	return {
 		files,
 		version: versions.entries().next().value[0],
