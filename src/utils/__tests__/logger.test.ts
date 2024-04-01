@@ -14,7 +14,7 @@ describe("logger", () => {
 	});
 
 	it("should log a message", () => {
-		const logger = new Logger({ silent: false, debug: false });
+		const logger = new Logger({ silent: false, debug: false, inspectVersion: false });
 
 		logger.log("log test");
 		logger.warn("warn test");
@@ -28,7 +28,7 @@ describe("logger", () => {
 	});
 
 	it("should not log if silent is true", () => {
-		const logger = new Logger({ silent: true, debug: false });
+		const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
 
 		logger.log("log test");
 		logger.warn("warn test");
@@ -44,7 +44,7 @@ describe("logger", () => {
 	it("should log a debug message if debug is true", () => {
 		const enabledDebugSpy = vi.spyOn(global.console, "debug").mockImplementation(() => undefined);
 
-		const logger = new Logger({ silent: false, debug: true });
+		const logger = new Logger({ silent: false, debug: true, inspectVersion: false });
 		logger.debug("debug test");
 
 		expect(enabledDebugSpy).toHaveBeenCalledWith("debug test");

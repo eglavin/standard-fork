@@ -86,7 +86,7 @@ export function createTestDir(testName: string) {
 				],
 			};
 
-			const logger = new Logger({ silent: true, debug: false });
+			const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
 			logger.log = vi.fn();
 			logger.warn = vi.fn();
 			logger.error = vi.fn();
