@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.38 (2024-04-01)
+
+
+### Refactor
+
+* changelog creation + add tests ([b1ff567](https://github.com/eglavin/fork-version/commit/b1ff5672b24b3694842537f84fd33696446abc51))
+
+
 ## 1.4.37 (2024-04-01)
 
 
@@ -340,5 +348,6 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
