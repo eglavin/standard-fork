@@ -44,6 +44,11 @@ export function createTestDir(testName: string) {
 			execSync(`git add ${file}`, execSyncOptions);
 		},
 
+		createFile: function _createFile(content: string, file: string) {
+			writeFileSync(join(testDir, file), content, "utf-8");
+			execSync(`git add ${file}`, execSyncOptions);
+		},
+
 		createCommits: function _createCommits(commits?: string[]) {
 			const testCommits = Array.isArray(commits)
 				? commits
