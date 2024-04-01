@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.37 (2024-04-01)
+
+
+### Bug Fixes
+
+* removes empty arrays from console logs ([3347975](https://github.com/eglavin/fork-version/commit/33479753cd7e9c751e27f17c5f9152a6969ffd67))
+
+
 ## 1.4.36 (2024-04-01)
 
 
