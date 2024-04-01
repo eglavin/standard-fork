@@ -40,9 +40,7 @@ export class JSONPackage implements IFileManager {
 					path: filePath,
 					version: parsedJson.version,
 
-					isPrivate:
-						"private" in parsedJson &&
-						(typeof parsedJson.private === "boolean" ? parsedJson.private : false),
+					isPrivate: typeof parsedJson?.private === "boolean" ? parsedJson.private : true,
 				};
 			}
 
@@ -51,8 +49,6 @@ export class JSONPackage implements IFileManager {
 	}
 
 	public write(filePath: string, newVersion: string) {
-		if (this.config.dryRun) return;
-
 		const fileContents = readFileSync(filePath, "utf8");
 		const parsedJson = JSON.parse(fileContents);
 

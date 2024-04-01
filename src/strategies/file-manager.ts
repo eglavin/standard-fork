@@ -18,10 +18,13 @@ export interface IFileManager {
 }
 
 export class FileManager implements IFileManager {
-	public JSONPackage;
-	public PlainText;
+	private JSONPackage: JSONPackage;
+	private PlainText: PlainText;
 
-	constructor(config: ForkConfig, logger: Logger) {
+	constructor(
+		private config: ForkConfig,
+		private logger: Logger,
+	) {
 		this.JSONPackage = new JSONPackage(config, logger);
 		this.PlainText = new PlainText(config, logger);
 	}
@@ -45,6 +48,8 @@ export class FileManager implements IFileManager {
 		} else if (fileName.toLowerCase().endsWith("version.txt")) {
 			return this.PlainText.read(fileName);
 		}
+
+		this.logger.error(`Unsupported file type: ${fileName}`);
 	}
 
 	/**
@@ -56,10 +61,17 @@ export class FileManager implements IFileManager {
 	 * ```
 	 */
 	public write(filePath: string, newVersion: string): void {
+		if (this.config.dryRun) {
+			this.logger.log(`[Dry run]: Not updating ${filePath}`);
+			return;
+		}
+
 		if (filePath.toLowerCase().endsWith(".json")) {
 			return this.JSONPackage.write(filePath, newVersion);
 		} else if (filePath.toLowerCase().endsWith("version.txt")) {
 			return this.PlainText.write(filePath, newVersion);
 		}
+
+		this.logger.error(`Unsupported file type: ${filePath}`);
 	}
 }

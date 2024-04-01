@@ -34,8 +34,6 @@ export class PlainText implements IFileManager {
 	}
 
 	public write(filePath: string, newVersion: string) {
-		if (this.config.dryRun) return;
-
 		writeFileSync(filePath, newVersion, "utf8");
 	}
 }
