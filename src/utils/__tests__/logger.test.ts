@@ -21,10 +21,10 @@ describe("logger", () => {
 		logger.error("error test");
 		logger.debug("debug test");
 
-		expect(logSpy).toHaveBeenCalledWith("log test", []);
-		expect(warnSpy).toHaveBeenCalledWith("warn test", []);
-		expect(errorSpy).toHaveBeenCalledWith("error test", []);
-		expect(debugSpy).not.toHaveBeenCalledWith("debug test", []);
+		expect(logSpy).toHaveBeenCalledWith("log test");
+		expect(warnSpy).toHaveBeenCalledWith("warn test");
+		expect(errorSpy).toHaveBeenCalledWith("error test");
+		expect(debugSpy).not.toHaveBeenCalledWith("debug test");
 	});
 
 	it("should not log if silent is true", () => {
@@ -47,7 +47,7 @@ describe("logger", () => {
 		const logger = new Logger({ silent: false, debug: true });
 		logger.debug("debug test");
 
-		expect(enabledDebugSpy).toHaveBeenCalledWith("debug test", []);
+		expect(enabledDebugSpy).toHaveBeenCalledWith("debug test");
 		enabledDebugSpy.mockRestore();
 	});
 });

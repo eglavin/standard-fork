@@ -10,27 +10,27 @@ export class Logger {
 		this.debug = this.debug.bind(this);
 	}
 
-	public log(message?: any, ...optionalParams: any[]) {
+	public log(...messages: any[]) {
 		if (!this.config.silent) {
-			console.log(message, optionalParams);
+			console.log(...messages);
 		}
 	}
 
-	public warn(message?: any, ...optionalParams: any[]) {
+	public warn(...messages: any[]) {
 		if (!this.config.silent) {
-			console.warn(message, optionalParams);
+			console.warn(...messages);
 		}
 	}
 
-	public error(message?: any, ...optionalParams: any[]) {
+	public error(...messages: any[]) {
 		if (!this.config.silent) {
-			console.error(message, optionalParams);
+			console.error(...messages);
 		}
 	}
 
-	public debug(message?: any, ...optionalParams: any[]) {
+	public debug(...messages: any[]) {
 		if (this.config.debug && !this.config.silent) {
-			console.debug(message, optionalParams);
+			console.debug(...messages);
 		}
 	}
 }
