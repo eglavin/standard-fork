@@ -1,7 +1,9 @@
+import type { ReleaseType } from "semver";
+
 import { createExecute } from "../utils/execute-file";
 import { formatCommitMessage } from "../utils/format-commit-message";
 import type { ForkConfig } from "../config/schema";
-import type { BumpVersion } from "./version";
+import type { FileState } from "../strategies/file-manager";
 import type { Logger } from "../utils/logger";
 
 interface TagChanges {
@@ -15,13 +17,15 @@ interface TagChanges {
 export async function tagChanges(
 	config: ForkConfig,
 	logger: Logger,
-	bumpResult: BumpVersion,
+	files: FileState[],
+	nextVersion: string,
+	releaseType: ReleaseType | undefined,
 ): Promise<TagChanges> {
 	const { git } = createExecute(config, logger);
 
 	const shouldSign = config.sign ? "-s" : "-a";
 	/** @example "v1.2.3" or "version/1.2.3" */
-	const tag = `${config.tagPrefix}${bumpResult.nextVersion}`;
+	const tag = `${config.tagPrefix}${nextVersion}`;
 
 	logger.log(`Creating Tag: ${tag}`);
 
@@ -30,18 +34,15 @@ export async function tagChanges(
 		shouldSign,
 		tag,
 		"-m",
-		formatCommitMessage(
-			config.changelogPresetConfig?.releaseCommitMessageFormat,
-			bumpResult.nextVersion,
-		),
+		formatCommitMessage(config.changelogPresetConfig?.releaseCommitMessageFormat, nextVersion),
 	);
 
 	const currentBranchName = await git("rev-parse", "--abbrev-ref", "HEAD");
 
-	const hasPublicPackageFile = bumpResult.files.some(
+	const hasPublicPackageFile = files.some(
 		(file) => file.name === "package.json" && file.isPrivate === false,
 	);
-	const isPreRelease = `${bumpResult.releaseType}`.startsWith("pre");
+	const isPreRelease = `${releaseType}`.startsWith("pre");
 
 	const pushMessage = `Run \`git push --follow-tags origin ${currentBranchName.trim()}\` to push the changes and the tag.`;
 	const publishMessage = isPreRelease

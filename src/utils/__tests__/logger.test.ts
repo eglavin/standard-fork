@@ -14,7 +14,7 @@ describe("logger", () => {
 	});
 
 	it("should log a message", () => {
-		const logger = new Logger({ silent: false });
+		const logger = new Logger({ silent: false, debug: false });
 
 		logger.log("log test");
 		logger.warn("warn test");
@@ -24,11 +24,11 @@ describe("logger", () => {
 		expect(logSpy).toHaveBeenCalledWith("log test", []);
 		expect(warnSpy).toHaveBeenCalledWith("warn test", []);
 		expect(errorSpy).toHaveBeenCalledWith("error test", []);
-		expect(debugSpy).toHaveBeenCalledWith("debug test", []);
+		expect(debugSpy).not.toHaveBeenCalledWith("debug test", []);
 	});
 
 	it("should not log if silent is true", () => {
-		const logger = new Logger({ silent: true });
+		const logger = new Logger({ silent: true, debug: false });
 
 		logger.log("log test");
 		logger.warn("warn test");
@@ -39,5 +39,15 @@ describe("logger", () => {
 		expect(warnSpy).not.toHaveBeenCalled();
 		expect(errorSpy).not.toHaveBeenCalled();
 		expect(debugSpy).not.toHaveBeenCalled();
+	});
+
+	it("should log a debug message if debug is true", () => {
+		const enabledDebugSpy = vi.spyOn(global.console, "debug").mockImplementation(() => undefined);
+
+		const logger = new Logger({ silent: false, debug: true });
+		logger.debug("debug test");
+
+		expect(enabledDebugSpy).toHaveBeenCalledWith("debug test", []);
+		enabledDebugSpy.mockRestore();
 	});
 });

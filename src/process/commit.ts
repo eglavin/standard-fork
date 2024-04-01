@@ -1,7 +1,7 @@
 import { createExecute } from "../utils/execute-file";
 import { formatCommitMessage } from "../utils/format-commit-message";
 import type { ForkConfig } from "../config/schema";
-import type { BumpVersion } from "./version";
+import type { FileState } from "../strategies/file-manager";
 import type { Logger } from "../utils/logger";
 
 interface CommitChanges {
@@ -13,14 +13,15 @@ interface CommitChanges {
 export async function commitChanges(
 	config: ForkConfig,
 	logger: Logger,
-	bumpResult: BumpVersion,
+	files: FileState[],
+	nextVersion: string,
 ): Promise<CommitChanges> {
 	const { git } = createExecute(config, logger);
 
 	logger.log("Committing changes");
 
 	const filesToCommit: string[] = [config.changelog];
-	for (const file of bumpResult.files) {
+	for (const file of files) {
 		filesToCommit.push(file.name);
 	}
 
@@ -43,10 +44,7 @@ export async function commitChanges(
 		shouldSign,
 		...shouldCommitAll,
 		"-m",
-		formatCommitMessage(
-			config.changelogPresetConfig?.releaseCommitMessageFormat,
-			bumpResult.nextVersion,
-		),
+		formatCommitMessage(config.changelogPresetConfig?.releaseCommitMessageFormat, nextVersion),
 	);
 
 	return {

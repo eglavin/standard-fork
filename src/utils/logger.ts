@@ -3,7 +3,7 @@
 import type { ForkConfig } from "../config/schema";
 
 export class Logger {
-	constructor(private config: Pick<ForkConfig, "silent">) {
+	constructor(private config: Pick<ForkConfig, "silent" | "debug">) {
 		this.log = this.log.bind(this);
 		this.warn = this.warn.bind(this);
 		this.error = this.error.bind(this);
@@ -29,7 +29,7 @@ export class Logger {
 	}
 
 	public debug(message?: any, ...optionalParams: any[]) {
-		if (!this.config.silent) {
+		if (this.config.debug && !this.config.silent) {
 			console.debug(message, optionalParams);
 		}
 	}

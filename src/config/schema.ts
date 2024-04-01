@@ -73,6 +73,11 @@ export const ForkConfigSchema = z.object({
 	 */
 	commitAll: z.boolean(),
 	/**
+	 * If set we'll log debug information.
+	 * @default false
+	 */
+	debug: z.boolean(),
+	/**
 	 * If true, no output will be written to disk or committed.
 	 * @default false
 	 */

@@ -23,6 +23,8 @@ Options:
 
   --commit-all
     Commit all staged changes, not just files updated by fork-version.
+  --debug
+    If true, we'll output debug information.
   --dry-run
     If true, no output will be written to disk or committed.
   --git-tag-fallback [Default: true]
@@ -53,6 +55,7 @@ Options:
 				preReleaseTag: { type: "string" },
 
 				commitAll: { type: "boolean" },
+				debug: { type: "boolean" },
 				dryRun: { type: "boolean" },
 				gitTagFallback: { type: "boolean" },
 				sign: { type: "boolean" },

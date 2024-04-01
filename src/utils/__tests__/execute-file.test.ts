@@ -1,64 +1,55 @@
 import { execSync } from "child_process";
 
 import { createTestDir } from "../../../tests/create-test-directory";
-import { createTestConfig } from "../../../tests/create-test-config";
 import { createExecute } from "../execute-file";
 
 describe("execute-file", () => {
 	it("should accept arguments", async () => {
-		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+		const { testDir, createCommits, createJSONFile, deleteTestDir, createTestConfig } =
 			createTestDir("execute-file");
 
-		initGitRepo();
 		createJSONFile();
 		createCommits();
 
-		const { config, logger } = await createTestConfig(testDir);
+		const { config, logger } = await createTestConfig();
 		const { git } = createExecute(config, logger);
 
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
 		const log = execSync("git log", { cwd: testDir }).toString();
-		expect(
-			log.search("test: test arguments works"), // Expect the commit to exist
-		).not.toBe(-1);
+		expect(log).toMatch(/test: test arguments works/);
 
 		deleteTestDir();
 	});
 
 	it("should not execute if dryRun is enabled", async () => {
-		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+		const { testDir, createCommits, createJSONFile, deleteTestDir, createTestConfig } =
 			createTestDir("execute-file");
 
-		initGitRepo();
 		createJSONFile();
 		createCommits();
 
-		const { config, logger } = await createTestConfig(testDir);
+		const { config, logger } = await createTestConfig();
 		config.dryRun = true;
 		const { git } = createExecute(config, logger);
 
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
 		const log = execSync("git log", { cwd: testDir }).toString();
-		expect(
-			log.search("test: test arguments works"), // Expect the commit to not exist
-		).toBe(-1);
+		expect(log).not.toMatch(/test: test arguments works/);
 
 		deleteTestDir();
 	});
 
 	it("should log if debug is enabled", async () => {
-		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+		const { createCommits, createJSONFile, deleteTestDir, createTestConfig } =
 			createTestDir("execute-file");
 
-		initGitRepo();
 		createJSONFile();
 		createCommits();
+		const { config, logger } = await createTestConfig();
 
-		const { config, logger } = await createTestConfig(testDir);
 		const { git } = createExecute(config, logger);
-
 		await git("commit", "--allow-empty", "-m", "test: test arguments works");
 
 		expect(logger.debug).toHaveBeenCalledTimes(1);
@@ -70,21 +61,17 @@ describe("execute-file", () => {
 	});
 
 	it("should log if error is thrown", async () => {
-		const { createCommits, createJSONFile, initGitRepo, deleteTestDir, testDir } =
+		const { createCommits, createJSONFile, deleteTestDir, createTestConfig } =
 			createTestDir("execute-file");
 
-		initGitRepo();
 		createJSONFile();
 		createCommits();
+		const { config, logger } = await createTestConfig();
 
-		const { config, logger } = await createTestConfig(testDir);
 		const { git } = createExecute(config, logger);
-
 		try {
 			await git("add", "non-existing-file");
-		} catch (_) {
-			// Ignore error
-		}
+		} catch (_) {}
 
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/add:$/));

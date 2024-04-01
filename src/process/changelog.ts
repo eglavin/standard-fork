@@ -3,7 +3,6 @@ import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "
 
 import conventionalChangelog from "conventional-changelog";
 import type { ForkConfig } from "../config/schema";
-import type { BumpVersion } from "./version";
 import type { Logger } from "../utils/logger";
 
 interface CreateChangelog {
@@ -57,7 +56,7 @@ function getOldReleaseContent(changelog: CreateChangelog): string {
 function getNewReleaseContent(
 	config: ForkConfig,
 	logger: Logger,
-	bumpResult: BumpVersion,
+	nextVersion: string,
 ): Promise<string> {
 	return new Promise<string>((resolve) => {
 		let newContent = "";
@@ -73,7 +72,7 @@ function getNewReleaseContent(
 				cwd: config.workingDirectory,
 			},
 			{
-				version: bumpResult.nextVersion,
+				version: nextVersion,
 			},
 			{
 				merges: null,
@@ -102,7 +101,7 @@ interface UpdateChangelog {
 export async function updateChangelog(
 	config: ForkConfig,
 	logger: Logger,
-	bumpResult: BumpVersion,
+	nextVersion: string,
 ): Promise<UpdateChangelog> {
 	if (config.header.search(RELEASE_PATTERN) !== -1) {
 		// Need to ensure the header doesn't contain the release pattern
@@ -111,7 +110,7 @@ export async function updateChangelog(
 
 	const changelog = createChangelog(config, logger);
 	const oldContent = getOldReleaseContent(changelog);
-	const newContent = await getNewReleaseContent(config, logger, bumpResult);
+	const newContent = await getNewReleaseContent(config, logger, nextVersion);
 
 	logger.log(`Updating Changelog:
 \t${changelog.path}`);

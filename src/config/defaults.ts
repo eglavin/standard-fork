@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. See [fork-v
 	tagPrefix: "v",
 
 	commitAll: false,
+	debug: false,
 	dryRun: false,
 	gitTagFallback: true,
 	sign: false,
