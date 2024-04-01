@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
-import { constants, accessSync, writeFileSync, readFileSync, existsSync } from "node:fs";
-
+import { writeFileSync, readFileSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
+
+import { fileExists } from "../utils/file-state";
 import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
 
@@ -11,21 +12,17 @@ interface CreateChangelog {
 }
 
 function createChangelog(config: ForkConfig, logger: Logger): CreateChangelog {
-	const changelogPath = resolve(config.changelog);
+	const changelogPath = resolve(config.workingDirectory, config.changelog);
 
-	try {
-		accessSync(changelogPath, constants.F_OK);
-	} catch (err) {
-		if (!config.dryRun && (err as { code: string }).code === "ENOENT") {
-			logger.log(`Creating Changelog file: ${changelogPath}`);
+	if (!config.dryRun && !fileExists(changelogPath)) {
+		logger.log(`Creating Changelog file: ${changelogPath}`);
 
-			writeFileSync(changelogPath, "\n", "utf8");
-		}
+		writeFileSync(changelogPath, "\n", "utf8");
 	}
 
 	return {
 		path: changelogPath,
-		exists: existsSync(changelogPath),
+		exists: fileExists(changelogPath),
 	};
 }
 
@@ -58,7 +55,7 @@ function getNewReleaseContent(
 	logger: Logger,
 	nextVersion: string,
 ): Promise<string> {
-	return new Promise<string>((resolve) => {
+	return new Promise<string>((onResolve) => {
 		let newContent = "";
 
 		conventionalChangelog(
@@ -87,7 +84,7 @@ function getNewReleaseContent(
 				newContent += chunk.toString();
 			})
 			.on("end", () => {
-				resolve(newContent);
+				onResolve(newContent);
 			});
 	});
 }

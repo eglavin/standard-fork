@@ -1,4 +1,4 @@
-import path from "node:path";
+import { parse } from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 
@@ -15,7 +15,7 @@ export async function getUserConfig(): Promise<ForkConfig> {
 	const configFilePath = await joycon.resolve({
 		files: ["fork.config.ts", "fork.config.js", "fork.config.cjs", "fork.config.mjs"],
 		cwd,
-		stopDir: path.parse(cwd).root,
+		stopDir: parse(cwd).root,
 	});
 
 	if (configFilePath) {

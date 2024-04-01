@@ -13,7 +13,7 @@ export function createExecute(config: ForkConfig, logger: Logger) {
 		logger.debug(`Executing: git ${args.join(" ")}`);
 
 		if (!config.dryRun) {
-			return new Promise((resolve, reject) => {
+			return new Promise((onResolve, onReject) => {
 				execFile(
 					"git",
 					args,
@@ -23,10 +23,10 @@ export function createExecute(config: ForkConfig, logger: Logger) {
 					(error, stdout, stderr) => {
 						if (error) {
 							logger.error(`git ${args[0]}:`);
-							reject(error);
+							onReject(error);
 						}
 
-						resolve(stdout ? stdout : stderr);
+						onResolve(stdout ? stdout : stderr);
 					},
 				);
 			});

@@ -1,9 +1,10 @@
 import { resolve } from "node:path";
-import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import detectIndent from "detect-indent";
 import { detectNewline } from "detect-newline";
 
 import { stringifyPackage } from "../libs/stringify-package";
+import { fileExists } from "../utils/file-state";
 import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
 import type { FileState, IFileManager } from "./file-manager";
@@ -30,7 +31,7 @@ export class JSONPackage implements IFileManager {
 	public read(fileName: string): FileState | undefined {
 		const filePath = resolve(this.config.workingDirectory, fileName);
 
-		if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+		if (fileExists(filePath)) {
 			const fileContents = readFileSync(filePath, "utf8");
 			const parsedJson = JSON.parse(fileContents);
 
