@@ -48,7 +48,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:cover": "vitest --coverage",
-    "test:ci": "vitest run --coverage"
+    "test:ci": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "bundle-require": "4.0.2",
@@ -71,6 +72,7 @@
     "@types/node": "20.11.30",
     "@types/semver": "7.5.8",
     "@vitest/coverage-v8": "1.4.0",
+    "@vitest/ui": "1.4.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
