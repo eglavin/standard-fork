@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.39 (2024-04-01)
+
+
+### Bug Fixes
+
+* add inspectVersion prop to logger usage in tests ([0869edb](https://github.com/eglavin/fork-version/commit/0869edbfb22b573f337989bb13386477d3ab747f))
+
+
 ## 1.4.38 (2024-04-01)
 
 
@@ -348,6 +356,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
