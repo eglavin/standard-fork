@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.36 (2024-04-01)
+
+
+### Refactor
+
+* split versioning steps to make testing easier and allow adding other strategies ([e0d8aa2](https://github.com/eglavin/fork-version/commit/e0d8aa21a23ce282553d6e78da9f8ea002a72dff))
+
+
 ## 1.4.35 (2024-03-31)
 
 

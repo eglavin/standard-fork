@@ -26,15 +26,16 @@ npx fork-version
 
 <!-- Code Coverage Table Start -->
 
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-68%25-yellow?style=flat)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-75%25-yellow?style=flat)
 
-| Package           | Line Rate            | Branch Rate       | Complexity | Health |
-| ----------------- | -------------------- | ----------------- | ---------- | ------ |
-| src               | 0%                   | 0%                | 0          | ❌     |
-| src.configuration | 98%                  | 62%               | 0          | ✔     |
-| src.libs          | 100%                 | 100%              | 0          | ✔     |
-| src.process       | 39%                  | 42%               | 0          | ❌     |
-| src.utils         | 100%                 | 100%              | 0          | ✔     |
-| **Summary**       | **68%** (715 / 1056) | **71%** (62 / 87) | **0**      | ➖     |
+| Package        | Line Rate            | Branch Rate       | Complexity | Health |
+| -------------- | -------------------- | ----------------- | ---------- | ------ |
+| src            | 22%                  | 0%                | 0          | ❌     |
+| src.config     | 98%                  | 62%               | 0          | ✔     |
+| src.libs       | 100%                 | 100%              | 0          | ✔     |
+| src.process    | 46%                  | 75%               | 0          | ❌     |
+| src.strategies | 76%                  | 75%               | 0          | ➖     |
+| src.utils      | 100%                 | 100%              | 0          | ✔     |
+| **Summary**    | **75%** (877 / 1174) | **85%** (78 / 92) | **0**      | ➖     |
 
 <!-- Code Coverage Table End -->
