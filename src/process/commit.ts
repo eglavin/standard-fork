@@ -1,5 +1,5 @@
 import { resolve } from "node:path";
-import { createExecute } from "../utils/execute-file";
+import { Git } from "../utils/git";
 import { formatCommitMessage } from "../utils/format-commit-message";
 import { fileExists } from "../utils/file-state";
 import type { ForkConfig } from "../config/schema";
@@ -18,7 +18,7 @@ export async function commitChanges(
 	files: FileState[],
 	nextVersion: string,
 ): Promise<CommitChanges> {
-	const { git } = createExecute(config, logger);
+	const git = new Git(config, logger);
 
 	logger.log("Committing changes");
 
@@ -44,9 +44,8 @@ export async function commitChanges(
 	if (config.commitAll) {
 		return {
 			filesToCommit,
-			gitAddOutput: await git("add", "--all"),
-			gitCommitOutput: await git(
-				"commit",
+			gitAddOutput: await git.add("--all"),
+			gitCommitOutput: await git.commit(
 				shouldVerify,
 				shouldSign,
 				"--message",
@@ -57,9 +56,8 @@ export async function commitChanges(
 
 	return {
 		filesToCommit,
-		gitAddOutput: await git("add", ...filesToCommit),
-		gitCommitOutput: await git(
-			"commit",
+		gitAddOutput: await git.add(...filesToCommit),
+		gitCommitOutput: await git.commit(
 			shouldVerify,
 			shouldSign,
 			...filesToCommit,

@@ -1,9 +1,9 @@
 import { execSync } from "child_process";
 
 import { createTestDir } from "../../../tests/create-test-directory";
-import { createExecute } from "../execute-file";
+import { Git } from "../git";
 
-describe("execute-file", () => {
+describe("git", () => {
 	it("should accept arguments", async () => {
 		const { testDir, createCommits, createJSONFile, deleteTestDir, createTestConfig } =
 			createTestDir("execute-file");
@@ -12,9 +12,9 @@ describe("execute-file", () => {
 		createCommits();
 
 		const { config, logger } = await createTestConfig();
-		const { git } = createExecute(config, logger);
+		const git = new Git(config, logger);
 
-		await git("commit", "--allow-empty", "-m", "test: test arguments works");
+		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
 		const log = execSync("git log", { cwd: testDir }).toString();
 		expect(log).toMatch(/test: test arguments works/);
@@ -31,9 +31,9 @@ describe("execute-file", () => {
 
 		const { config, logger } = await createTestConfig();
 		config.dryRun = true;
-		const { git } = createExecute(config, logger);
+		const git = new Git(config, logger);
 
-		await git("commit", "--allow-empty", "-m", "test: test arguments works");
+		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
 		const log = execSync("git log", { cwd: testDir }).toString();
 		expect(log).not.toMatch(/test: test arguments works/);
@@ -48,9 +48,9 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 		const { config, logger } = await createTestConfig();
+		const git = new Git(config, logger);
 
-		const { git } = createExecute(config, logger);
-		await git("commit", "--allow-empty", "-m", "test: test arguments works");
+		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
 		expect(logger.debug).toHaveBeenCalledTimes(1);
 		expect(logger.debug).toHaveBeenCalledWith(
@@ -67,10 +67,10 @@ describe("execute-file", () => {
 		createJSONFile();
 		createCommits();
 		const { config, logger } = await createTestConfig();
+		const git = new Git(config, logger);
 
-		const { git } = createExecute(config, logger);
 		try {
-			await git("add", "non-existing-file");
+			await git.add("non-existing-file");
 		} catch (_) {}
 
 		expect(logger.error).toHaveBeenCalledTimes(1);

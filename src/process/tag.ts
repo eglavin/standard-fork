@@ -1,6 +1,6 @@
 import type { ReleaseType } from "semver";
 
-import { createExecute } from "../utils/execute-file";
+import { Git } from "../utils/git";
 import { formatCommitMessage } from "../utils/format-commit-message";
 import type { ForkConfig } from "../config/schema";
 import type { FileState } from "../strategies/file-manager";
@@ -21,7 +21,7 @@ export async function tagChanges(
 	nextVersion: string,
 	releaseType: ReleaseType | undefined,
 ): Promise<TagChanges> {
-	const { git } = createExecute(config, logger);
+	const git = new Git(config, logger);
 
 	const shouldSign = config.sign ? "-s" : "-a";
 	/** @example "v1.2.3" or "version/1.2.3" */
@@ -29,15 +29,14 @@ export async function tagChanges(
 
 	logger.log(`Creating Tag: ${tag}`);
 
-	const gitTagOutput = await git(
-		"tag",
+	const gitTagOutput = await git.tag(
 		shouldSign,
 		tag,
 		"-m",
 		formatCommitMessage(config.changelogPresetConfig?.releaseCommitMessageFormat, nextVersion),
 	);
 
-	const currentBranchName = await git("rev-parse", "--abbrev-ref", "HEAD");
+	const currentBranchName = await git.revParse("--abbrev-ref", "HEAD");
 
 	const hasPublicPackageFile = files.some(
 		(file) => file.name === "package.json" && file.isPrivate === false,
