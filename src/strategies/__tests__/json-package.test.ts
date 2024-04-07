@@ -32,7 +32,7 @@ describe("strategies json-package", () => {
 		const file = fileManager.read("package.json");
 		expect(file).toBeUndefined();
 
-		expect(logger.log).toBeCalledWith("Unable to determine json package file: package.json");
+		expect(logger.warn).toBeCalledWith("Unable to determine json package file: package.json");
 
 		deleteTestDir();
 	});

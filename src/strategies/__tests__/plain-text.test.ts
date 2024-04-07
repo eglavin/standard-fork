@@ -20,6 +20,20 @@ describe("strategies plain-text", () => {
 		deleteTestDir();
 	});
 
+	it('should log a warning when "version.txt" file is not found', async () => {
+		const { deleteTestDir, createTestConfig } = createTestDir("strategies plain-text");
+
+		const { config, logger } = await createTestConfig();
+		const fileManager = new PlainText(config, logger);
+
+		const file = fileManager.read("version.txt");
+
+		expect(file).toBeUndefined();
+		expect(logger.warn).toHaveBeenCalledWith("Unable to determine plain text file: version.txt");
+
+		deleteTestDir();
+	});
+
 	it("should return empty string when version.txt is empty", async () => {
 		const { testDir, deleteTestDir, createFile, createTestConfig } =
 			createTestDir("strategies plain-text");

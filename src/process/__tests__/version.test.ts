@@ -15,7 +15,7 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
-		const result = await getCurrentVersion(config, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager);
 		expect(result).toEqual({
 			files: [
 				{
@@ -41,7 +41,7 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
-		const result = await getCurrentVersion(config, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager);
 		expect(result).toEqual({
 			files: [
 				{
@@ -75,7 +75,7 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
-		const result = await getCurrentVersion(config, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager);
 		expect(result).toEqual({
 			files: [
 				{
@@ -109,7 +109,9 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
-		expect(getCurrentVersion(config, fileManager)).rejects.toThrow("Found multiple versions");
+		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
+			"Found multiple versions",
+		);
 
 		deleteTestDir();
 	});
@@ -120,7 +122,7 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
-		expect(getCurrentVersion(config, fileManager)).rejects.toThrow(
+		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
 			"Unable to find current version",
 		);
 
@@ -138,7 +140,7 @@ describe("version > getCurrentVersion", () => {
 		config.currentVersion = "3.2.1";
 		const fileManager = new FileManager(config, logger);
 
-		const result = await getCurrentVersion(config, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager);
 		expect(result).toEqual({
 			files: [
 				{
@@ -169,7 +171,7 @@ describe("version > getCurrentVersion", () => {
 		config.inspectVersion = true;
 		const fileManager = new FileManager(config, logger);
 
-		await getCurrentVersion(config, fileManager);
+		await getCurrentVersion(config, logger, fileManager);
 		expect(spyOnConsole).toHaveBeenCalledWith("1.2.3");
 		expect(spyOnProcess).toHaveBeenCalledWith(0);
 		spyOnConsole.mockRestore();
@@ -187,9 +189,9 @@ describe("version > getNextVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits(["feat: A feature commit"]);
 
-		const { config } = await createTestConfig();
+		const { config, logger } = await createTestConfig();
 
-		const result = await getNextVersion(config, "1.2.3");
+		const result = await getNextVersion(config, logger, "1.2.3");
 		expect(result).toEqual({
 			level: 1,
 			preMajor: false,
@@ -204,9 +206,9 @@ describe("version > getNextVersion", () => {
 	it("should throw an error if not able to determine the next version", async () => {
 		const { createTestConfig, deleteTestDir } = createTestDir("version getNextVersion");
 
-		const { config } = await createTestConfig();
+		const { config, logger } = await createTestConfig();
 
-		expect(getNextVersion(config, "1.2.3")).rejects.toThrow(
+		expect(getNextVersion(config, logger, "1.2.3")).rejects.toThrow(
 			"[conventional-recommended-bump] Unable to determine next version",
 		);
 
@@ -220,10 +222,10 @@ describe("version > getNextVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits(["feat: A feature commit"]);
 
-		const { config } = await createTestConfig();
+		const { config, logger } = await createTestConfig();
 		config.nextVersion = "2.0.0";
 
-		const result = await getNextVersion(config, "1.2.3");
+		const result = await getNextVersion(config, logger, "1.2.3");
 		expect(result).toEqual({ version: "2.0.0" });
 
 		deleteTestDir();

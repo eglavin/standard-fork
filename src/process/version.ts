@@ -1,10 +1,11 @@
 import semver, { type ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 
-import type { ForkConfig } from "../config/schema";
-import type { IFileManager, FileState } from "../strategies/file-manager";
 import { getLatestGitTagVersion } from "../utils/git-tag-version";
 import { getReleaseType } from "../utils/release-type";
+import type { ForkConfig } from "../config/schema";
+import type { IFileManager, FileState } from "../strategies/file-manager";
+import type { Logger } from "../utils/logger";
 
 export interface CurrentVersion {
 	version: string;
@@ -13,6 +14,7 @@ export interface CurrentVersion {
 
 export async function getCurrentVersion(
 	config: ForkConfig,
+	logger: Logger,
 	fileManager: IFileManager,
 ): Promise<CurrentVersion> {
 	const files: FileState[] = [];
@@ -52,15 +54,18 @@ export async function getCurrentVersion(
 		throw new Error("Found multiple versions");
 	}
 
+	const currentVersion = versions.entries().next().value[0];
+
 	// If we're just inspecting the version, output the version and exit
 	if (config.inspectVersion) {
-		console.log(versions.entries().next().value[0]);
+		console.log(currentVersion);
 		process.exit(0);
 	}
 
+	logger.log(`Current version: ${currentVersion}`);
 	return {
 		files,
-		version: versions.entries().next().value[0],
+		version: currentVersion,
 	};
 }
 
@@ -74,9 +79,11 @@ export interface NextVersion {
 
 export async function getNextVersion(
 	config: ForkConfig,
+	logger: Logger,
 	currentVersion: string,
 ): Promise<NextVersion> {
 	if (config.nextVersion && semver.valid(config.nextVersion)) {
+		logger.log(`Next version: ${config.nextVersion}`);
 		return { version: config.nextVersion };
 	}
 
@@ -105,7 +112,8 @@ export async function getNextVersion(
 			config.preReleaseTag,
 		);
 
-		return Object.assign(recommendedBump, {
+		const state: NextVersion = {
+			...recommendedBump,
 			preMajor: isPreMajor,
 			releaseType,
 			version:
@@ -114,7 +122,10 @@ export async function getNextVersion(
 					releaseType,
 					typeof config.preReleaseTag === "string" ? config.preReleaseTag : undefined,
 				) ?? "",
-		} satisfies NextVersion);
+		};
+
+		logger.log(`Next version: ${state.version} (${state.releaseType})`);
+		return state;
 	}
 
 	throw new Error("Unable to find next version");
