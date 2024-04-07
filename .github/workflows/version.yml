@@ -65,6 +65,12 @@ jobs:
         run: |
           pnpm test:ci
 
+      - name: Tree Of Test Folder
+        run: |
+          tree fork-version.tests
+        continue-on-error: true
+        working-directory: ..
+
       - name: Upload Coverage
         uses: actions/upload-artifact@v3
         with:
