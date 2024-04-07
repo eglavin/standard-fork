@@ -27,10 +27,13 @@ describe("tagChanges", () => {
 		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
 		createCommit("feat: A feature commit");
 
-		await tagChanges(config, logger, "1.2.4");
+		expect(
+			(async () => {
+				await tagChanges(config, logger, "1.2.4");
+				await tagChanges(config, logger, "1.2.4");
 
-		expect(tagChanges(config, logger, "1.2.4")).rejects.toThrow(/tag 'v1.2.4' already exists/);
-
-		deleteTestDir();
+				deleteTestDir();
+			})(),
+		).rejects.toThrow("tag 'v1.2.4' already exists");
 	});
 });
