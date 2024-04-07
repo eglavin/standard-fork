@@ -1,5 +1,53 @@
 import { z } from "zod";
 
+export const ChangelogPresetConfigSchema = z.object({
+	/**
+	 * An array of `type` objects representing the explicitly supported commit message types,
+	 * and whether they should show up in generated `CHANGELOG`s.
+	 */
+	types: z.array(
+		z.object({
+			type: z.string(),
+			section: z.string().optional(),
+			hidden: z.boolean().optional(),
+		}),
+	),
+	/**
+	 * A URL representing a specific commit at a hash.
+	 * @default "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}"
+	 */
+	commitUrlFormat: z.string(),
+	/**
+	 * A URL representing the comparison between two git SHAs.
+	 * @default "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}"
+	 */
+	compareUrlFormat: z.string(),
+	/**
+	 * A URL representing the issue format (allowing a different URL format to be swapped in
+	 * for Gitlab, Bitbucket, etc).
+	 * @default "{{host}}/{{owner}}/{{repository}}/issues/{{id}}"
+	 */
+	issueUrlFormat: z.string(),
+	/**
+	 * A URL representing the a user's profile URL on GitHub, Gitlab, etc. This URL is used
+	 * for substituting @bcoe with https://github.com/bcoe in commit messages.
+	 * @default "{{host}}/{{user}}"
+	 */
+	userUrlFormat: z.string(),
+	/**
+	 * A string to be used to format the auto-generated release commit message.
+	 * @default "chore(release): {{currentTag}}"
+	 */
+	releaseCommitMessageFormat: z.string(),
+	/**
+	 * An array of prefixes used to detect references to issues
+	 * @default ["#"]
+	 */
+	issuePrefixes: z.array(z.string()),
+});
+
+export type ChangelogPresetConfig = z.infer<typeof ChangelogPresetConfigSchema>;
+
 export const ForkConfigSchema = z.object({
 	/**
 	 * The path fork-version will run from.
@@ -8,7 +56,7 @@ export const ForkConfigSchema = z.object({
 	 * process.cwd()
 	 * ```
 	 */
-	workingDirectory: z.string(),
+	path: z.string(),
 	/**
 	 * Name of the changelog file.
 	 * @default "CHANGELOG.md"
@@ -127,47 +175,7 @@ export const ForkConfigSchema = z.object({
 	/**
 	 * Override the default conventional-changelog preset configuration.
 	 */
-	changelogPresetConfig: z.object({
-		/**
-		 * An array of `type` objects representing the explicitly supported commit message types,
-		 * and whether they should show up in generated `CHANGELOG`s.
-		 */
-		types: z
-			.array(
-				z.object({
-					type: z.string(),
-					section: z.string().optional(),
-					hidden: z.boolean().optional(),
-				}),
-			)
-			.optional(),
-		/**
-		 * A URL representing a specific commit at a hash.
-		 */
-		commitUrlFormat: z.string().optional(),
-		/**
-		 * A URL representing the comparison between two git SHAs.
-		 */
-		compareUrlFormat: z.string().optional(),
-		/**
-		 * A URL representing the issue format (allowing a different URL format to be swapped in
-		 * for Gitlab, Bitbucket, etc).
-		 */
-		issueUrlFormat: z.string().optional(),
-		/**
-		 * A URL representing the a user's profile URL on GitHub, Gitlab, etc. This URL is used
-		 * for substituting @bcoe with https://github.com/bcoe in commit messages.
-		 */
-		userUrlFormat: z.string().optional(),
-		/**
-		 * A string to be used to format the auto-generated release commit message.
-		 */
-		releaseCommitMessageFormat: z.string().optional(),
-		/**
-		 * An array of prefixes used to detect references to issues
-		 */
-		issuePrefixes: z.array(z.string()).optional(),
-	}),
+	changelogPresetConfig: ChangelogPresetConfigSchema.partial(),
 });
 
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;

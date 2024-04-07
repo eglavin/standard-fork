@@ -21,7 +21,7 @@ export class PlainText implements IFileManager {
 	) {}
 
 	public read(fileName: string): FileState | undefined {
-		const filePath = resolve(this.config.workingDirectory, fileName);
+		const filePath = resolve(this.config.path, fileName);
 
 		if (fileExists(filePath)) {
 			const fileContents = readFileSync(filePath, "utf8");

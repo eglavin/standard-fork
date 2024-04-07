@@ -1,6 +1,6 @@
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
 
-import type { ForkConfig } from "./schema";
+import { ChangelogPresetConfigSchema, type ForkConfig } from "./schema";
 
 export function getChangelogPresetConfig(
 	usersChangelogPresetConfig?: ForkConfig["changelogPresetConfig"],
@@ -27,5 +27,5 @@ export function getChangelogPresetConfig(
 		});
 	}
 
-	return preset;
+	return ChangelogPresetConfigSchema.passthrough().parse(preset);
 }

@@ -90,9 +90,9 @@ export async function getNextVersion(
 				...config.changelogPresetConfig,
 				preMajor: isPreMajor,
 			},
-			path: config.workingDirectory,
+			path: config.path,
 			tagPrefix: config.tagPrefix,
-			cwd: config.workingDirectory,
+			cwd: config.path,
 		});
 	} catch (error) {
 		throw new Error(`[conventional-recommended-bump] Unable to determine next version`);

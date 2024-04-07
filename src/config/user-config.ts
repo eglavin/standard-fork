@@ -1,4 +1,4 @@
-import { parse } from "node:path";
+import { parse, resolve } from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 
@@ -10,7 +10,7 @@ import { getChangelogPresetConfig } from "./changelog-preset-config";
 export async function getUserConfig(): Promise<ForkConfig> {
 	const cliArguments = getCliArguments();
 
-	const cwd = process.cwd();
+	const cwd = cliArguments.flags.path ? resolve(cliArguments.flags.path) : process.cwd();
 	const joycon = new JoyCon();
 	const configFilePath = await joycon.resolve({
 		files: ["fork.config.ts", "fork.config.js", "fork.config.cjs", "fork.config.mjs"],
@@ -18,31 +18,47 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		stopDir: parse(cwd).root,
 	});
 
-	if (configFilePath) {
-		const foundConfig = await bundleRequire({ filepath: configFilePath });
-		const parsedConfig = ForkConfigSchema.partial().safeParse(
-			foundConfig.mod.default || foundConfig.mod,
-		);
-
-		if (parsedConfig.success) {
-			const usersConfig = Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags);
-
-			// Allow users to add additional files
-			const mergedFiles = DEFAULT_CONFIG.files.concat(
-				Array.isArray(parsedConfig.data?.files) ? parsedConfig.data.files : [],
-				Array.isArray(cliArguments.flags?.files) ? cliArguments.flags.files : [],
-			);
-
-			return Object.assign(usersConfig, {
-				changelogPresetConfig: getChangelogPresetConfig(usersConfig?.changelogPresetConfig),
-				files: Array.from(new Set(mergedFiles)),
-			});
-		} else {
-			throw parsedConfig.error;
-		}
+	if (!configFilePath) {
+		return {
+			...DEFAULT_CONFIG,
+			...cliArguments.flags,
+			path: cwd,
+			changelogPresetConfig: getChangelogPresetConfig(),
+		} as ForkConfig;
 	}
 
-	return Object.assign(DEFAULT_CONFIG, cliArguments.flags, {
-		changelogPresetConfig: getChangelogPresetConfig(),
-	});
+	const foundConfig = await bundleRequire({ filepath: configFilePath });
+	const parsedConfig = ForkConfigSchema.partial().safeParse(
+		foundConfig.mod.default || foundConfig.mod,
+	);
+
+	if (!parsedConfig.success) {
+		throw parsedConfig.error;
+	}
+
+	const usersConfig = {
+		...DEFAULT_CONFIG,
+		...parsedConfig.data,
+		...cliArguments.flags,
+	} as ForkConfig;
+
+	const files = mergeFiles(parsedConfig.data?.files, cliArguments.flags?.files);
+
+	return {
+		...usersConfig,
+		path: cwd,
+		files: files.length > 0 ? files : DEFAULT_CONFIG.files,
+		changelogPresetConfig: getChangelogPresetConfig(usersConfig?.changelogPresetConfig),
+	};
+}
+
+function mergeFiles(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
+	return Array.from(
+		new Set(
+			([] as string[]).concat(
+				Array.isArray(configFiles) ? configFiles : [],
+				Array.isArray(cliFiles) ? cliFiles : [],
+			),
+		),
+	);
 }

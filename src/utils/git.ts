@@ -40,7 +40,7 @@ export class Git {
 				"git",
 				[command, ...args],
 				{
-					cwd: this.config.workingDirectory,
+					cwd: this.config.path,
 				},
 				(error, stdout, stderr) => {
 					if (error) {

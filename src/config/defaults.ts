@@ -1,7 +1,7 @@
 import type { ForkConfig } from "./schema";
 
 export const DEFAULT_CONFIG: ForkConfig = {
-	workingDirectory: process.cwd(),
+	path: process.cwd(),
 	changelog: "CHANGELOG.md",
 	files: [
 		"package.json",

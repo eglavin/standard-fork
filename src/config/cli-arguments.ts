@@ -7,7 +7,7 @@ Usage:
   $ fork-version [options]
 
 Options:
-  --working-directory [Default: process.cwd()]
+  --path [Default: process.cwd()]
     The path fork-version will run from.
   --changelog [Default: "CHANGELOG.md"]
     Name of the changelog file.
@@ -49,7 +49,7 @@ Options:
 		{
 			importMeta: import.meta,
 			flags: {
-				workingDirectory: { type: "string", default: process.cwd() },
+				path: { type: "string", default: process.cwd() },
 				changelog: { type: "string" },
 				header: { type: "string", shortFlag: "H" },
 				files: { type: "string", isMultiple: true, aliases: ["file"], shortFlag: "F" },

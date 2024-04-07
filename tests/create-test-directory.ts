@@ -71,7 +71,7 @@ export function createTestDir(testName: string) {
 
 		createTestConfig: async function _createTestConfig() {
 			const config = await getUserConfig();
-			config.workingDirectory = testDir;
+			config.path = testDir;
 			config.header = "# Test Header\n";
 			config.changelogPresetConfig = {
 				...config.changelogPresetConfig,

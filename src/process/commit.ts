@@ -23,8 +23,8 @@ export async function commitChanges(
 	logger.log("Committing changes");
 
 	const filesToCommit: string[] = [];
-	if (fileExists(resolve(config.workingDirectory, config.changelog))) {
-		filesToCommit.push(resolve(config.workingDirectory, config.changelog));
+	if (fileExists(resolve(config.path, config.changelog))) {
+		filesToCommit.push(resolve(config.path, config.changelog));
 	}
 	for (const file of files) {
 		filesToCommit.push(file.path);

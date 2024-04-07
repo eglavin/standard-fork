@@ -49,14 +49,14 @@ function getNewReleaseContent(
 				},
 				tagPrefix: config.tagPrefix,
 				warn: (...message: string[]) => logger.error("conventional-changelog: ", ...message),
-				cwd: config.workingDirectory,
+				cwd: config.path,
 			},
 			{
 				version: nextVersion,
 			},
 			{
 				merges: null,
-				path: config.workingDirectory,
+				path: config.path,
 			},
 		)
 			.on("error", (error) => {
@@ -89,7 +89,7 @@ export async function updateChangelog(
 	}
 
 	// Create the changelog file if it doesn't exist
-	const changelogPath = resolve(config.workingDirectory, config.changelog);
+	const changelogPath = resolve(config.path, config.changelog);
 	if (!config.dryRun && !fileExists(changelogPath)) {
 		logger.log(`Creating Changelog file: ${changelogPath}`);
 		writeFileSync(changelogPath, "\n", "utf8");
