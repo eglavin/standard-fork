@@ -82,6 +82,12 @@ jobs:
           thresholds: "60 80"
           badge: true
 
+      - name: Update README Code Coverage
+        run: |
+          node scripts/update-readme-code-coverage.js
+          npx prettier --write README.md
+          git add README.md
+
       - name: Build
         run: |
           pnpm build
@@ -89,13 +95,6 @@ jobs:
       - name: Bump version
         run: |
           pnpm fork-version
-
-      - name: Update README Code Coverage
-        run: |
-          node scripts/update-readme-code-coverage.js
-          npx prettier --write README.md
-          git add README.md
-          git commit --amend --no-edit
 
       - name: Push changes
         run: |
