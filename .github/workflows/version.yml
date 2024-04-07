@@ -62,16 +62,8 @@ jobs:
           pnpm lint:check
 
       - name: Run Tests
-        shell: pwsh
         run: |
-          try {
-            pnpm test:ci
-          } catch {
-            Get-Location
-            Get-Content -Path ../ -Recurse
-            tree ../fork-version.tests
-            throw $_
-          }
+          pnpm test || (tree ../fork-version.tests && exit 1)
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v3
