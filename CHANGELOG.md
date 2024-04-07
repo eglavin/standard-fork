@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.44 (2024-04-07)
+
+
+### Chore
+
+* explicitly set package json private state ([966ea28](https://github.com/eglavin/fork-version/commit/966ea2844857cd8608129ce12ca48641ac90e727))
+
+
 ## 1.4.43 (2024-04-07)
 
 
@@ -378,6 +386,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
