@@ -1,16 +1,20 @@
+import type { MockInstance } from "vitest";
 import { Logger } from "../logger";
 
 describe("logger", () => {
-	const logSpy = vi.spyOn(global.console, "log").mockImplementation(() => undefined);
-	const warnSpy = vi.spyOn(global.console, "warn").mockImplementation(() => undefined);
-	const errorSpy = vi.spyOn(global.console, "error").mockImplementation(() => undefined);
-	const debugSpy = vi.spyOn(global.console, "debug").mockImplementation(() => undefined);
+	let logSpy: MockInstance;
+	let warnSpy: MockInstance;
+	let errorSpy: MockInstance;
+	let debugSpy: MockInstance;
 
+	beforeEach(() => {
+		logSpy = vi.spyOn(global.console, "log").mockImplementation(() => undefined);
+		warnSpy = vi.spyOn(global.console, "warn").mockImplementation(() => undefined);
+		errorSpy = vi.spyOn(global.console, "error").mockImplementation(() => undefined);
+		debugSpy = vi.spyOn(global.console, "debug").mockImplementation(() => undefined);
+	});
 	afterEach(() => {
-		logSpy.mockRestore();
-		warnSpy.mockRestore();
-		errorSpy.mockRestore();
-		debugSpy.mockRestore();
+		vi.restoreAllMocks();
 	});
 
 	it("should log a message", () => {
