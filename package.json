@@ -16,6 +16,7 @@
     "url": "https://eglavin.com"
   },
   "packageManager": "pnpm@8.15.6",
+  "private": false,
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
