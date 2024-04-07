@@ -29,7 +29,7 @@ describe("tagChanges", () => {
 
 		await tagChanges(config, logger, "1.2.4");
 
-		expect(tagChanges(config, logger, "1.2.4")).rejects.toThrow("already exists");
+		expect(tagChanges(config, logger, "1.2.4")).rejects.toThrow(/tag 'v1.2.4' already exists/);
 
 		deleteTestDir();
 	});
