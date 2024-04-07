@@ -13,7 +13,7 @@ Options:
     Name of the changelog file.
   --header, -H
     The header to be used in the changelog.
-  --files, --file [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+  --files, --file, -F [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
     Files to be updated.
   --tag-prefix [Default: "v"]
     Specify a prefix for the git tag "fork-version" will create.
@@ -52,7 +52,7 @@ Options:
 				workingDirectory: { type: "string", default: process.cwd() },
 				changelog: { type: "string" },
 				header: { type: "string", shortFlag: "H" },
-				files: { type: "string", isMultiple: true, aliases: ["file"] },
+				files: { type: "string", isMultiple: true, aliases: ["file"], shortFlag: "F" },
 				tagPrefix: { type: "string" },
 				preReleaseTag: { type: "string" },
 
