@@ -9,6 +9,7 @@ on:
       - "pnpm-lock.yaml"
       - "README.md"
       - ".github/workflows/version.yml"
+  workflow_dispatch: {}
 
 jobs:
   version:
