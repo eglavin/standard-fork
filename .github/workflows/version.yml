@@ -64,7 +64,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          pnpm test || (tree -a ../fork-version.tests && exit 1)
+          pnpm test:ci || (tree -a ../fork-version.tests && exit 1)
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v3
