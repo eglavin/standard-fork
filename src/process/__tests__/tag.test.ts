@@ -13,11 +13,11 @@ describe("tagChanges", () => {
 
 		await tagChanges(config, logger, "1.2.4");
 
-		await execFile("git", ["tag"], { cwd: testDir }, (error, stdout) =>
-			expect(stdout).toContain("v1.2.4"),
-		);
+		await execFile("git", ["tag"], { cwd: testDir }, (_error, stdout, _stderr) => {
+			expect(stdout).toContain("v1.2.4");
 
-		deleteTestDir();
+			deleteTestDir();
+		});
 	});
 
 	it("should throw an error if the tag already exists", async () => {
