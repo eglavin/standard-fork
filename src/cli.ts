@@ -8,6 +8,7 @@ import { getCurrentVersion, getNextVersion } from "./process/version";
 import { updateChangelog } from "./process/changelog";
 import { commitChanges } from "./process/commit";
 import { tagChanges } from "./process/tag";
+import { completedMessage } from "./process/message";
 
 async function runFork() {
 	const config = await getUserConfig();
@@ -32,7 +33,9 @@ Updating Files: `);
 
 	const changelogResult = await updateChangelog(config, logger, next.version);
 	const commitResult = await commitChanges(config, logger, current.files, next.version);
-	const tagResult = await tagChanges(config, logger, current.files, next.version, next.releaseType);
+	const tagResult = await tagChanges(config, logger, next.version);
+
+	completedMessage(config, logger, current.files, next.releaseType);
 
 	const result = {
 		config,

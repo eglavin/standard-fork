@@ -7,7 +7,7 @@ import { commitChanges } from "../commit";
 
 describe("commit", () => {
 	it("should commit changed files", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("changelog");
+		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 
@@ -38,7 +38,7 @@ describe("commit", () => {
 	});
 
 	it("should not commit if there are no files to commit", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("changelog");
+		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 
@@ -59,7 +59,7 @@ describe("commit", () => {
 	});
 
 	it("should commit all files if commitAll is set to true", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("changelog");
+		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 		config.commitAll = true;
