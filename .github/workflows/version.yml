@@ -62,14 +62,14 @@ jobs:
           pnpm lint:check
 
       - name: Run Tests
+        shell: pwsh
         run: |
-          pnpm test:ci
-
-      - name: Tree Of Test Folder
-        run: |
-          tree fork-version.tests
-        continue-on-error: true
-        working-directory: ..
+          try {
+            pnpm test:ci
+          } catch {
+            tree ../fork-version.tests
+            throw $_
+          }
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v3
