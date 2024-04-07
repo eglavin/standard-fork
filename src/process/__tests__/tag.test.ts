@@ -13,7 +13,7 @@ describe("tagChanges", () => {
 
 		await tagChanges(config, logger, "1.2.4");
 
-		execFile("git", ["tag"], { cwd: testDir }, (error, stdout) =>
+		await execFile("git", ["tag"], { cwd: testDir }, (error, stdout) =>
 			expect(stdout).toContain("v1.2.4"),
 		);
 
