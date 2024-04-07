@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.41 (2024-04-07)
+
+
+### Refactor
+
+* **config:** rename working directory to path + changes to config ([d413fcc](https://github.com/eglavin/fork-version/commit/d413fccaf6d9324accdd894961ac70635aacbae0))
+
+
 ## 1.4.40 (2024-04-07)
 
 
@@ -359,6 +367,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
