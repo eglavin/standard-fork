@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.43 (2024-04-07)
+
+
+### Refactor
+
+* move some logging into functions ([6585d2b](https://github.com/eglavin/fork-version/commit/6585d2b0a82bdcd9feba7429d513541af2f56eed))
+
+
 ## 1.4.42 (2024-04-07)
 
 
@@ -370,6 +378,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
