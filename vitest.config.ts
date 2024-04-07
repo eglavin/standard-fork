@@ -4,6 +4,7 @@ export default defineConfig({
 	test: {
 		include: ["src/**/*.test.ts"],
 		globals: true,
+		restoreMocks: true,
 		coverage: {
 			include: ["src/**/*"],
 			all: true,

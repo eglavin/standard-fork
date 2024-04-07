@@ -67,6 +67,8 @@ jobs:
           try {
             pnpm test:ci
           } catch {
+            Get-Location
+            Get-Content -Path ../ -Recurse
             tree ../fork-version.tests
             throw $_
           }
