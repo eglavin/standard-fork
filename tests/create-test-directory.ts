@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { join } from "node:path";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
@@ -7,7 +8,7 @@ import { Logger } from "../src/utils/logger";
 
 export function createTestDir(testName: string) {
 	const testLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.
-	const testDirName = `${Date.now()}-${testName}`;
+	const testDirName = `${randomBytes(16).toString("hex")}-${testName}`;
 	const testDir = join(testLocation, testDirName);
 
 	const execSyncOptions: ExecSyncOptionsWithBufferEncoding = {
