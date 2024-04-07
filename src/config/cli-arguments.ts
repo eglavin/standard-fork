@@ -13,7 +13,7 @@ Options:
     Name of the changelog file.
   --header, -H
     The header to be used in the changelog.
-  --bump-files, --bump-file [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+  --files, --file [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
     Files to be updated.
   --tag-prefix [Default: "v"]
     Specify a prefix for the git tag "fork-version" will create.
@@ -28,7 +28,7 @@ Options:
   --dry-run
     If true, no output will be written to disk or committed.
   --git-tag-fallback [Default: true]
-    If true and we cant find a version in a bumpFiles, we'll fallback
+    If true and we cant find a version in the given files, we'll fallback
     and attempt to use the latest git tag for the current version.
   --inspect-version
     If set, we'll gather information about the current version and exit.
@@ -41,7 +41,7 @@ Options:
 
   --current-version
     If set, we'll use this version number instead of trying to find a
-    version in a "bumpFiles".
+    version in a "file".
   --next-version
     If set, we'll attempt to update the version number to this version,
     instead of incrementing using "conventional-commit".
@@ -49,10 +49,10 @@ Options:
 		{
 			importMeta: import.meta,
 			flags: {
-				workingDirectory: { type: "string" },
+				workingDirectory: { type: "string", default: process.cwd() },
 				changelog: { type: "string" },
 				header: { type: "string", shortFlag: "H" },
-				bumpFiles: { type: "string", isMultiple: true, aliases: ["bump-file"] },
+				files: { type: "string", isMultiple: true, aliases: ["file"] },
 				tagPrefix: { type: "string" },
 				preReleaseTag: { type: "string" },
 

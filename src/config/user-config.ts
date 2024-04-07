@@ -27,15 +27,15 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		if (parsedConfig.success) {
 			const usersConfig = Object.assign({}, DEFAULT_CONFIG, parsedConfig.data, cliArguments.flags);
 
-			// Allow users to add additional bumpFiles
-			const mergedBumpFiles = DEFAULT_CONFIG.bumpFiles.concat(
-				Array.isArray(parsedConfig.data?.bumpFiles) ? parsedConfig.data.bumpFiles : [],
-				Array.isArray(cliArguments.flags?.bumpFiles) ? cliArguments.flags.bumpFiles : [],
+			// Allow users to add additional files
+			const mergedFiles = DEFAULT_CONFIG.files.concat(
+				Array.isArray(parsedConfig.data?.files) ? parsedConfig.data.files : [],
+				Array.isArray(cliArguments.flags?.files) ? cliArguments.flags.files : [],
 			);
 
 			return Object.assign(usersConfig, {
 				changelogPresetConfig: getChangelogPresetConfig(usersConfig?.changelogPresetConfig),
-				bumpFiles: Array.from(new Set(mergedBumpFiles)),
+				files: Array.from(new Set(mergedFiles)),
 			});
 		} else {
 			throw parsedConfig.error;

@@ -25,13 +25,13 @@ export const ForkConfigSchema = z.object({
 	 */
 	header: z.string(),
 	/**
-	 * Files to be updated, Currently only JSON files with a version key are supported.
+	 * Files to be updated.
 	 * @default
 	 * ```js
 	 * ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]
 	 * ```
 	 */
-	bumpFiles: z.array(z.string()),
+	files: z.array(z.string()),
 	/**
 	 * Specify a prefix for the git tag fork-version will create.
 	 *
@@ -83,8 +83,8 @@ export const ForkConfigSchema = z.object({
 	 */
 	dryRun: z.boolean(),
 	/**
-	 * If true and we cant find a version in a `bumpFiles`, we'll fallback and attempt to use
-	 * the latest git tag for the current version.
+	 * If true and we cant find a version in the list of `files`, we'll fallback
+	 * and attempt to use the latest git tag to get the current version.
 	 * @default true
 	 */
 	gitTagFallback: z.boolean(),
@@ -111,7 +111,7 @@ export const ForkConfigSchema = z.object({
 	verify: z.boolean(),
 
 	/**
-	 * If set, we'll use this version number instead of trying to find a version in a `bumpFiles`.
+	 * If set, we'll use this version number instead of trying to find a version from the list of `files`.
 	 * @example "1.0.0"
 	 * @default undefined
 	 */

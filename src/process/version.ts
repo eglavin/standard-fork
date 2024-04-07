@@ -18,7 +18,7 @@ export async function getCurrentVersion(
 	const files: FileState[] = [];
 	const versions = new Set<string>();
 
-	for (const file of config.bumpFiles) {
+	for (const file of config.files) {
 		const fileState = fileManager.read(file);
 
 		if (fileState) {

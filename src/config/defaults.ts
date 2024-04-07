@@ -3,7 +3,7 @@ import type { ForkConfig } from "./schema";
 export const DEFAULT_CONFIG: ForkConfig = {
 	workingDirectory: process.cwd(),
 	changelog: "CHANGELOG.md",
-	bumpFiles: [
+	files: [
 		"package.json",
 		"package-lock.json",
 		"npm-shrinkwrap.json",
