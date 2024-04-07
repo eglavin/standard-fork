@@ -14,16 +14,15 @@ export async function tagChanges(
 ): Promise<TagChanges> {
 	const git = new Git(config, logger);
 
-	const shouldSign = config.sign ? "-s" : "-a";
 	/** @example "v1.2.3" or "version/1.2.3" */
 	const tag = `${config.tagPrefix}${nextVersion}`;
 
 	logger.log(`Creating Tag: ${tag}`);
 
 	const gitTagOutput = await git.tag(
-		shouldSign,
+		config.sign ? "--sign" : "--annotate",
 		tag,
-		"-m",
+		"--message",
 		formatCommitMessage(config.changelogPresetConfig?.releaseCommitMessageFormat, nextVersion),
 	);
 
