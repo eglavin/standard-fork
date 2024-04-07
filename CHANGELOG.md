@@ -1,5 +1,8 @@
 # Fork Version
 
+## 1.4.40 (2024-04-07)
+
+
 ## 1.4.39 (2024-04-01)
 
 
@@ -356,6 +359,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
