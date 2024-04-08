@@ -6,6 +6,8 @@
 
 Fork-version is a re-write of [standard-version](https://github.com/conventional-changelog/standard-version) following on from its deprecation in May 15, 2022.
 
+<img src="assets/fork-version.jpg" alt="Fork Version Icon" width="200px">
+
 ## Installation
 
 To install the package locally to your project you can use one of the following commands:
