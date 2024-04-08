@@ -12,60 +12,8 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  test_windows:
-    name: Test Windows
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        id: pnpm-install
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile
-
-      - name: Run Typecheck
-        run: |
-          pnpm typecheck
-
-      - name: Run Lint Check
-        run: |
-          pnpm lint:check
-
-      - name: Run Tests
-        shell: bash
-        run: |
-          pnpm test:ci || (tree -a ../fork-version.tests && exit 1)
-
-
-  test_ubuntu:
-    name: Test and Version PR
+  version:
+    name: Version
     runs-on: ubuntu-latest
 
     steps:
@@ -106,40 +54,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
-
-      - name: Run Typecheck
-        run: |
-          pnpm typecheck
-
-      - name: Run Lint Check
-        run: |
-          pnpm lint:check
-
-      - name: Run Tests
-        run: |
-          pnpm test:ci || (tree -a ../fork-version.tests && exit 1)
-
-      - name: Upload Coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-${{ github.run_number }}
-          path: coverage
-          retention-days: 7
-
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage/cobertura-coverage.xml
-          format: markdown
-          output: both
-          thresholds: "60 80"
-          badge: true
-
-      - name: Update README Code Coverage
-        run: |
-          node scripts/update-readme-code-coverage.js
-          npx prettier --write README.md
-          git add README.md
 
       - name: Build
         run: |
