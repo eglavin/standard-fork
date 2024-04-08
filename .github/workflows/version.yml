@@ -50,7 +50,6 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
-
       - name: Run Typecheck
         run: |
           pnpm typecheck
@@ -60,6 +59,7 @@ jobs:
           pnpm lint:check
 
       - name: Run Tests
+        shell: bash
         run: |
           pnpm test:ci || (tree -a ../fork-version.tests && exit 1)
 
