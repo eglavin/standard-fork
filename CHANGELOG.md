@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.45 (2024-04-08)
+
+
+### Chore
+
+* add fork-version icon ([9c65555](https://github.com/eglavin/fork-version/commit/9c65555b7ef0d65cede785c341fb83f36c3b72ac))
+
+
 ## 1.4.44 (2024-04-07)
 
 
@@ -386,6 +394,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
