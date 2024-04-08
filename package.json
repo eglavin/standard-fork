@@ -38,7 +38,9 @@
     "fork-version": "./dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
   ],
   "scripts": {
     "fork-version": "node dist/cli.js",
