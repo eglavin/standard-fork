@@ -57,6 +57,7 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
           pnpm test:ci
+          tree /f ../fork-version.tests
 
   test_ubuntu:
     name: Test Ubuntu
