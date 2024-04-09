@@ -35,7 +35,7 @@ export function createTestDir(testName: string) {
 		testDir,
 
 		deleteTestDir: function _deleteTestDir() {
-			rmSync(testDir, { recursive: true, force: true });
+			rmSync(testDir, { recursive: true, force: true, maxRetries: 2 });
 		},
 
 		createJSONFile: function _createJSONFile(jsObject?: object, file = "package.json") {
