@@ -55,6 +55,7 @@ jobs:
       - name: Run Tests
         run: |
           pnpm test:ci
+          tree -a ../fork-version.tests
 
   test_ubuntu:
     name: Test Ubuntu
