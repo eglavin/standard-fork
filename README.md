@@ -23,21 +23,3 @@ Otherwise you can use `npx` to run the package without installation like so:
 ```bash
 npx fork-version
 ```
-
-## Code Coverage
-
-<!-- Code Coverage Table Start -->
-
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-94%25-success?style=flat)
-
-| Package        | Line Rate             | Branch Rate         | Complexity | Health |
-| -------------- | --------------------- | ------------------- | ---------- | ------ |
-| src            | 21%                   | 0%                  | 0          | ❌     |
-| src.config     | 98%                   | 56%                 | 0          | ✔     |
-| src.libs       | 100%                  | 100%                | 0          | ✔     |
-| src.process    | 96%                   | 88%                 | 0          | ✔     |
-| src.strategies | 100%                  | 100%                | 0          | ✔     |
-| src.utils      | 100%                  | 100%                | 0          | ✔     |
-| **Summary**    | **94%** (1189 / 1265) | **90%** (143 / 158) | **0**      | ✔     |
-
-<!-- Code Coverage Table End -->
