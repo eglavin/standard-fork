@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { join } from "node:path";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
-import { moveRemove } from "rimraf";
+import { moveRemoveSync } from "rimraf";
 
 import { getUserConfig } from "../src";
 import { Logger } from "../src/utils/logger";
@@ -36,7 +36,7 @@ export function createTestDir(testName: string) {
 		testDir,
 
 		deleteTestDir: function _deleteTestDir() {
-			moveRemove(testDir);
+			moveRemoveSync(testDir);
 		},
 
 		createJSONFile: function _createJSONFile(jsObject?: object, file = "package.json") {
