@@ -54,8 +54,13 @@ jobs:
 
       - name: Run Tests
         run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
           pnpm test:ci
-          tree -a ../fork-version.tests
+          if ($LastExitCode -ne 0) {
+            tree /f ../fork-version.tests;
+            exit 1
+          }
 
   test_ubuntu:
     name: Test Ubuntu
@@ -105,4 +110,6 @@ jobs:
 
       - name: Run Tests
         run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
           pnpm test:ci || (tree -a ../fork-version.tests && exit 1)

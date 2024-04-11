@@ -6,7 +6,7 @@ import { updateChangelog } from "../changelog";
 
 describe("changelog", () => {
 	it("should create changelog file", async () => {
-		const { testDir, createCommit, deleteTestDir, createTestConfig } = createTestDir("changelog");
+		const { testDir, createCommit, createTestConfig } = createTestDir("changelog");
 
 		createCommit("feat: A feature commit", "BREAKING CHANGE: A breaking change message");
 
@@ -15,13 +15,10 @@ describe("changelog", () => {
 		expect(existsSync(join(testDir, "CHANGELOG.md"))).toBe(false);
 		await updateChangelog(config, logger, "1.2.4");
 		expect(existsSync(join(testDir, "CHANGELOG.md"))).toBe(true);
-
-		deleteTestDir();
 	});
 
 	it("should update changelog file", async () => {
-		const { testDir, createCommit, deleteTestDir, createFile, createTestConfig } =
-			createTestDir("changelog");
+		const { testDir, createCommit, createFile, createTestConfig } = createTestDir("changelog");
 
 		createFile(
 			`# Test Header
@@ -42,13 +39,10 @@ describe("changelog", () => {
 		expect(changelog).toContain("A feature commit");
 		expect(changelog).toContain("### ⚠ BREAKING CHANGES");
 		expect(changelog).toContain("A breaking change message");
-
-		deleteTestDir();
 	});
 
 	it("should throw an error if header contains a release pattern", async () => {
-		const { createFile, createCommit, createTestConfig, deleteTestDir } =
-			createTestDir("changelog");
+		const { createFile, createCommit, createTestConfig } = createTestDir("changelog");
 
 		createFile(
 			`# Test Header
@@ -65,13 +59,10 @@ describe("changelog", () => {
 		expect(updateChangelog(config, logger, "1.2.4")).rejects.toThrow(
 			"Header cannot contain release pattern",
 		);
-
-		deleteTestDir();
 	});
 
 	it("should not update changelog if dryRun is set", async () => {
-		const { testDir, createFile, createCommit, createTestConfig, deleteTestDir } =
-			createTestDir("changelog");
+		const { testDir, createFile, createCommit, createTestConfig } = createTestDir("changelog");
 
 		createFile(
 			`# Test Header
@@ -90,7 +81,5 @@ describe("changelog", () => {
 		const changelog = readFileSync(join(testDir, "CHANGELOG.md"), "utf-8");
 		expect(changelog).toContain("## 1.2.3");
 		expect(changelog).not.toContain("## 1.2.4");
-
-		deleteTestDir();
 	});
 });

@@ -53,7 +53,8 @@
     "test": "vitest",
     "test:cover": "vitest --coverage",
     "test:ci": "vitest run --coverage --no-file-parallelism",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:cleanup": "rimraf -g ../fork-version.tests/*"
   },
   "dependencies": {
     "bundle-require": "4.0.2",
@@ -82,6 +83,7 @@
     "eslint-plugin-prettier": "5.1.3",
     "globals": "15.0.0",
     "prettier": "3.2.5",
+    "rimraf": "5.0.5",
     "tsup": "8.0.2",
     "typescript": "5.4.3",
     "typescript-eslint": "7.4.0",

@@ -7,7 +7,7 @@ import { commitChanges } from "../commit";
 
 describe("commit", () => {
 	it("should commit changed files", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
+		const { testDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 
@@ -33,12 +33,10 @@ describe("commit", () => {
 			},
 			(error, stdout) => expect(stdout).toContain("?? README.md"),
 		);
-
-		deleteTestDir();
 	});
 
 	it("should not commit if there are no files to commit", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
+		const { testDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 
@@ -54,12 +52,10 @@ describe("commit", () => {
 			},
 			(error, stdout) => expect(stdout).toContain(""),
 		);
-
-		deleteTestDir();
 	});
 
 	it("should commit all files if commitAll is set to true", async () => {
-		const { testDir, deleteTestDir, createTestConfig } = createTestDir("commit");
+		const { testDir, createTestConfig } = createTestDir("commit");
 
 		const { config, logger } = await createTestConfig();
 		config.commitAll = true;
@@ -86,7 +82,5 @@ describe("commit", () => {
 			},
 			(error, stdout) => expect(stdout).toBe(""),
 		);
-
-		deleteTestDir();
 	});
 });
