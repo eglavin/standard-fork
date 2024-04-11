@@ -2,7 +2,6 @@ import { randomBytes } from "node:crypto";
 import { join } from "node:path";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
-// import { moveRemoveSync } from "rimraf";
 
 import { getUserConfig } from "../src";
 import { Logger } from "../src/utils/logger";
@@ -34,10 +33,6 @@ export function createTestDir(testName: string) {
 	return {
 		testDirName,
 		testDir,
-
-		deleteTestDir: function _deleteTestDir() {
-			// moveRemoveSync(testDir);
-		},
 
 		createJSONFile: function _createJSONFile(jsObject?: object, file = "package.json") {
 			const stringifiedPackage = JSON.stringify(jsObject ?? { version: "1.0.0" }, null, 2);

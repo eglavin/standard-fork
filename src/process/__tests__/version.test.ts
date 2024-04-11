@@ -6,8 +6,9 @@ import { FileManager } from "../../strategies/file-manager";
 
 describe("version > getCurrentVersion", () => {
 	it("should be able to read package.json", async () => {
-		const { testDir, createJSONFile, createCommits, deleteTestDir, createTestConfig } =
-			createTestDir("version getCurrentVersion");
+		const { testDir, createJSONFile, createCommits, createTestConfig } = createTestDir(
+			"version getCurrentVersion",
+		);
 
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
@@ -27,13 +28,12 @@ describe("version > getCurrentVersion", () => {
 			],
 			version: "1.2.3",
 		});
-
-		deleteTestDir();
 	});
 
 	it("should determine the package is private", async () => {
-		const { testDir, createJSONFile, createCommits, deleteTestDir, createTestConfig } =
-			createTestDir("version getCurrentVersion");
+		const { testDir, createJSONFile, createCommits, createTestConfig } = createTestDir(
+			"version getCurrentVersion",
+		);
 
 		createJSONFile({ version: "1.2.3", private: true });
 		createCommits();
@@ -53,13 +53,12 @@ describe("version > getCurrentVersion", () => {
 			],
 			version: "1.2.3",
 		});
-
-		deleteTestDir();
 	});
 
 	it("should be able to read package-lock.json", async () => {
-		const { testDir, createJSONFile, createCommits, deleteTestDir, createTestConfig } =
-			createTestDir("version getCurrentVersion");
+		const { testDir, createJSONFile, createCommits, createTestConfig } = createTestDir(
+			"version getCurrentVersion",
+		);
 
 		createJSONFile({ version: "1.2.3" });
 		createJSONFile(
@@ -93,12 +92,10 @@ describe("version > getCurrentVersion", () => {
 			],
 			version: "1.2.3",
 		});
-
-		deleteTestDir();
 	});
 
 	it("should throw an error if multiple versions found", async () => {
-		const { createJSONFile, createCommits, deleteTestDir, createTestConfig } = createTestDir(
+		const { createJSONFile, createCommits, createTestConfig } = createTestDir(
 			"version getCurrentVersion",
 		);
 
@@ -112,12 +109,10 @@ describe("version > getCurrentVersion", () => {
 		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
 			"Found multiple versions",
 		);
-
-		deleteTestDir();
 	});
 
 	it("should throw an error if no version found", async () => {
-		const { deleteTestDir, createTestConfig } = createTestDir("getCurrentVersion");
+		const { createTestConfig } = createTestDir("getCurrentVersion");
 
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
@@ -125,13 +120,12 @@ describe("version > getCurrentVersion", () => {
 		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
 			"Unable to find current version",
 		);
-
-		deleteTestDir();
 	});
 
 	it("should be able to define the current version using the config", async () => {
-		const { testDir, createJSONFile, createCommits, deleteTestDir, createTestConfig } =
-			createTestDir("version getCurrentVersion");
+		const { testDir, createJSONFile, createCommits, createTestConfig } = createTestDir(
+			"version getCurrentVersion",
+		);
 
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
@@ -152,15 +146,13 @@ describe("version > getCurrentVersion", () => {
 			],
 			version: "3.2.1",
 		});
-
-		deleteTestDir();
 	});
 
 	it("should log the version and exit if inspectVersion set", async () => {
 		const spyOnConsole = vi.spyOn(console, "log").mockImplementation(() => undefined);
 		const spyOnProcess = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
 
-		const { createJSONFile, createCommits, deleteTestDir, createTestConfig } = createTestDir(
+		const { createJSONFile, createCommits, createTestConfig } = createTestDir(
 			"version getCurrentVersion",
 		);
 
@@ -176,14 +168,12 @@ describe("version > getCurrentVersion", () => {
 		expect(spyOnProcess).toHaveBeenCalledWith(0);
 		spyOnConsole.mockRestore();
 		spyOnProcess.mockRestore();
-
-		deleteTestDir();
 	});
 });
 
 describe("version > getNextVersion", () => {
 	it("should determine the next version as a minor bump", async () => {
-		const { createJSONFile, createCommits, deleteTestDir, createTestConfig } =
+		const { createJSONFile, createCommits, createTestConfig } =
 			createTestDir("version getNextVersion");
 
 		createJSONFile({ version: "1.2.3" });
@@ -199,24 +189,20 @@ describe("version > getNextVersion", () => {
 			releaseType: "minor",
 			version: "1.3.0",
 		});
-
-		deleteTestDir();
 	});
 
 	it("should throw an error if not able to determine the next version", async () => {
-		const { createTestConfig, deleteTestDir } = createTestDir("version getNextVersion");
+		const { createTestConfig } = createTestDir("version getNextVersion");
 
 		const { config, logger } = await createTestConfig();
 
 		expect(getNextVersion(config, logger, "1.2.3")).rejects.toThrow(
 			"[conventional-recommended-bump] Unable to determine next version",
 		);
-
-		deleteTestDir();
 	});
 
 	it("should be able to define the next version using the config", async () => {
-		const { createJSONFile, createCommits, createTestConfig, deleteTestDir } =
+		const { createJSONFile, createCommits, createTestConfig } =
 			createTestDir("version getNextVersion");
 
 		createJSONFile({ version: "1.2.3" });
@@ -227,7 +213,5 @@ describe("version > getNextVersion", () => {
 
 		const result = await getNextVersion(config, logger, "1.2.3");
 		expect(result).toEqual({ version: "2.0.0" });
-
-		deleteTestDir();
 	});
 });

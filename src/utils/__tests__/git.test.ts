@@ -5,7 +5,7 @@ import { Git } from "../git";
 
 describe("git", () => {
 	it("should accept arguments", async () => {
-		const { testDir, createCommits, createJSONFile, deleteTestDir, createTestConfig } =
+		const { testDir, createCommits, createJSONFile, createTestConfig } =
 			createTestDir("execute-file");
 
 		createJSONFile();
@@ -18,12 +18,10 @@ describe("git", () => {
 
 		const log = execSync("git log", { cwd: testDir }).toString();
 		expect(log).toMatch(/test: test arguments works/);
-
-		deleteTestDir();
 	});
 
 	it("should not execute if dryRun is enabled", async () => {
-		const { testDir, createCommits, createJSONFile, deleteTestDir, createTestConfig } =
+		const { testDir, createCommits, createJSONFile, createTestConfig } =
 			createTestDir("execute-file");
 
 		createJSONFile();
@@ -37,13 +35,10 @@ describe("git", () => {
 
 		const log = execSync("git log", { cwd: testDir }).toString();
 		expect(log).not.toMatch(/test: test arguments works/);
-
-		deleteTestDir();
 	});
 
 	it("should log if debug is enabled", async () => {
-		const { createCommits, createJSONFile, deleteTestDir, createTestConfig } =
-			createTestDir("execute-file");
+		const { createCommits, createJSONFile, createTestConfig } = createTestDir("execute-file");
 
 		createJSONFile();
 		createCommits();
@@ -56,13 +51,10 @@ describe("git", () => {
 		expect(logger.debug).toHaveBeenCalledWith(
 			expect.stringMatching(/git commit --allow-empty -m test: test arguments works$/),
 		);
-
-		deleteTestDir();
 	});
 
 	it("should log if error is thrown", async () => {
-		const { createCommits, createJSONFile, deleteTestDir, createTestConfig } =
-			createTestDir("execute-file");
+		const { createCommits, createJSONFile, createTestConfig } = createTestDir("execute-file");
 
 		createJSONFile();
 		createCommits();
@@ -75,7 +67,5 @@ describe("git", () => {
 
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/add:$/));
-
-		deleteTestDir();
 	});
 });

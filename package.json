@@ -53,7 +53,8 @@
     "test": "vitest",
     "test:cover": "vitest --coverage",
     "test:ci": "vitest run --coverage --no-file-parallelism",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:cleanup": "rimraf -g ../fork-version.tests/*"
   },
   "dependencies": {
     "bundle-require": "4.0.2",

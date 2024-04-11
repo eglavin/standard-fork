@@ -6,8 +6,7 @@ import { FileManager } from "../file-manager";
 
 describe("strategies file-manager", () => {
 	it("should read json when file extension is .json", async () => {
-		const { deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies file-manager");
+		const { createJSONFile, createTestConfig } = createTestDir("strategies file-manager");
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
 
@@ -16,13 +15,10 @@ describe("strategies file-manager", () => {
 
 		const file = fileManager.read("package.json");
 		expect(file?.version).toEqual("1.2.3");
-
-		deleteTestDir();
 	});
 
 	it("should read plain text when file is version.txt", async () => {
-		const { deleteTestDir, createFile, createTestConfig } =
-			createTestDir("strategies file-manager");
+		const { createFile, createTestConfig } = createTestDir("strategies file-manager");
 
 		createFile("1.2.3", "version.txt");
 
@@ -31,13 +27,10 @@ describe("strategies file-manager", () => {
 
 		const file = fileManager.read("version.txt");
 		expect(file?.version).toEqual("1.2.3");
-
-		deleteTestDir();
 	});
 
 	it("should log an error when read file type is not supported", async () => {
-		const { deleteTestDir, createFile, createTestConfig } =
-			createTestDir("strategies file-manager");
+		const { createFile, createTestConfig } = createTestDir("strategies file-manager");
 
 		createFile("Version: 1.2.3", "version.unknown");
 
@@ -46,12 +39,10 @@ describe("strategies file-manager", () => {
 
 		fileManager.read("version.unknown");
 		expect(logger.error).toHaveBeenCalledWith("Unsupported file type: version.unknown");
-
-		deleteTestDir();
 	});
 
 	it("should not write to file if dry run is enabled", async () => {
-		const { deleteTestDir, createTestConfig } = createTestDir("strategies file-manager");
+		const { createTestConfig } = createTestDir("strategies file-manager");
 
 		const { config, logger } = await createTestConfig();
 		config.dryRun = true;
@@ -59,13 +50,10 @@ describe("strategies file-manager", () => {
 
 		fileManager.write("package.json", "1.2.3");
 		expect(logger.log).toHaveBeenCalledWith("[Dry run]: Not updating package.json");
-
-		deleteTestDir();
 	});
 
 	it("should write json file when file extension is .json", async () => {
-		const { testDir, deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies file-manager");
+		const { testDir, createJSONFile, createTestConfig } = createTestDir("strategies file-manager");
 
 		createJSONFile({ version: "1.0.0" }, "package.json");
 
@@ -76,13 +64,10 @@ describe("strategies file-manager", () => {
 
 		const packageJSON = JSON.parse(readFileSync(join(testDir, "package.json"), "utf-8"));
 		expect(packageJSON.version).toEqual("1.2.3");
-
-		deleteTestDir();
 	});
 
 	it("should write plain text when file is version.txt", async () => {
-		const { testDir, deleteTestDir, createFile, createTestConfig } =
-			createTestDir("strategies file-manager");
+		const { testDir, createFile, createTestConfig } = createTestDir("strategies file-manager");
 
 		createFile("1.0.0", "version.txt");
 
@@ -93,19 +78,15 @@ describe("strategies file-manager", () => {
 
 		const version = readFileSync(join(testDir, "version.txt"), "utf-8");
 		expect(version).toEqual("1.2.3");
-
-		deleteTestDir();
 	});
 
 	it("should log an error when write file type is not supported", async () => {
-		const { deleteTestDir, createTestConfig } = createTestDir("strategies file-manager");
+		const { createTestConfig } = createTestDir("strategies file-manager");
 
 		const { config, logger } = await createTestConfig();
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.write("version.unknown", "1.2.3");
 		expect(logger.error).toHaveBeenCalledWith("Unsupported file type: version.unknown");
-
-		deleteTestDir();
 	});
 });

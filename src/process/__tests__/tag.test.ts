@@ -5,7 +5,7 @@ import { tagChanges } from "../tag";
 
 describe("tagChanges", () => {
 	it("should create a tag", async () => {
-		const { testDir, createCommit, deleteTestDir, createTestConfig } = createTestDir("tagChanges");
+		const { testDir, createCommit, createTestConfig } = createTestDir("tagChanges");
 		const { config, logger } = await createTestConfig();
 
 		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
@@ -15,13 +15,11 @@ describe("tagChanges", () => {
 
 		await execFile("git", ["tag"], { cwd: testDir }, (_error, stdout, _stderr) => {
 			expect(stdout).toContain("v1.2.4");
-
-			deleteTestDir();
 		});
 	});
 
 	it("should throw an error if the tag already exists", async () => {
-		const { testDir, createTestConfig, createCommit, deleteTestDir } = createTestDir("tagChanges");
+		const { testDir, createTestConfig, createCommit } = createTestDir("tagChanges");
 		const { config, logger } = await createTestConfig();
 
 		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
@@ -31,8 +29,6 @@ describe("tagChanges", () => {
 			(async () => {
 				await tagChanges(config, logger, "1.2.4");
 				await tagChanges(config, logger, "1.2.4");
-
-				deleteTestDir();
 			})(),
 		).rejects.toThrow("tag 'v1.2.4' already exists");
 	});

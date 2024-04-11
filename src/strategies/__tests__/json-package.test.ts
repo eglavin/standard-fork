@@ -6,8 +6,7 @@ import { JSONPackage } from "../json-package";
 
 describe("strategies json-package", () => {
 	it("should read a package.json file", async () => {
-		const { deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies json-package");
+		const { createJSONFile, createTestConfig } = createTestDir("strategies json-package");
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
 
@@ -16,13 +15,10 @@ describe("strategies json-package", () => {
 
 		const file = fileManager.read("package.json");
 		expect(file?.version).toEqual("1.2.3");
-
-		deleteTestDir();
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies json-package");
+		const { createJSONFile, createTestConfig } = createTestDir("strategies json-package");
 
 		createJSONFile({ version: "" }, "package.json");
 
@@ -33,13 +29,10 @@ describe("strategies json-package", () => {
 		expect(file).toBeUndefined();
 
 		expect(logger.warn).toBeCalledWith("Unable to determine json package file: package.json");
-
-		deleteTestDir();
 	});
 
 	it("should read private property", async () => {
-		const { deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies json-package");
+		const { createJSONFile, createTestConfig } = createTestDir("strategies json-package");
 
 		createJSONFile({ version: "1.2.3", private: true }, "package.json");
 
@@ -48,13 +41,10 @@ describe("strategies json-package", () => {
 
 		const file = fileManager.read("package.json");
 		expect(file?.isPrivate).toEqual(true);
-
-		deleteTestDir();
 	});
 
 	it("should write a package.json file", async () => {
-		const { testDir, deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies json-package");
+		const { testDir, createJSONFile, createTestConfig } = createTestDir("strategies json-package");
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
 
@@ -65,13 +55,10 @@ describe("strategies json-package", () => {
 
 		const file = fileManager.read(join(testDir, "package.json"));
 		expect(file?.version).toEqual("4.5.6");
-
-		deleteTestDir();
 	});
 
 	it("should write a package-lock.json file", async () => {
-		const { testDir, deleteTestDir, createJSONFile, createTestConfig } =
-			createTestDir("strategies json-package");
+		const { testDir, createJSONFile, createTestConfig } = createTestDir("strategies json-package");
 
 		createJSONFile(
 			{
@@ -90,7 +77,5 @@ describe("strategies json-package", () => {
 		const content = JSON.parse(readFileSync(join(testDir, "package-lock.json"), "utf8"));
 		expect(content.version).toContain("4.5.6");
 		expect(content.packages[""].version).toContain("4.5.6");
-
-		deleteTestDir();
 	});
 });
