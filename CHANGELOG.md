@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.48 (2024-04-11)
+
+
+### Docs
+
+* removes coverage from readme ([#16](https://github.com/eglavin/fork-version/issues/16)) ([a7edec1](https://github.com/eglavin/fork-version/commit/a7edec1c95dc0d8a56d1aed80820afef32dbf7a5))
+
+
 ## 1.4.47 (2024-04-11)
 
 
@@ -400,6 +408,7 @@
 ### Features
 
 * add conventional bump ([3b8ceef](https://github.com/eglavin/fork-version/commit/3b8ceef27baced317d6d7375dc3dfc2e6b0a58b0))
+
 
 
 
