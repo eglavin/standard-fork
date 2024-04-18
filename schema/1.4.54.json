@@ -1,0 +1,130 @@
+{
+  "$ref": "#/definitions/type",
+  "definitions": {
+    "type": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "changelog": {
+          "type": "string"
+        },
+        "header": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tagPrefix": {
+          "type": "string"
+        },
+        "preReleaseTag": {
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "commitAll": {
+          "type": "boolean"
+        },
+        "debug": {
+          "type": "boolean"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "gitTagFallback": {
+          "type": "boolean"
+        },
+        "inspectVersion": {
+          "type": "boolean"
+        },
+        "sign": {
+          "type": "boolean"
+        },
+        "silent": {
+          "type": "boolean"
+        },
+        "verify": {
+          "type": "boolean"
+        },
+        "currentVersion": {
+          "type": "string"
+        },
+        "nextVersion": {
+          "type": "string"
+        },
+        "changelogPresetConfig": {
+          "type": "object",
+          "properties": {
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "section": {
+                    "type": "string"
+                  },
+                  "hidden": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "commitUrlFormat": {
+              "type": "string"
+            },
+            "compareUrlFormat": {
+              "type": "string"
+            },
+            "issueUrlFormat": {
+              "type": "string"
+            },
+            "userUrlFormat": {
+              "type": "string"
+            },
+            "releaseCommitMessageFormat": {
+              "type": "string"
+            },
+            "issuePrefixes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "path",
+        "changelog",
+        "header",
+        "files",
+        "tagPrefix",
+        "commitAll",
+        "debug",
+        "dryRun",
+        "gitTagFallback",
+        "inspectVersion",
+        "sign",
+        "silent",
+        "verify",
+        "changelogPresetConfig"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
