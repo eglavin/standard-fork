@@ -27,7 +27,9 @@ describe("strategies plain-text", () => {
 		const file = fileManager.read("version.txt");
 
 		expect(file).toBeUndefined();
-		expect(logger.warn).toHaveBeenCalledWith("Unable to determine plain text file: version.txt");
+		expect(logger.warn).toHaveBeenCalledWith(
+			"[File Manager] Unable to determine plain text: version.txt",
+		);
 	});
 
 	it("should return empty string when version.txt is empty", async () => {

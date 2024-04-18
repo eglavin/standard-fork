@@ -15,15 +15,15 @@ async function runFork() {
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
 
-	logger.log(`Running fork-version: ${new Date().toLocaleString()}`);
-	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "\n");
+	logger.log(`Running fork-version - ${new Date().toLocaleString()}`);
+	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
 
 	const current = await getCurrentVersion(config, logger, fileManager);
 	const next = await getNextVersion(config, logger, current.version);
 
 	logger.log("Updating Files: ");
 	for (const outFile of current.files) {
-		logger.log(`\t${outFile.path}`);
+		logger.log(`  - ${outFile.path}`);
 
 		fileManager.write(outFile.path, next.version);
 	}

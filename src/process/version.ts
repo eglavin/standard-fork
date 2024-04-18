@@ -38,17 +38,15 @@ export async function getCurrentVersion(
 		versions.add(config.currentVersion);
 	}
 
-	if (versions.size === 0) {
-		if (config.gitTagFallback) {
-			const version = await getLatestGitTagVersion(config.tagPrefix);
-			if (version) {
-				return {
-					files: [],
-					version: version,
-				};
-			}
+	// If we still don't have a version, try to get the latest git tag
+	if (versions.size === 0 && config.gitTagFallback) {
+		const version = await getLatestGitTagVersion(config.tagPrefix);
+		if (version) {
+			versions.add(version);
 		}
+	}
 
+	if (versions.size === 0) {
 		throw new Error("Unable to find current version");
 	} else if (versions.size > 1) {
 		throw new Error("Found multiple versions");
@@ -84,7 +82,9 @@ export async function getNextVersion(
 ): Promise<NextVersion> {
 	if (config.nextVersion && semver.valid(config.nextVersion)) {
 		logger.log(`Next version: ${config.nextVersion}`);
-		return { version: config.nextVersion };
+		return {
+			version: config.nextVersion,
+		};
 	}
 
 	const isPreMajor = semver.lt(currentVersion, "1.0.0");

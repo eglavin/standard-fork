@@ -49,7 +49,7 @@ describe("git", () => {
 
 		expect(logger.debug).toHaveBeenCalledTimes(1);
 		expect(logger.debug).toHaveBeenCalledWith(
-			expect.stringMatching(/git commit --allow-empty -m test: test arguments works$/),
+			expect.stringMatching(/\[git commit\] --allow-empty -m test: test arguments works$/),
 		);
 	});
 
@@ -66,6 +66,6 @@ describe("git", () => {
 		} catch (_) {}
 
 		expect(logger.error).toHaveBeenCalledTimes(1);
-		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/add:$/));
+		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/\[git add\] $/));
 	});
 });

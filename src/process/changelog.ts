@@ -48,7 +48,7 @@ function getNewReleaseContent(
 					...config.changelogPresetConfig,
 				},
 				tagPrefix: config.tagPrefix,
-				warn: (...message: string[]) => logger.error("conventional-changelog: ", ...message),
+				warn: (...message: string[]) => logger.error("[conventional-changelog] ", ...message),
 				cwd: config.path,
 			},
 			{
@@ -60,7 +60,7 @@ function getNewReleaseContent(
 			},
 		)
 			.on("error", (error) => {
-				logger.error("conventional-changelog: Unable to parse changes");
+				logger.error("[conventional-changelog] Unable to parse changes");
 				throw error;
 			})
 			.on("data", (chunk) => {

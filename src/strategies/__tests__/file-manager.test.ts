@@ -38,7 +38,7 @@ describe("strategies file-manager", () => {
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.read("version.unknown");
-		expect(logger.error).toHaveBeenCalledWith("Unsupported file type: version.unknown");
+		expect(logger.error).toHaveBeenCalledWith("[File Manager] Unsupported file: version.unknown");
 	});
 
 	it("should not write to file if dry run is enabled", async () => {
@@ -86,6 +86,6 @@ describe("strategies file-manager", () => {
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.write("version.unknown", "1.2.3");
-		expect(logger.error).toHaveBeenCalledWith("Unsupported file type: version.unknown");
+		expect(logger.error).toHaveBeenCalledWith("[File Manager] Unsupported file: version.unknown");
 	});
 });
