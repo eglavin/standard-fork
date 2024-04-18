@@ -42,23 +42,31 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		...cliArguments.flags,
 	} as ForkConfig;
 
-	const files = mergeFiles(parsedConfig.data?.files, cliArguments.flags?.files);
-
 	return {
 		...usersConfig,
 		path: cwd,
-		files: files.length > 0 ? files : DEFAULT_CONFIG.files,
+		files: getFiles(parsedConfig.data?.files, cliArguments.flags?.files),
 		changelogPresetConfig: getChangelogPresetConfig(usersConfig?.changelogPresetConfig),
 	};
 }
 
-function mergeFiles(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
-	return Array.from(
-		new Set(
-			([] as string[]).concat(
-				Array.isArray(configFiles) ? configFiles : [],
-				Array.isArray(cliFiles) ? cliFiles : [],
-			),
-		),
-	);
+function getFiles(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
+	const listOfFiles = new Set<string>();
+
+	// Add files from the users config file
+	if (Array.isArray(configFiles)) {
+		configFiles.forEach((file) => listOfFiles.add(file));
+	}
+
+	// Add files from the cli arguments
+	if (Array.isArray(cliFiles)) {
+		cliFiles.forEach((file) => listOfFiles.add(file));
+	}
+
+	// If the user has defined files use them, otherwise use the default list of files.
+	if (listOfFiles.size) {
+		return Array.from(listOfFiles);
+	}
+
+	return DEFAULT_CONFIG.files;
 }
