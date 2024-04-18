@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.52 (2024-04-18)
+
+
+### Refactor
+
+* clean up cli messaging ([630d957](https://github.com/eglavin/fork-version/commit/630d9573d52805eb768fd3d9613ffb8a8c785312))
+
+
 ## 1.4.51 (2024-04-18)
 
 
