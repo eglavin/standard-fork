@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.54 (2024-04-18)
+
+
+### Refactor
+
+* logging annotations + split git tag fallback version check ([aceb3b9](https://github.com/eglavin/fork-version/commit/aceb3b98bc6c33135dee2801799980fd09abfb31))
+
+
 ## 1.4.53 (2024-04-18)
 
 
