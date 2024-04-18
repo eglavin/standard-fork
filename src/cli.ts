@@ -15,8 +15,8 @@ async function runFork() {
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
 
-	logger.log(`Running Fork: ${new Date().toLocaleString()}`);
-	logger.log(config.dryRun ? "Dry run, no changes will be written to disk.\n" : "");
+	logger.log(`Running fork-version: ${new Date().toLocaleString()}`);
+	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "\n");
 
 	const current = await getCurrentVersion(config, logger, fileManager);
 	const next = await getNextVersion(config, logger, current.version);

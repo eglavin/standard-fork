@@ -10,31 +10,40 @@ export class Git {
 		this.add = this.add.bind(this);
 		this.commit = this.commit.bind(this);
 		this.tag = this.tag.bind(this);
-		this.revParse = this.revParse.bind(this);
+		this.currentBranch = this.currentBranch.bind(this);
 	}
 
 	public add(...args: (string | undefined)[]) {
-		return this.execGit("add", args.filter(Boolean) as string[]);
-	}
-
-	public commit(...args: (string | undefined)[]) {
-		return this.execGit("commit", args.filter(Boolean) as string[]);
-	}
-
-	public tag(...args: (string | undefined)[]) {
-		return this.execGit("tag", args.filter(Boolean) as string[]);
-	}
-
-	public revParse(...args: (string | undefined)[]) {
-		return this.execGit("rev-parse", args.filter(Boolean) as string[]);
-	}
-
-	private execGit(command: string, args: string[]): Promise<string> {
 		if (this.config.dryRun) {
 			return Promise.resolve("");
 		}
 
+		return this.execGit("add", args.filter(Boolean) as string[]);
+	}
+
+	public commit(...args: (string | undefined)[]) {
+		if (this.config.dryRun) {
+			return Promise.resolve("");
+		}
+
+		return this.execGit("commit", args.filter(Boolean) as string[]);
+	}
+
+	public tag(...args: (string | undefined)[]) {
+		if (this.config.dryRun) {
+			return Promise.resolve("");
+		}
+
+		return this.execGit("tag", args.filter(Boolean) as string[]);
+	}
+
+	public async currentBranch() {
+		return (await this.execGit("rev-parse", ["--abbrev-ref", "HEAD"])).trim();
+	}
+
+	private execGit(command: string, args: string[]): Promise<string> {
 		this.logger.debug(`Executing: git ${command} ${args.join(" ")}`);
+
 		return new Promise((onResolve, onReject) => {
 			execFile(
 				"git",
