@@ -12,10 +12,10 @@ export async function completedMessage(
 	const git = new Git(config, logger);
 
 	// Print git push command
-	const branchName = (await git.revParse("--abbrev-ref", "HEAD")).trim();
+	const branchName = await git.currentBranch();
 
 	logger.log(
-		`Run \`git push --follow-tags origin ${branchName}\` to push the changes and the tag.`,
+		`\nRun \`git push --follow-tags origin ${branchName}\` to push the changes and the tag.`,
 	);
 
 	// Print npm publish command

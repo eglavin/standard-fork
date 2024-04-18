@@ -62,7 +62,6 @@ export class FileManager implements IFileManager {
 	 */
 	public write(filePath: string, newVersion: string): void {
 		if (this.config.dryRun) {
-			this.logger.log(`[Dry run]: Not updating ${filePath}`);
 			return;
 		}
 
