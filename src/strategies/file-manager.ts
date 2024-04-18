@@ -49,7 +49,7 @@ export class FileManager implements IFileManager {
 			return this.PlainText.read(fileName);
 		}
 
-		this.logger.error(`Unsupported file type: ${fileName}`);
+		this.logger.error(`[File Manager] Unsupported file: ${fileName}`);
 	}
 
 	/**
@@ -71,6 +71,6 @@ export class FileManager implements IFileManager {
 			return this.PlainText.write(filePath, newVersion);
 		}
 
-		this.logger.error(`Unsupported file type: ${filePath}`);
+		this.logger.error(`[File Manager] Unsupported file: ${filePath}`);
 	}
 }

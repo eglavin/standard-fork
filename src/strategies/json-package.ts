@@ -45,7 +45,7 @@ export class JSONPackage implements IFileManager {
 				};
 			}
 
-			this.logger.warn(`Unable to determine json package file: ${fileName}`);
+			this.logger.warn(`[File Manager] Unable to determine json package: ${fileName}`);
 		}
 	}
 

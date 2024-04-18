@@ -42,7 +42,7 @@ export class Git {
 	}
 
 	private execGit(command: string, args: string[]): Promise<string> {
-		this.logger.debug(`Executing: git ${command} ${args.join(" ")}`);
+		this.logger.debug(`[git ${command}] ${args.join(" ")}`);
 
 		return new Promise((onResolve, onReject) => {
 			execFile(
@@ -53,7 +53,7 @@ export class Git {
 				},
 				(error, stdout, stderr) => {
 					if (error) {
-						this.logger.error(`git ${command}:`);
+						this.logger.error(`[git ${command}] `);
 						onReject(error);
 					}
 
