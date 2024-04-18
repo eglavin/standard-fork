@@ -23,7 +23,7 @@ async function runFork() {
 
 	logger.log("Updating Files: ");
 	for (const outFile of current.files) {
-		logger.log(`\t${outFile.path}`);
+		logger.log(`  - ${outFile.path}`);
 
 		fileManager.write(outFile.path, next.version);
 	}
