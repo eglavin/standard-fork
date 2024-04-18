@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.51 (2024-04-18)
+
+
+### Bug Fixes
+
+* ensure files are merged even if no config defined ([9ef08fb](https://github.com/eglavin/fork-version/commit/9ef08fb8b1eb75d0e14d960ac7d85fc647896f3e))
+
+
 ## 1.4.50 (2024-04-18)
 
 
