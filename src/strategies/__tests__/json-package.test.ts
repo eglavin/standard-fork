@@ -28,7 +28,9 @@ describe("strategies json-package", () => {
 		const file = fileManager.read("package.json");
 		expect(file).toBeUndefined();
 
-		expect(logger.warn).toBeCalledWith("Unable to determine json package file: package.json");
+		expect(logger.warn).toBeCalledWith(
+			"[File Manager] Unable to determine json package: package.json",
+		);
 	});
 
 	it("should read private property", async () => {
