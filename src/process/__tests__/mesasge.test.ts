@@ -14,7 +14,7 @@ describe("completedMessage", () => {
 		await completedMessage(config, logger, [], "minor");
 
 		expect(logger.log).toHaveBeenCalledWith(
-			"Run `git push --follow-tags origin main` to push the changes and the tag.",
+			"\nRun `git push --follow-tags origin main` to push the changes and the tag.",
 		);
 	});
 
