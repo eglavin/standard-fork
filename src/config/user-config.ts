@@ -23,6 +23,7 @@ export async function getUserConfig(): Promise<ForkConfig> {
 			...DEFAULT_CONFIG,
 			...cliArguments.flags,
 			path: cwd,
+			files: getFiles([], cliArguments.flags?.files),
 			changelogPresetConfig: getChangelogPresetConfig(),
 		} as ForkConfig;
 	}
