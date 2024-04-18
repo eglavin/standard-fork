@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.50 (2024-04-18)
+
+
+### Bug Fixes
+
+* change files function to explicitly check sets size ([cce8489](https://github.com/eglavin/fork-version/commit/cce84894217b95e21db16fc89e31cb60fe75174a))
+
+
 ## 1.4.49 (2024-04-12)
 
 
