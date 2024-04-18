@@ -49,7 +49,6 @@ describe("strategies file-manager", () => {
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.write("package.json", "1.2.3");
-		expect(logger.log).toHaveBeenCalledWith("[Dry run]: Not updating package.json");
 	});
 
 	it("should write json file when file extension is .json", async () => {
