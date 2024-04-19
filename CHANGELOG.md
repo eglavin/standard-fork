@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.56 (2024-04-19)
+
+
+### Bug Fixes
+
+* ensures cli undefined booleans dont override users config ([bfe93a3](https://github.com/eglavin/fork-version/commit/bfe93a30d29772c3b2dbcff0e1e84b0a20f8721e))
+
+
 ## 1.4.55 (2024-04-19)
 
 
