@@ -48,6 +48,7 @@ Options:
 `,
 		{
 			importMeta: import.meta,
+			booleanDefault: undefined,
 			flags: {
 				path: { type: "string", default: process.cwd() },
 				changelog: { type: "string" },

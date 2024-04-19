@@ -83,6 +83,7 @@ export function createTestDir(testName: string) {
 					{ type: "test", section: "Test" },
 				],
 			};
+			config.gitTagFallback = false;
 
 			const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
 			logger.log = vi.fn();
