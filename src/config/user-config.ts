@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { parse, resolve } from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
@@ -13,45 +14,61 @@ export async function getUserConfig(): Promise<ForkConfig> {
 	const cwd = cliArguments.flags.path ? resolve(cliArguments.flags.path) : process.cwd();
 	const joycon = new JoyCon();
 	const configFilePath = await joycon.resolve({
-		files: ["fork.config.ts", "fork.config.js", "fork.config.cjs", "fork.config.mjs"],
+		files: [
+			"fork.config.ts",
+			"fork.config.js",
+			"fork.config.cjs",
+			"fork.config.mjs",
+			"fork.config.json",
+		],
 		cwd,
 		stopDir: parse(cwd).root,
 	});
 
-	if (!configFilePath) {
-		return {
-			...DEFAULT_CONFIG,
-			...cliArguments.flags,
-			path: cwd,
-			files: getFiles([], cliArguments.flags?.files),
-			changelogPresetConfig: getChangelogPresetConfig(),
-		} as ForkConfig;
-	}
+	const configFile = await loadConfigFile(configFilePath);
 
-	const foundConfig = await bundleRequire({ filepath: configFilePath });
-	const parsedConfig = ForkConfigSchema.partial().safeParse(
-		foundConfig.mod.default || foundConfig.mod,
-	);
-
-	if (!parsedConfig.success) {
-		throw parsedConfig.error;
-	}
-
-	const usersConfig = {
+	const mergedConfig = {
 		...DEFAULT_CONFIG,
-		...parsedConfig.data,
+		...configFile,
 		...cliArguments.flags,
 	} as ForkConfig;
 
 	return {
-		...usersConfig,
+		...mergedConfig,
+
 		path: cwd,
-		files: getFiles(parsedConfig.data?.files, cliArguments.flags?.files),
-		changelogPresetConfig: getChangelogPresetConfig(usersConfig?.changelogPresetConfig),
+		files: getFilesList(configFile?.files, cliArguments.flags?.files),
+		changelogPresetConfig: getChangelogPresetConfig(mergedConfig?.changelogPresetConfig),
 	};
 }
 
-function getFiles(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
+async function loadConfigFile(configFilePath: string | null) {
+	if (!configFilePath) {
+		return {};
+	}
+
+	// Handle json config file.
+	if (configFilePath.endsWith("json")) {
+		const fileContent = JSON.parse(readFileSync(configFilePath).toString());
+
+		const parsed = ForkConfigSchema.partial().safeParse(fileContent);
+		if (!parsed.success) {
+			throw parsed.error;
+		}
+		return parsed.data;
+	}
+
+	// Otherwise expect config file to use js or ts.
+	const fileContent = await bundleRequire({ filepath: configFilePath });
+
+	const parsed = ForkConfigSchema.partial().safeParse(fileContent.mod.default || fileContent.mod);
+	if (!parsed.success) {
+		throw parsed.error;
+	}
+	return parsed.data;
+}
+
+function getFilesList(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
 	const listOfFiles = new Set<string>();
 
 	// Add files from the users config file
