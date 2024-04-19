@@ -1,18 +1,17 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
+// @ts-check
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readFileSync, writeFileSync } from "node:fs";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { ForkConfigSchema } from "../src/config/schema.js";
+import { ForkConfigSchema } from "../dist/index.js";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const { name, version } = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf-8"));
+const outputLocation = join(projectRoot, "schema", `latest.json`);
 
-const packageJson = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf-8"));
-const outputLocation = join(projectRoot, "schema", `${packageJson.version}.json`);
-
-console.log(`Generating JSON schema for ${packageJson.name} ${packageJson.version}`);
-
+console.log(`Generating JSON schema for ${name} ${version}`);
 const jsonSchema = zodToJsonSchema(ForkConfigSchema, "type");
 
 writeFileSync(outputLocation, JSON.stringify(jsonSchema, null, 2));

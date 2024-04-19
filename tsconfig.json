@@ -24,7 +24,6 @@
 	"include": [
 		"@types/*",
 		"src/**/*",
-		"tests/**/*",
-		"scripts/**/*",
+		"tests/**/*"
 	]
 }
