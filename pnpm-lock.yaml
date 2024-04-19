@@ -46,9 +46,6 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
-  '@types/git-raw-commits':
-    specifier: 2.0.4
-    version: 2.0.4
   '@types/json-schema':
     specifier: 7.0.15
     version: 7.0.15
@@ -821,12 +818,6 @@ packages:
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
-    dev: true
-
-  /@types/git-raw-commits@2.0.4:
-    resolution: {integrity: sha512-PYmTK156j6TilbwtnO2JErH4TCC1izpgP3kRE3KUX35bjBOD2A+syCGeercqHXBcM6wL+DU0WbJB2Gz8fPR+8A==}
-    dependencies:
-      '@types/node': 20.11.30
     dev: true
 
   /@types/istanbul-lib-coverage@2.0.6:
