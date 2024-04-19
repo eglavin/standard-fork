@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.55 (2024-04-19)
+
+
+### Refactor
+
+* adds json config file support ([a09b74e](https://github.com/eglavin/fork-version/commit/a09b74e1a2f2d24fd52f91780b002a9d633a6797))
+
+
 ## 1.4.54 (2024-04-18)
 
 
