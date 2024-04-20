@@ -10,6 +10,10 @@ jobs:
     name: Test Windows
     runs-on: windows-latest
 
+    strategy:
+      matrix:
+        version: [18, 20]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -17,7 +21,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
+          node-version: ${{matrix.version}}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -66,6 +70,10 @@ jobs:
     name: Test Ubuntu
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        version: [18, 20]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -73,7 +81,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
+          node-version: ${{matrix.version}}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -123,12 +131,6 @@ jobs:
       actions: read
       contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: javascript-typescript
-            build-mode: none
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -136,10 +138,10 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+          languages: javascript-typescript
+          build-mode: none
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: "/language:javascript-typescript"
