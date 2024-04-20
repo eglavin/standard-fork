@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.57 (2024-04-20)
+
+
+### Test
+
+* combine test config + logger into createTestDir function ([c22def6](https://github.com/eglavin/fork-version/commit/c22def6ccb03929f56db40902fefad85d81d7f5d))
+
+
 ## 1.4.56 (2024-04-19)
 
 
