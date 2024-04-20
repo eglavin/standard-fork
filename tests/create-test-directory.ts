@@ -6,24 +6,23 @@ import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_pro
 import { getUserConfig } from "../src";
 import { Logger } from "../src/utils/logger";
 
-export function createTestDir(testName: string) {
-	const testLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.
-	const testDirName = `${randomBytes(16).toString("hex")}-${testName}`;
-	const testDir = join(testLocation, testDirName);
+export async function createTestDir(name: string) {
+	const testFolderLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.
+	const testFolder = join(testFolderLocation, `${randomBytes(16).toString("hex")}-${name}`);
 
 	const execSyncOptions: ExecSyncOptionsWithBufferEncoding = {
-		cwd: testDir,
+		cwd: testFolder,
 		stdio: "ignore",
 	};
 
-	if (!existsSync(testDir)) {
-		mkdirSync(testDir, { recursive: true });
+	if (!existsSync(testFolder)) {
+		mkdirSync(testFolder, { recursive: true });
 
-		if (!existsSync(testDir)) {
+		if (!existsSync(testFolder)) {
 			throw new Error("Unable to create test folder.");
 		}
 	} else {
-		throw new Error(`Test folder already exists: ${testDir}`);
+		throw new Error(`Test folder already exists: ${testFolder}`);
 	}
 
 	execSync("git config --global init.defaultBranch main", execSyncOptions);
@@ -31,19 +30,48 @@ export function createTestDir(testName: string) {
 	execSync("git config commit.gpgSign false", execSyncOptions);
 	execSync("git config core.autocrlf false", execSyncOptions);
 
+	const config = await getUserConfig();
+	config.path = testFolder;
+	config.header = "# Test Header\n";
+	config.changelogPresetConfig = {
+		...config.changelogPresetConfig,
+		types: [
+			{ type: "feat", section: "Features" },
+			{ type: "fix", section: "Bug Fixes" },
+			{ type: "chore", section: "Chore" },
+			{ type: "docs", section: "Docs" },
+			{ type: "style", section: "Style" },
+			{ type: "refactor", section: "Refactor" },
+			{ type: "perf", section: "Perf" },
+			{ type: "test", section: "Test" },
+		],
+	};
+	config.gitTagFallback = false;
+
+	const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
+	logger.log = vi.fn();
+	logger.warn = vi.fn();
+	logger.error = vi.fn();
+	logger.debug = vi.fn();
+
 	return {
-		testDirName,
-		testDir,
+		testFolder,
+		config,
+		logger,
+
+		relativeTo: function _relativeTo(...pathSegments: string[]) {
+			return join(testFolder, ...pathSegments);
+		},
 
 		createJSONFile: function _createJSONFile(jsObject?: object, file = "package.json") {
 			const stringifiedPackage = JSON.stringify(jsObject ?? { version: "1.0.0" }, null, 2);
 
-			writeFileSync(join(testDir, file), stringifiedPackage, "utf-8");
+			writeFileSync(join(testFolder, file), stringifiedPackage, "utf-8");
 			execSync(`git add ${file}`, execSyncOptions);
 		},
 
 		createFile: function _createFile(content: string, file: string) {
-			writeFileSync(join(testDir, file), content, "utf-8");
+			writeFileSync(join(testFolder, file), content, "utf-8");
 			execSync(`git add ${file}`, execSyncOptions);
 		},
 
@@ -64,37 +92,6 @@ export function createTestDir(testName: string) {
 					: `git commit --allow-empty -m "${message}"`,
 				execSyncOptions,
 			);
-		},
-
-		createTestConfig: async function _createTestConfig() {
-			const config = await getUserConfig();
-			config.path = testDir;
-			config.header = "# Test Header\n";
-			config.changelogPresetConfig = {
-				...config.changelogPresetConfig,
-				types: [
-					{ type: "feat", section: "Features" },
-					{ type: "fix", section: "Bug Fixes" },
-					{ type: "chore", section: "Chore" },
-					{ type: "docs", section: "Docs" },
-					{ type: "style", section: "Style" },
-					{ type: "refactor", section: "Refactor" },
-					{ type: "perf", section: "Perf" },
-					{ type: "test", section: "Test" },
-				],
-			};
-			config.gitTagFallback = false;
-
-			const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
-			logger.log = vi.fn();
-			logger.warn = vi.fn();
-			logger.error = vi.fn();
-			logger.debug = vi.fn();
-
-			return {
-				config,
-				logger,
-			};
 		},
 	};
 }

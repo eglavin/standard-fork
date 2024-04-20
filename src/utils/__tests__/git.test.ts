@@ -5,45 +5,40 @@ import { Git } from "../git";
 
 describe("git", () => {
 	it("should accept arguments", async () => {
-		const { testDir, createCommits, createJSONFile, createTestConfig } =
-			createTestDir("execute-file");
+		const { testFolder, config, logger, createCommits, createJSONFile } =
+			await createTestDir("execute-file");
+		const git = new Git(config, logger);
 
 		createJSONFile();
 		createCommits();
 
-		const { config, logger } = await createTestConfig();
-		const git = new Git(config, logger);
-
 		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
-		const log = execSync("git log", { cwd: testDir }).toString();
+		const log = execSync("git log", { cwd: testFolder }).toString();
 		expect(log).toMatch(/test: test arguments works/);
 	});
 
 	it("should not execute if dryRun is enabled", async () => {
-		const { testDir, createCommits, createJSONFile, createTestConfig } =
-			createTestDir("execute-file");
+		const { testFolder, config, logger, createCommits, createJSONFile } =
+			await createTestDir("execute-file");
+		config.dryRun = true;
+		const git = new Git(config, logger);
 
 		createJSONFile();
 		createCommits();
 
-		const { config, logger } = await createTestConfig();
-		config.dryRun = true;
-		const git = new Git(config, logger);
-
 		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
-		const log = execSync("git log", { cwd: testDir }).toString();
+		const log = execSync("git log", { cwd: testFolder }).toString();
 		expect(log).not.toMatch(/test: test arguments works/);
 	});
 
 	it("should log if debug is enabled", async () => {
-		const { createCommits, createJSONFile, createTestConfig } = createTestDir("execute-file");
+		const { config, logger, createCommits, createJSONFile } = await createTestDir("execute-file");
+		const git = new Git(config, logger);
 
 		createJSONFile();
 		createCommits();
-		const { config, logger } = await createTestConfig();
-		const git = new Git(config, logger);
 
 		await git.commit("--allow-empty", "-m", "test: test arguments works");
 
@@ -54,12 +49,11 @@ describe("git", () => {
 	});
 
 	it("should log if error is thrown", async () => {
-		const { createCommits, createJSONFile, createTestConfig } = createTestDir("execute-file");
+		const { config, logger, createCommits, createJSONFile } = await createTestDir("execute-file");
+		const git = new Git(config, logger);
 
 		createJSONFile();
 		createCommits();
-		const { config, logger } = await createTestConfig();
-		const git = new Git(config, logger);
 
 		try {
 			await git.add("non-existing-file");

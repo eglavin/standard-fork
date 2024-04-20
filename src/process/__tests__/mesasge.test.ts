@@ -1,15 +1,13 @@
 import { execFile } from "node:child_process";
-import { join } from "node:path";
 import { createTestDir } from "../../../tests/create-test-directory";
 import { completedMessage } from "../message";
 
 describe("completedMessage", () => {
 	it("should print git push command", async () => {
-		const { testDir, createCommit, createTestConfig } = createTestDir("completedMessage");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, config, logger, createCommit } = await createTestDir("completedMessage");
 
 		createCommit("feat: A feature commit");
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 
 		await completedMessage(config, logger, [], "minor");
 
@@ -19,11 +17,11 @@ describe("completedMessage", () => {
 	});
 
 	it("should print npm publish command", async () => {
-		const { testDir, createCommit, createTestConfig } = createTestDir("completedMessage");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, relativeTo, config, logger, createCommit } =
+			await createTestDir("completedMessage");
 
 		createCommit("feat: A feature commit");
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 
 		await completedMessage(
 			config,
@@ -31,7 +29,7 @@ describe("completedMessage", () => {
 			[
 				{
 					name: "package.json",
-					path: join(testDir, "package.json"),
+					path: relativeTo("package.json"),
 					version: "1.2.4",
 					isPrivate: false,
 				},
@@ -43,11 +41,11 @@ describe("completedMessage", () => {
 	});
 
 	it("should print npm publish command with pre-release tag", async () => {
-		const { testDir, createCommit, createTestConfig } = createTestDir("completedMessage");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, relativeTo, config, logger, createCommit } =
+			await createTestDir("completedMessage");
 
 		createCommit("feat: A feature commit");
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 
 		await completedMessage(
 			config,
@@ -55,7 +53,7 @@ describe("completedMessage", () => {
 			[
 				{
 					name: "package.json",
-					path: join(testDir, "package.json"),
+					path: relativeTo("package.json"),
 					version: "1.2.4",
 					isPrivate: false,
 				},
@@ -69,12 +67,12 @@ describe("completedMessage", () => {
 	});
 
 	it("should print npm publish command with custom pre-release tag", async () => {
-		const { testDir, createCommit, createTestConfig } = createTestDir("completedMessage");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, relativeTo, config, logger, createCommit } =
+			await createTestDir("completedMessage");
 		config.preReleaseTag = "alpha";
 
 		createCommit("feat: A feature commit");
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 
 		await completedMessage(
 			config,
@@ -82,7 +80,7 @@ describe("completedMessage", () => {
 			[
 				{
 					name: "package.json",
-					path: join(testDir, "package.json"),
+					path: relativeTo("package.json"),
 					version: "1.2.4",
 					isPrivate: false,
 				},

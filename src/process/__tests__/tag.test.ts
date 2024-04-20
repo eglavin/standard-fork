@@ -5,24 +5,22 @@ import { tagChanges } from "../tag";
 
 describe("tagChanges", () => {
 	it("should create a tag", async () => {
-		const { testDir, createCommit, createTestConfig } = createTestDir("tagChanges");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, config, logger, createCommit } = await createTestDir("tagChanges");
 
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 		createCommit("feat: A feature commit");
 
 		await tagChanges(config, logger, "1.2.4");
 
-		await execFile("git", ["tag"], { cwd: testDir }, (_error, stdout, _stderr) => {
+		await execFile("git", ["tag"], { cwd: testFolder }, (_error, stdout, _stderr) => {
 			expect(stdout).toContain("v1.2.4");
 		});
 	});
 
 	it("should throw an error if the tag already exists", async () => {
-		const { testDir, createTestConfig, createCommit } = createTestDir("tagChanges");
-		const { config, logger } = await createTestConfig();
+		const { testFolder, config, logger, createCommit } = await createTestDir("tagChanges");
 
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testDir }, () => {});
+		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
 		createCommit("feat: A feature commit");
 
 		expect(
