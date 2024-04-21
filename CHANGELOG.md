@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.58 (2024-04-21)
+
+
+### Refactor
+
+* add descriptions to zod properties which will output to json schema ([1fc0302](https://github.com/eglavin/fork-version/commit/1fc03024ac5bb23c91976b5d5205d8f0f3ded7b2))
+
+
 ## 1.4.57 (2024-04-20)
 
 
