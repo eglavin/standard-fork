@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.59 (2024-04-21)
+
+
+### Refactor
+
+* changes to file writing signature + add completed in time debug log ([89df6df](https://github.com/eglavin/fork-version/commit/89df6df73a75f3a6d1e8469c4093f17b12d27f13))
+
+
 ## 1.4.58 (2024-04-21)
 
 
