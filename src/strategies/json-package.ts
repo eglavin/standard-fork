@@ -49,8 +49,8 @@ export class JSONPackage implements IFileManager {
 		}
 	}
 
-	public write(filePath: string, newVersion: string) {
-		const fileContents = readFileSync(filePath, "utf8");
+	public write(fileState: FileState, newVersion: string) {
+		const fileContents = readFileSync(fileState.path, "utf8");
 		const parsedJson = JSON.parse(fileContents);
 
 		parsedJson.version = newVersion;
@@ -59,7 +59,7 @@ export class JSONPackage implements IFileManager {
 		}
 
 		writeFileSync(
-			filePath,
+			fileState.path,
 			stringifyPackage(parsedJson, detectIndent(fileContents).amount, detectNewline(fileContents)),
 			"utf8",
 		);

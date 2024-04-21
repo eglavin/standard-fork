@@ -14,7 +14,7 @@ export interface FileState {
 
 export interface IFileManager {
 	read(fileName: string): FileState | undefined;
-	write(filePath: string, newVersion: string): void;
+	write(fileState: FileState, newVersion: string): void;
 }
 
 export class FileManager implements IFileManager {
@@ -43,9 +43,13 @@ export class FileManager implements IFileManager {
 	 * ```
 	 */
 	public read(fileName: string): FileState | undefined {
-		if (fileName.toLowerCase().endsWith(".json")) {
+		const _fileName = fileName.toLowerCase();
+
+		if (_fileName.endsWith(".json")) {
 			return this.JSONPackage.read(fileName);
-		} else if (fileName.toLowerCase().endsWith("version.txt")) {
+		}
+
+		if (_fileName.endsWith("version.txt")) {
 			return this.PlainText.read(fileName);
 		}
 
@@ -53,24 +57,30 @@ export class FileManager implements IFileManager {
 	}
 
 	/**
-	 * Write the new version to the given file path.
+	 * Write the new version to the given file.
 	 *
 	 * @example
 	 * ```ts
-	 * fileManager.write("/path/to/package.json", "1.2.3");
+	 * fileManager.write(
+	 *   { name: "package.json", path: "/path/to/package.json", version: "1.2.2" },
+	 *   "1.2.3"
+	 * );
 	 * ```
 	 */
-	public write(filePath: string, newVersion: string): void {
+	public write(fileState: FileState, newVersion: string): void {
 		if (this.config.dryRun) {
 			return;
 		}
+		const _fileName = fileState.name.toLowerCase();
 
-		if (filePath.toLowerCase().endsWith(".json")) {
-			return this.JSONPackage.write(filePath, newVersion);
-		} else if (filePath.toLowerCase().endsWith("version.txt")) {
-			return this.PlainText.write(filePath, newVersion);
+		if (_fileName.endsWith(".json")) {
+			return this.JSONPackage.write(fileState, newVersion);
 		}
 
-		this.logger.error(`[File Manager] Unsupported file: ${filePath}`);
+		if (_fileName.endsWith("version.txt")) {
+			return this.PlainText.write(fileState, newVersion);
+		}
+
+		this.logger.error(`[File Manager] Unsupported file: ${fileState.path}`);
 	}
 }

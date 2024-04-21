@@ -11,11 +11,13 @@ import { tagChanges } from "./process/tag";
 import { completedMessage } from "./process/message";
 
 async function runFork() {
+	const startTime = Date.now();
+
 	const config = await getUserConfig();
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
 
-	logger.log(`Running fork-version - ${new Date().toLocaleString()}`);
+	logger.log(`Running fork-version - ${new Date().toUTCString()}`);
 	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
 
 	const current = await getCurrentVersion(config, logger, fileManager);
@@ -25,14 +27,16 @@ async function runFork() {
 	for (const outFile of current.files) {
 		logger.log(`  - ${outFile.path}`);
 
-		fileManager.write(outFile.path, next.version);
+		fileManager.write(outFile, next.version);
 	}
 
 	const changelogResult = await updateChangelog(config, logger, next.version);
 	const commitResult = await commitChanges(config, logger, current.files, next.version);
 	const tagResult = await tagChanges(config, logger, next.version);
 
-	completedMessage(config, logger, current.files, next.releaseType);
+	await completedMessage(config, logger, current.files, next.releaseType);
+
+	logger.debug(`Completed in ${Date.now() - startTime} ms`);
 
 	const result = {
 		config,

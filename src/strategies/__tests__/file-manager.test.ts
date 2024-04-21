@@ -35,11 +35,18 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should not write to file if dry run is enabled", async () => {
-		const { config, logger } = await createTestDir("strategies file-manager");
+		const { relativeTo, config, logger } = await createTestDir("strategies file-manager");
 		config.dryRun = true;
 		const fileManager = new FileManager(config, logger);
 
-		fileManager.write("package.json", "1.2.3");
+		fileManager.write(
+			{
+				name: "package.json",
+				path: relativeTo("package.json"),
+				version: "1.2.2",
+			},
+			"1.2.3",
+		);
 	});
 
 	it("should write json file when file extension is .json", async () => {
@@ -49,7 +56,14 @@ describe("strategies file-manager", () => {
 
 		createJSONFile({ version: "1.0.0" }, "package.json");
 
-		fileManager.write(relativeTo("package.json"), "1.2.3");
+		fileManager.write(
+			{
+				name: "package.json",
+				path: relativeTo("package.json"),
+				version: "1.2.2",
+			},
+			"1.2.3",
+		);
 		const packageJSON = JSON.parse(readFileSync(relativeTo("package.json"), "utf-8"));
 		expect(packageJSON.version).toEqual("1.2.3");
 	});
@@ -61,16 +75,32 @@ describe("strategies file-manager", () => {
 
 		createFile("1.0.0", "version.txt");
 
-		fileManager.write(relativeTo("version.txt"), "1.2.3");
+		fileManager.write(
+			{
+				name: "version.txt",
+				path: relativeTo("version.txt"),
+				version: "1.2.2",
+			},
+			"1.2.3",
+		);
 		const version = readFileSync(relativeTo("version.txt"), "utf-8");
 		expect(version).toEqual("1.2.3");
 	});
 
 	it("should log an error when write file type is not supported", async () => {
-		const { config, logger } = await createTestDir("strategies file-manager");
+		const { relativeTo, config, logger } = await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		fileManager.write("version.unknown", "1.2.3");
-		expect(logger.error).toHaveBeenCalledWith("[File Manager] Unsupported file: version.unknown");
+		fileManager.write(
+			{
+				name: "version.unknown",
+				path: relativeTo("version.unknown"),
+				version: "1.2.2",
+			},
+			"1.2.3",
+		);
+		expect(logger.error).toHaveBeenCalledWith(
+			`[File Manager] Unsupported file: ${relativeTo("version.unknown")}`,
+		);
 	});
 });

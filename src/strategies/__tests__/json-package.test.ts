@@ -44,7 +44,14 @@ describe("strategies json-package", () => {
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
 
-		fileManager.write(relativeTo("package.json"), "4.5.6");
+		fileManager.write(
+			{
+				name: "package.json",
+				path: relativeTo("package.json"),
+				version: "1.2.3",
+			},
+			"4.5.6",
+		);
 
 		const file = fileManager.read(relativeTo("package.json"));
 		expect(file?.version).toEqual("4.5.6");
@@ -64,7 +71,14 @@ describe("strategies json-package", () => {
 			"package-lock.json",
 		);
 
-		fileManager.write(relativeTo("package-lock.json"), "4.5.6");
+		fileManager.write(
+			{
+				name: "package-lock.json",
+				path: relativeTo("package-lock.json"),
+				version: "1.2.3",
+			},
+			"4.5.6",
+		);
 
 		const content = JSON.parse(readFileSync(relativeTo("package-lock.json"), "utf8"));
 		expect(content.version).toContain("4.5.6");

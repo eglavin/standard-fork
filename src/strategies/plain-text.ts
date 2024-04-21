@@ -36,7 +36,7 @@ export class PlainText implements IFileManager {
 		this.logger.warn(`[File Manager] Unable to determine plain text: ${fileName}`);
 	}
 
-	public write(filePath: string, newVersion: string) {
-		writeFileSync(filePath, newVersion, "utf8");
+	public write(fileState: FileState, newVersion: string) {
+		writeFileSync(fileState.path, newVersion, "utf8");
 	}
 }

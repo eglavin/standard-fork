@@ -44,7 +44,14 @@ describe("strategies plain-text", () => {
 
 		createFile("1.2.3", "version.txt");
 
-		fileManager.write(relativeTo("version.txt"), "1.2.4");
+		fileManager.write(
+			{
+				name: "version.txt",
+				path: relativeTo("version.txt"),
+				version: "1.2.3",
+			},
+			"1.2.4",
+		);
 		const newVersion = readFileSync(relativeTo("version.txt"), "utf-8");
 
 		expect(newVersion).toEqual("1.2.4");
