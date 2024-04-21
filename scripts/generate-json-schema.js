@@ -12,6 +12,18 @@ const { name, version } = JSON.parse(readFileSync(join(projectRoot, "package.jso
 const outputLocation = join(projectRoot, "schema", `latest.json`);
 
 console.log(`Generating JSON schema for ${name} ${version}`);
-const jsonSchema = zodToJsonSchema(ForkConfigSchema, "type");
+const jsonSchema = zodToJsonSchema(ForkConfigSchema);
 
-writeFileSync(outputLocation, JSON.stringify(jsonSchema, null, 2));
+writeFileSync(
+	outputLocation,
+	JSON.stringify(
+		{
+			$schema: "http://json-schema.org/draft-07/schema#",
+			type: "object",
+			additionalProperties: false,
+			properties: jsonSchema["properties"],
+		},
+		null,
+		2,
+	),
+);
