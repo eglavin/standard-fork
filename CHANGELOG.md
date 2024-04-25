@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.61 (2024-04-25)
+
+
+### Refactor
+
+* ensure files arent ignored by git ([8a36886](https://github.com/eglavin/fork-version/commit/8a36886d23d28d9a5eca1104a939a3174c11deb3))
+
+
 ## 1.4.60 (2024-04-25)
 
 
