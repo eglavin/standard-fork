@@ -42,6 +42,7 @@ export async function getCurrentVersion(
 	if (versions.size === 0 && config.gitTagFallback) {
 		const version = await getLatestGitTagVersion(config.tagPrefix);
 		if (version) {
+			logger.log(`[Version] Using git tag fallback.`);
 			versions.add(version);
 		}
 	}
