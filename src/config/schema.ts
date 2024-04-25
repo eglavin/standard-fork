@@ -99,6 +99,17 @@ export const ForkConfigSchema = z.object({
 	 */
 	files: z.array(z.string()).describe("List of the files to be updated."),
 	/**
+	 * Glob pattern to match files to be updated.
+	 *
+	 * Internally we're using [glob](https://github.com/isaacs/node-glob) to match files.
+	 *
+	 * Read more about the pattern syntax [here](https://github.com/isaacs/node-glob/tree/v10.3.12?tab=readme-ov-file#glob-primer).
+	 *
+	 * @default undefined
+	 * @example "*.json"
+	 */
+	glob: z.string().optional().describe("Glob pattern to match files to be updated."),
+	/**
 	 * Specify a prefix for the tag fork-version will create.
 	 *
 	 * For instance if your version tag is prefixed by "version/" instead of "v" you have to specify
