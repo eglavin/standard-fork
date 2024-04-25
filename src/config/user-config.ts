@@ -3,6 +3,7 @@ import { parse, resolve } from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { glob } from "glob";
+import dotgitignore from "dotgitignore";
 
 import { ForkConfigSchema, type ForkConfig } from "./schema";
 import { DEFAULT_CONFIG } from "./defaults";
@@ -48,7 +49,10 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		...mergedConfig,
 
 		path: cwd,
-		files: getFilesList(configFile?.files, cliArguments.flags?.files, globResults),
+		files: filterGitIgnoredFiles(
+			cwd,
+			getFilesList(configFile?.files, cliArguments.flags?.files, globResults),
+		),
 		changelogPresetConfig: getChangelogPresetConfig(mergedConfig?.changelogPresetConfig),
 	};
 }
@@ -105,4 +109,10 @@ function getFilesList(
 	}
 
 	return DEFAULT_CONFIG.files;
+}
+
+function filterGitIgnoredFiles(cwd: string, files: string[]) {
+	const dotgit = dotgitignore({ cwd });
+
+	return files.filter((file) => !dotgit.ignore(file));
 }
