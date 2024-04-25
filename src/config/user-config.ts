@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { parse, resolve } from "node:path";
 import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
+import { glob } from "glob";
 
 import { ForkConfigSchema, type ForkConfig } from "./schema";
 import { DEFAULT_CONFIG } from "./defaults";
@@ -33,11 +34,21 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		...cliArguments.flags,
 	} as ForkConfig;
 
+	// If the user has defined a glob pattern, use it to find the requested files.
+	let globResults: string[] = [];
+	if (mergedConfig.glob) {
+		globResults = await glob(mergedConfig.glob, {
+			cwd: cwd,
+			ignore: ["node_modules/**"],
+			nodir: true,
+		});
+	}
+
 	return {
 		...mergedConfig,
 
 		path: cwd,
-		files: getFilesList(configFile?.files, cliArguments.flags?.files),
+		files: getFilesList(configFile?.files, cliArguments.flags?.files, globResults),
 		changelogPresetConfig: getChangelogPresetConfig(mergedConfig?.changelogPresetConfig),
 	};
 }
@@ -68,7 +79,11 @@ async function loadConfigFile(configFilePath: string | null) {
 	return parsed.data;
 }
 
-function getFilesList(configFiles: string[] | undefined, cliFiles: string[] | undefined): string[] {
+function getFilesList(
+	configFiles: string[] | undefined,
+	cliFiles: string[] | undefined,
+	globResults: string[],
+): string[] {
 	const listOfFiles = new Set<string>();
 
 	// Add files from the users config file
@@ -80,6 +95,9 @@ function getFilesList(configFiles: string[] | undefined, cliFiles: string[] | un
 	if (Array.isArray(cliFiles)) {
 		cliFiles.forEach((file) => listOfFiles.add(file));
 	}
+
+	// Add files from glob results
+	globResults.forEach((file) => listOfFiles.add(file));
 
 	// If the user has defined files use them, otherwise use the default list of files.
 	if (listOfFiles.size) {

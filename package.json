@@ -66,6 +66,7 @@
     "detect-newline": "4.0.1",
     "esbuild": "0.20.2",
     "git-semver-tags": "7.0.1",
+    "glob": "10.3.12",
     "joycon": "3.1.1",
     "meow": "13.2.0",
     "semver": "7.6.0",
