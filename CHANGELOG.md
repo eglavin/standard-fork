@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.62 (2024-04-25)
+
+
+### Refactor
+
+* output debug log to a json file instead of console logging ([ed562d8](https://github.com/eglavin/fork-version/commit/ed562d8b98a0545e70ab817a67d8ccbc917ce18b))
+
+
 ## 1.4.61 (2024-04-25)
 
 
