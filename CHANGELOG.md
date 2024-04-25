@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.60 (2024-04-25)
+
+
+### Refactor
+
+* add glob support to find files ([f4e0701](https://github.com/eglavin/fork-version/commit/f4e0701301cb9169e1d4c834ef4167291ca7f347))
+
+
 ## 1.4.59 (2024-04-21)
 
 
