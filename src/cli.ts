@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { getUserConfig } from "./config/user-config";
 import { Logger } from "./utils/logger";
 import { FileManager } from "./strategies/file-manager";
@@ -47,7 +50,12 @@ async function runFork() {
 		tagResult,
 	};
 
-	logger.debug(JSON.stringify(result, null, 2));
+	if (!config.dryRun && config.debug) {
+		writeFileSync(
+			join(config.path, `fork-version-${Date.now()}.debug-log.json`),
+			JSON.stringify(result, null, 2),
+		);
+	}
 
 	return result;
 }
