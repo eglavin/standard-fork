@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "bundle-require": "4.0.2",
+    "cheerio": "1.0.0-rc.12",
     "conventional-changelog": "5.1.0",
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "7.0.2",

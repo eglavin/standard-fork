@@ -1,5 +1,6 @@
 import { JSONPackage } from "./json-package";
 import { PlainText } from "./plain-text";
+import { CSharpProject } from "./csharp-project";
 
 import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
@@ -20,6 +21,7 @@ export interface IFileManager {
 export class FileManager implements IFileManager {
 	private JSONPackage: JSONPackage;
 	private PlainText: PlainText;
+	private CSharpProject: CSharpProject;
 
 	constructor(
 		private config: ForkConfig,
@@ -27,6 +29,7 @@ export class FileManager implements IFileManager {
 	) {
 		this.JSONPackage = new JSONPackage(config, logger);
 		this.PlainText = new PlainText(config, logger);
+		this.CSharpProject = new CSharpProject(config, logger);
 	}
 
 	/**
@@ -51,6 +54,10 @@ export class FileManager implements IFileManager {
 
 		if (_fileName.endsWith("version.txt")) {
 			return this.PlainText.read(fileName);
+		}
+
+		if (_fileName.endsWith(".csproj")) {
+			return this.CSharpProject.read(fileName);
 		}
 
 		this.logger.error(`[File Manager] Unsupported file: ${fileName}`);
@@ -79,6 +86,10 @@ export class FileManager implements IFileManager {
 
 		if (_fileName.endsWith("version.txt")) {
 			return this.PlainText.write(fileState, newVersion);
+		}
+
+		if (_fileName.endsWith(".csproj")) {
+			return this.CSharpProject.write(fileState, newVersion);
 		}
 
 		this.logger.error(`[File Manager] Unsupported file: ${fileState.path}`);
