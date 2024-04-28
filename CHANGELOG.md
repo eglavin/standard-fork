@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.67 (2024-04-28)
+
+
+### Bug Fixes
+
+* stop decoding entities with cheerio ([#40](https://github.com/eglavin/fork-version/issues/40)) ([aaae442](https://github.com/eglavin/fork-version/commit/aaae442b32a4996d0363bd328077212ea6fe1937))
+
+
 ## 1.4.66 (2024-04-28)
 
 
