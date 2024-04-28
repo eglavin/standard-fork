@@ -23,9 +23,9 @@ describe("git-tag-version", () => {
 		expect(getLatestGitTagVersion("v")).resolves.toBe("1.0.2");
 	});
 
-	it('should return "1.0.0" if no tags are found', () => {
+	it("should return an empty string if no tags are found", () => {
 		mockGitSemverTags.mockResolvedValue([]);
 
-		expect(getLatestGitTagVersion("v")).resolves.toBe("1.0.0");
+		expect(getLatestGitTagVersion("v")).resolves.toBe("");
 	});
 });
