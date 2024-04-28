@@ -46,6 +46,7 @@
     "fork-version": "node dist/cli.js",
     "dev": "tsup --watch",
     "build": "tsup",
+    "generate-json-schema": "node scripts/generate-json-schema.js",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:format": "prettier --write \"src/**/*.ts\"",

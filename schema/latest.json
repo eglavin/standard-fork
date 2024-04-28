@@ -22,6 +22,10 @@
       },
       "description": "List of the files to be updated."
     },
+    "glob": {
+      "type": "string",
+      "description": "Glob pattern to match files to be updated."
+    },
     "tagPrefix": {
       "type": "string",
       "description": "Specify a prefix for the tag fork-version will create. Defaults to \"v\"."

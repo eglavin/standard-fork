@@ -10,22 +10,28 @@ import { DEFAULT_CONFIG } from "./defaults";
 import { getCliArguments } from "./cli-arguments";
 import { getChangelogPresetConfig } from "./changelog-preset-config";
 
+/**
+ * Name of the key in the package.json file that contains the users configuration.
+ */
+const PACKAGE_JSON_CONFIG_KEY = "fork-version";
+
 export async function getUserConfig(): Promise<ForkConfig> {
 	const cliArguments = getCliArguments();
 
 	const cwd = cliArguments.flags.path ? resolve(cliArguments.flags.path) : process.cwd();
-	const joycon = new JoyCon();
-	const configFilePath = await joycon.resolve({
-		files: [
-			"fork.config.ts",
-			"fork.config.js",
-			"fork.config.cjs",
-			"fork.config.mjs",
-			"fork.config.json",
-		],
+	const joycon = new JoyCon({
 		cwd,
+		packageKey: PACKAGE_JSON_CONFIG_KEY,
 		stopDir: parse(cwd).root,
 	});
+	const configFilePath = await joycon.resolve([
+		"fork.config.ts",
+		"fork.config.js",
+		"fork.config.cjs",
+		"fork.config.mjs",
+		"fork.config.json",
+		"package.json",
+	]);
 
 	const configFile = await loadConfigFile(configFilePath);
 
@@ -65,6 +71,22 @@ async function loadConfigFile(configFilePath: string | null) {
 	// Handle json config file.
 	if (configFilePath.endsWith("json")) {
 		const fileContent = JSON.parse(readFileSync(configFilePath).toString());
+
+		// Handle package.json config file.
+		if (configFilePath.endsWith("package.json")) {
+			if (
+				fileContent[PACKAGE_JSON_CONFIG_KEY] &&
+				typeof fileContent[PACKAGE_JSON_CONFIG_KEY] === "object"
+			) {
+				const parsed = ForkConfigSchema.partial().safeParse(fileContent[PACKAGE_JSON_CONFIG_KEY]);
+				if (!parsed.success) {
+					throw parsed.error;
+				}
+				return parsed.data;
+			}
+
+			return {};
+		}
 
 		const parsed = ForkConfigSchema.partial().safeParse(fileContent);
 		if (!parsed.success) {
