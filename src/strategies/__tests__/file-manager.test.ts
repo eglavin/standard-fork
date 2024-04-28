@@ -24,6 +24,24 @@ describe("strategies file-manager", () => {
 		expect(file?.version).toEqual("1.2.3");
 	});
 
+	it("should read csproj when file extension is csproj", async () => {
+		const { config, logger, createFile } = await createTestDir("strategies csproj-package");
+		const fileManager = new FileManager(config, logger);
+
+		createFile(
+			`<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Version>1.2.3</Version>
+	</PropertyGroup>
+</Project>
+`,
+			"API.csproj",
+		);
+
+		const file = fileManager.read("API.csproj");
+		expect(file?.version).toEqual("1.2.3");
+	});
+
 	it("should log an error when read file type is not supported", async () => {
 		const { config, logger, createFile } = await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
@@ -85,6 +103,35 @@ describe("strategies file-manager", () => {
 		);
 		const version = readFileSync(relativeTo("version.txt"), "utf-8");
 		expect(version).toEqual("1.2.3");
+	});
+
+	it("should write csproj when file extension is csproj", async () => {
+		const { relativeTo, config, logger, createFile } = await createTestDir(
+			"strategies csproj-package",
+		);
+		const fileManager = new FileManager(config, logger);
+
+		createFile(
+			`<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Version>1.2.3</Version>
+	</PropertyGroup>
+</Project>
+`,
+			"API.csproj",
+		);
+
+		fileManager.write(
+			{
+				name: "API.csproj",
+				path: relativeTo("API.csproj"),
+				version: "1.2.3",
+			},
+			"4.5.6",
+		);
+
+		const file = fileManager.read(relativeTo("API.csproj"));
+		expect(file?.version).toEqual("4.5.6");
 	});
 
 	it("should log an error when write file type is not supported", async () => {
