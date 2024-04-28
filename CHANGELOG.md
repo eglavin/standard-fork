@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.65 (2024-04-28)
+
+
+### Refactor
+
+* add support for csproj files using cheerio ([#38](https://github.com/eglavin/fork-version/issues/38)) ([0353589](https://github.com/eglavin/fork-version/commit/0353589709a58c989985bc826c2eba773034284a))
+
+
 ## 1.4.64 (2024-04-28)
 
 
