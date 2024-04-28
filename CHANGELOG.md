@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.66 (2024-04-28)
+
+
+### Bug Fixes
+
+* dont return a default version if not found in tags ([#39](https://github.com/eglavin/fork-version/issues/39)) ([7894822](https://github.com/eglavin/fork-version/commit/789482233cbd1c1adc9a31e43cad4f4f03e9afe7))
+
+
 ## 1.4.65 (2024-04-28)
 
 
