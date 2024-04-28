@@ -30,7 +30,7 @@ export class CSharpProject implements IFileManager {
 
 		if (fileExists(filePath)) {
 			const fileContents = readFileSync(filePath, "utf8");
-			const $ = cheerio.load(fileContents, { xmlMode: true });
+			const $ = cheerio.load(fileContents, { xmlMode: true, decodeEntities: false });
 
 			const version = $("Project > PropertyGroup > Version").text();
 			if (version) {
@@ -47,7 +47,7 @@ export class CSharpProject implements IFileManager {
 
 	public write(fileState: FileState, newVersion: string) {
 		const fileContents = readFileSync(fileState.path, "utf8");
-		const $ = cheerio.load(fileContents, { xmlMode: true });
+		const $ = cheerio.load(fileContents, { xmlMode: true, decodeEntities: false });
 
 		$("Project > PropertyGroup > Version").text(newVersion);
 
