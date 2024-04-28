@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.64 (2024-04-28)
+
+
+### Refactor
+
+* support configuration through package.json + update json schema ([#37](https://github.com/eglavin/fork-version/issues/37)) ([f312cef](https://github.com/eglavin/fork-version/commit/f312cefb3b09fea697c6f351231db779126690f5))
+
+
 ## 1.4.63 (2024-04-25)
 
 
