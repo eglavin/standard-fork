@@ -13,7 +13,7 @@ import semver from "semver";
 export async function getLatestGitTagVersion(tagPrefix: string | undefined): Promise<string> {
 	const gitTags = await gitSemverTags({ tagPrefix });
 	if (!gitTags.length) {
-		return "1.0.0";
+		return "";
 	}
 
 	const cleanedTags = [];
