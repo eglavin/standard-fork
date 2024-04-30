@@ -1,12 +1,12 @@
 # Fork-Version
 
-[![npm version](https://badge.fury.io/js/fork-version.svg)](https://www.npmjs.com/package/fork-version)
+[![NPM Version](https://img.shields.io/npm/v/fork-version)](https://www.npmjs.com/package/fork-version)
 [![Version Package](https://github.com/eglavin/fork-version/actions/workflows/version.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/version.yml)
 [![Publish Package](https://github.com/eglavin/fork-version/actions/workflows/release.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/release.yml)
 
 Fork-version is a re-write of [standard-version](https://github.com/conventional-changelog/standard-version) following on from its deprecation in May 15, 2022.
 
-<img src="assets/fork-version.jpg" alt="Fork Version Icon" width="200px">
+<img src="assets/fork-version-logo.svg" alt="Fork Version Icon" width="200px">
 
 ## Installation
 
