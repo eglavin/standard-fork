@@ -4,11 +4,11 @@
 [![Version Package](https://github.com/eglavin/fork-version/actions/workflows/version.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/version.yml)
 [![Publish Package](https://github.com/eglavin/fork-version/actions/workflows/release.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/release.yml)
 
-<p style="text-align: center;">
+<p align="center">
   <img src="assets/fork-version-logo.svg" alt="Fork Version Icon" width="200px">
 </p>
 
-<p style="text-align: center;">
+<p align="center">
 Fork-Version automates version control tasks such as determining, updating, and committing versions, files, and changelogs, simplifying the versioning process when adhering to the <a href="https://www.conventionalcommits.org">conventional commit</a> standard.
 </p>
 
