@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.68 (2024-05-01)
+
+
+### Docs
+
+* update project description + update readme with more info ([37e7171](https://github.com/eglavin/fork-version/commit/37e7171c0fbdc6c77357d17e97c6249180c766b7))
+
+
 ## 1.4.67 (2024-04-28)
 
 

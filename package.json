@@ -1,6 +1,6 @@
 {
   "name": "fork-version",
-  "version": "1.4.67",
+  "version": "1.4.68",
   "license": "ISC",
   "description": "Fork-Version automates version control tasks such as determining, updating, and committing versions, files, and changelogs, simplifying the process when adhering to the conventional commit standard.",
   "keywords": [
