@@ -2,7 +2,16 @@
   "name": "fork-version",
   "version": "1.4.67",
   "license": "ISC",
-  "description": "Replacement for standard version written with modern syntax",
+  "description": "Fork-Version automates version control tasks such as determining, updating, and committing versions, files, and changelogs, simplifying the process when adhering to the conventional commit standard.",
+  "keywords": [
+    "changelog",
+    "conventional changelog",
+    "conventional commits",
+    "git",
+    "semantic version",
+    "semver",
+    "version"
+  ],
   "homepage": "https://github.com/eglavin/fork-version",
   "bugs": {
     "url": "https://github.com/eglavin/fork-version/issues"
