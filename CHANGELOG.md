@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.69 (2024-05-01)
+
+
+### Docs
+
+* update text centring in readme ([a8919ef](https://github.com/eglavin/fork-version/commit/a8919ef3f27ad7042d17c68591a224d023f273bf))
+
+
 ## 1.4.68 (2024-05-01)
 
 
