@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.70 (2024-05-01)
+
+
+### Docs
+
+* set mit license info ([8990930](https://github.com/eglavin/fork-version/commit/899093074f5506851e10918ac65490b3a0948098))
+
+
 ## 1.4.69 (2024-05-01)
 
 
