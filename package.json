@@ -56,6 +56,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "generate-json-schema": "node scripts/generate-json-schema.js",
+    "update-readme-cli-options": "node scripts/update-readme-cli-options.js",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:format": "prettier --write \"src/**/*.ts\"",

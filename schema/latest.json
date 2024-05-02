@@ -3,17 +3,9 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "path": {
-      "type": "string",
-      "description": "The path fork-version will run from. Defaults to \"process.cwd()\"."
-    },
-    "changelog": {
-      "type": "string",
-      "description": "Name of the changelog file. Defaults to \"CHANGELOG.md\"."
-    },
-    "header": {
-      "type": "string",
-      "description": "The header to be used in the changelog."
+    "inspectVersion": {
+      "type": "boolean",
+      "description": "If set, fork-version will print the current version and exit."
     },
     "files": {
       "type": "array",
@@ -26,56 +18,64 @@
       "type": "string",
       "description": "Glob pattern to match files to be updated."
     },
+    "path": {
+      "type": "string",
+      "description": "The path fork-version will run from. Defaults to \"process.cwd()\"."
+    },
+    "changelog": {
+      "type": "string",
+      "description": "Name of the changelog file. Defaults to \"CHANGELOG.md\"."
+    },
+    "header": {
+      "type": "string",
+      "description": "The header text for the changelog."
+    },
     "tagPrefix": {
       "type": "string",
-      "description": "Specify a prefix for the tag fork-version will create. Defaults to \"v\"."
+      "description": "Specify a prefix for the created tag. Defaults to \"v\"."
     },
     "preReleaseTag": {
       "type": [
         "string",
         "boolean"
       ],
-      "description": "Make a pre-release with an optional label."
-    },
-    "commitAll": {
-      "type": "boolean",
-      "description": "If true, we'll commit all changes, not just files updated by fork-version."
-    },
-    "debug": {
-      "type": "boolean",
-      "description": "If true, we'll log debug information."
-    },
-    "dryRun": {
-      "type": "boolean",
-      "description": "If true, no output will be written to disk or committed."
-    },
-    "gitTagFallback": {
-      "type": "boolean",
-      "description": "Fallback and attempt to use the latest git tag as the current version. Defaults to true."
-    },
-    "inspectVersion": {
-      "type": "boolean",
-      "description": "If true, we'll log the current version and exit."
-    },
-    "sign": {
-      "type": "boolean",
-      "description": "If true, we'll sign the git commit using GPG."
-    },
-    "silent": {
-      "type": "boolean",
-      "description": "If true, no output will be written to stdout."
-    },
-    "verify": {
-      "type": "boolean",
-      "description": "If true, run git commit hooks."
+      "description": "Make a pre-release with optional label if given value is a string."
     },
     "currentVersion": {
       "type": "string",
-      "description": "If set, we'll use this as the current version"
+      "description": "If set, fork-version will use this version instead of trying to determine one."
     },
     "nextVersion": {
       "type": "string",
-      "description": "If set, we'll use this as the next version."
+      "description": "If set, fork-version will attempt to update to this version, instead of incrementing using \"conventional-commit\"."
+    },
+    "commitAll": {
+      "type": "boolean",
+      "description": "Commit all staged changes, not just files updated by fork-version."
+    },
+    "debug": {
+      "type": "boolean",
+      "description": "Output debug information."
+    },
+    "dryRun": {
+      "type": "boolean",
+      "description": "No output will be written to disk or committed."
+    },
+    "silent": {
+      "type": "boolean",
+      "description": "Run without logging to the terminal."
+    },
+    "gitTagFallback": {
+      "type": "boolean",
+      "description": "If unable to find a version in the given files, fallback and attempt to use the latest git tag. Defaults to true."
+    },
+    "sign": {
+      "type": "boolean",
+      "description": "If true, git will sign the commit with the systems GPG key."
+    },
+    "verify": {
+      "type": "boolean",
+      "description": "If true, git will run user defined git hooks before committing."
     },
     "changelogPresetConfig": {
       "type": "object",
