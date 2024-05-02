@@ -12,7 +12,7 @@ jobs:
         node: [18, 20]
         os: [ubuntu-latest, windows-latest]
 
-    name: Test ${{ matrix.os }} ${{ matrix.node }}
+    name: Test ${{ matrix.os }} on node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -68,7 +68,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
 
-    name: Test ${{ matrix.os }}
+    name: Test ${{ matrix.os }} on bun
     runs-on: ${{ matrix.os }}
 
     steps:
