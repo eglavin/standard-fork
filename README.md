@@ -68,3 +68,56 @@ You can then add the following entry to your package.json scripts section and us
   }
 }
 ```
+
+### Command Line Options
+
+<!-- START COMMAND LINE OPTIONS -->
+
+```txt
+Usage:
+  $ fork-version [options]
+
+Commands:
+  --help Show this help message.
+
+  --inspect-version If set, fork-version will print the current version and exit.
+
+Options:
+  --files, --file, -F [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+    List of the files to be updated.
+  --glob, -G
+    Glob pattern to match files to be updated.
+  --path, -P [Default: process.cwd()]
+    The path fork-version will run from.
+  --changelog [Default: "CHANGELOG.md"]
+    Name of the changelog file.
+  --header
+    The header text for the changelog.
+  --tag-prefix [Default: "v"]
+    Specify a prefix for the created tag.
+  --pre-release-tag [Default: undefined]
+    Make a pre-release with optional label if given value is a string.
+  --current-version
+    If set, fork-version will use this version instead of trying to determine one.
+  --next-version
+    If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+
+Flags:
+
+  --commit-all
+    Commit all staged changes, not just files updated by fork-version.
+  --debug
+    Output debug information.
+  --dry-run
+    No output will be written to disk or committed.
+  --silent
+    Run without logging to the terminal.
+  --git-tag-fallback [Default: true]
+    If unable to find a version in the given files, fallback and attempt to use the latest git tag.
+  --sign
+    If true, git will sign the commit with the systems GPG key.
+  --verify
+    If true, git will run user defined git hooks before committing.
+```
+
+<!-- END COMMAND LINE OPTIONS -->

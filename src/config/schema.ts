@@ -67,29 +67,20 @@ export const ChangelogPresetConfigSchema = z.object({
 export type ChangelogPresetConfig = z.infer<typeof ChangelogPresetConfigSchema>;
 
 export const ForkConfigSchema = z.object({
+	// Commands
+	//
+
 	/**
-	 * The path fork-version will run from.
-	 * @default
-	 * ```js
-	 * process.cwd()
-	 * ```
+	 * If set, fork-version will print the current version and exit.
+	 * @default false
 	 */
-	path: z.string().describe('The path fork-version will run from. Defaults to "process.cwd()".'),
-	/**
-	 * Name of the changelog file.
-	 * @default "CHANGELOG.md"
-	 */
-	changelog: z.string().describe('Name of the changelog file. Defaults to "CHANGELOG.md".'),
-	/**
-	 * The header to be used in the changelog.
-	 * @default
-	 * ```markdown
-	 * # Changelog
-	 *
-	 * All notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.
-	 * ```
-	 */
-	header: z.string().describe("The header to be used in the changelog."),
+	inspectVersion: z
+		.boolean()
+		.describe("If set, fork-version will print the current version and exit."),
+
+	// Options
+	//
+
 	/**
 	 * List of the files to be updated.
 	 * @default
@@ -110,7 +101,30 @@ export const ForkConfigSchema = z.object({
 	 */
 	glob: z.string().optional().describe("Glob pattern to match files to be updated."),
 	/**
-	 * Specify a prefix for the tag fork-version will create.
+	 * The path fork-version will run from.
+	 * @default
+	 * ```js
+	 * process.cwd()
+	 * ```
+	 */
+	path: z.string().describe('The path fork-version will run from. Defaults to "process.cwd()".'),
+	/**
+	 * Name of the changelog file.
+	 * @default "CHANGELOG.md"
+	 */
+	changelog: z.string().describe('Name of the changelog file. Defaults to "CHANGELOG.md".'),
+	/**
+	 * The header text for the changelog.
+	 * @default
+	 * ```markdown
+	 * # Changelog
+	 *
+	 * All notable changes to this project will be documented in this file. See [fork-version](https://github.com/eglavin/fork-version) for commit guidelines.
+	 * ```
+	 */
+	header: z.string().describe("The header text for the changelog."),
+	/**
+	 * Specify a prefix for the created tag.
 	 *
 	 * For instance if your version tag is prefixed by "version/" instead of "v" you have to specify
 	 * `tagPrefix: "version/"`.
@@ -128,12 +142,9 @@ export const ForkConfigSchema = z.object({
 	 * @example "", "version/", "@eglavin/fork-version-"
 	 * @default "v"
 	 */
-	tagPrefix: z
-		.string()
-		.describe('Specify a prefix for the tag fork-version will create. Defaults to "v".'),
+	tagPrefix: z.string().describe('Specify a prefix for the created tag. Defaults to "v".'),
 	/**
-	 * Make a pre-release with an optional label, if value is a string it will be used as the
-	 * pre-release tag.
+	 * Make a pre-release with optional label if given value is a string.
 	 *
 	 * | Example Value | Produced Version |
 	 * |:--------------|:-----------------|
@@ -148,69 +159,73 @@ export const ForkConfigSchema = z.object({
 		.string()
 		.or(z.boolean())
 		.optional()
-		.describe("Make a pre-release with an optional label."),
+		.describe("Make a pre-release with optional label if given value is a string."),
+	/**
+	 * If set, fork-version will use this version instead of trying to determine one.
+	 * @example "1.0.0"
+	 * @default undefined
+	 */
+	currentVersion: z
+		.string()
+		.optional()
+		.describe("If set, fork-version will use this version instead of trying to determine one."),
+	/**
+	 * If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+	 * @example "2.0.0"
+	 * @default undefined
+	 */
+	nextVersion: z
+		.string()
+		.optional()
+		.describe(
+			'If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".',
+		),
+
+	// Flags
+	//
 
 	/**
-	 * If true, we'll commit all changes, not just files updated by fork-version.
+	 * Commit all staged changes, not just files updated by fork-version.
 	 * @default false
 	 */
 	commitAll: z
 		.boolean()
-		.describe("If true, we'll commit all changes, not just files updated by fork-version."),
+		.describe("Commit all staged changes, not just files updated by fork-version."),
 	/**
-	 * If true, we'll log debug information.
+	 * Output debug information.
 	 * @default false
 	 */
-	debug: z.boolean().describe("If true, we'll log debug information."),
+	debug: z.boolean().describe("Output debug information."),
 	/**
-	 * If true, no output will be written to disk or committed.
+	 * No output will be written to disk or committed.
 	 * @default false
 	 */
-	dryRun: z.boolean().describe("If true, no output will be written to disk or committed."),
+	dryRun: z.boolean().describe("No output will be written to disk or committed."),
 	/**
-	 * If true and we cant find a version in the list of `files`, we'll fallback
-	 * and attempt to use the latest git tag to get the current version.
+	 * Run without logging to the terminal.
+	 * @default false
+	 */
+	silent: z.boolean().describe("Run without logging to the terminal."),
+	/**
+	 * If unable to find a version in the given files, fallback and attempt to use the latest git tag.
 	 * @default true
 	 */
 	gitTagFallback: z
 		.boolean()
 		.describe(
-			"Fallback and attempt to use the latest git tag as the current version. Defaults to true.",
+			"If unable to find a version in the given files, fallback and attempt to use the latest git tag. Defaults to true.",
 		),
 	/**
-	 * If true, we'll log the current version and exit.
-	 * @default false
-	 */
-	inspectVersion: z.boolean().describe("If true, we'll log the current version and exit."),
-	/**
-	 * If true, we'll sign the git commit using GPG.
+	 * If true, git will sign the commit with the systems GPG key.
 	 * @see {@link https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--Sltkeyidgt Git - GPG Sign Commits}
 	 * @default false
 	 */
-	sign: z.boolean().describe("If true, we'll sign the git commit using GPG."),
+	sign: z.boolean().describe("If true, git will sign the commit with the systems GPG key."),
 	/**
-	 * If true, no output will be written to stdout.
+	 * If true, git will run user defined git hooks before committing.
 	 * @default false
 	 */
-	silent: z.boolean().describe("If true, no output will be written to stdout."),
-	/**
-	 * If true, run git commit hooks.
-	 * @default false
-	 */
-	verify: z.boolean().describe("If true, run git commit hooks."),
-
-	/**
-	 * If set, we'll use this as the current version.
-	 * @example "1.0.0"
-	 * @default undefined
-	 */
-	currentVersion: z.string().optional().describe("If set, we'll use this as the current version"),
-	/**
-	 * If set, we'll use this as the next version.
-	 * @example "2.0.0"
-	 * @default undefined
-	 */
-	nextVersion: z.string().optional().describe("If set, we'll use this as the next version."),
+	verify: z.boolean().describe("If true, git will run user defined git hooks before committing."),
 
 	/**
 	 * Override the default "conventional-changelog-conventionalcommits" preset configuration.
