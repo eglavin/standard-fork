@@ -25,8 +25,7 @@ export async function createTestDir(name: string) {
 		throw new Error(`Test folder already exists: ${testFolder}`);
 	}
 
-	execSync("git config --global init.defaultBranch main", execSyncOptions);
-	execSync("git init", execSyncOptions);
+	execSync("git init --initial-branch=main", execSyncOptions);
 	execSync("git config commit.gpgSign false", execSyncOptions);
 	execSync("git config core.autocrlf false", execSyncOptions);
 
