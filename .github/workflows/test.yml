@@ -107,17 +107,17 @@ jobs:
 
       - name: Run Typecheck
         run: |
-          pnpm typecheck
+          bun run typecheck
 
       - name: Run Lint Check
         run: |
-          pnpm lint:check
+          bun run lint:check
 
       - name: Run Tests
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
-          pnpm test:ci
+          bun run test:ci
 
   code_ql:
     name: Run Code QL
