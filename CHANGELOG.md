@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.71 (2024-05-02)
+
+
+### Test
+
+* change branch initialisation to name main branch instead of modifying global config ([#41](https://github.com/eglavin/fork-version/issues/41)) ([4ad5e35](https://github.com/eglavin/fork-version/commit/4ad5e356247119daf0657b8c8c64bed12aa53160))
+
+
 ## 1.4.70 (2024-05-01)
 
 
