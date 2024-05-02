@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.72 (2024-05-02)
+
+
+### Refactor
+
+* changes to cli help text + extracting to display in readme ([#44](https://github.com/eglavin/fork-version/issues/44)) ([c7426f1](https://github.com/eglavin/fork-version/commit/c7426f19434f2d4c762ed0c565a806c42a16e579))
+
+
 ## 1.4.71 (2024-05-02)
 
 
