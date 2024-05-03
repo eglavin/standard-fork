@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.74 (2024-05-03)
+
+
+### Refactor
+
+* change to cli helper text display ([#46](https://github.com/eglavin/fork-version/issues/46)) ([2427eee](https://github.com/eglavin/fork-version/commit/2427eeefb355a14a304fdfb1d2c629d65d395e4c))
+
+
 ## 1.4.73 (2024-05-03)
 
 
