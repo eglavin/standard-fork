@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.73 (2024-05-03)
+
+
+### Bug Fixes
+
+* change indentation type in json packages to respect tabs ([#45](https://github.com/eglavin/fork-version/issues/45)) ([c885395](https://github.com/eglavin/fork-version/commit/c88539508718d56fe7e5b7ec6bdeb91d39718d5d))
+
+
 ## 1.4.72 (2024-05-02)
 
 
