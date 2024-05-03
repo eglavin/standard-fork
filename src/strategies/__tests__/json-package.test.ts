@@ -84,4 +84,24 @@ describe("strategies json-package", () => {
 		expect(content.version).toContain("4.5.6");
 		expect(content.packages[""].version).toContain("4.5.6");
 	});
+
+	it("should write output with tabs if input file is using tabs", async () => {
+		const { relativeTo, config, logger, createFile } =
+			await createTestDir("strategies json-package");
+		const fileManager = new JSONPackage(config, logger);
+
+		createFile('{\n\t"version": "1.2.3"\n}', "package.json");
+
+		fileManager.write(
+			{
+				name: "package.json",
+				path: relativeTo("package.json"),
+				version: "1.2.3",
+			},
+			"4.5.6",
+		);
+
+		const content = readFileSync(relativeTo("package.json"), "utf8");
+		expect(content).toBe('{\n\t"version": "4.5.6"\n}');
+	});
 });

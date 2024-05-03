@@ -64,8 +64,6 @@ export const ChangelogPresetConfigSchema = z.object({
 		.describe("List of prefixes used to detect references to issues."),
 });
 
-export type ChangelogPresetConfig = z.infer<typeof ChangelogPresetConfigSchema>;
-
 export const ForkConfigSchema = z.object({
 	// Commands
 	//

@@ -33,7 +33,6 @@ Options:
     If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
 Flags:
-
   --commit-all
     Commit all staged changes, not just files updated by fork-version.
   --debug
