@@ -60,7 +60,7 @@ export class JSONPackage implements IFileManager {
 
 		writeFileSync(
 			fileState.path,
-			stringifyPackage(parsedJson, detectIndent(fileContents).amount, detectNewline(fileContents)),
+			stringifyPackage(parsedJson, detectIndent(fileContents).indent, detectNewline(fileContents)),
 			"utf8",
 		);
 	}
