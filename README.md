@@ -45,9 +45,11 @@ npx fork-version
 ```
 
 > [!NOTE]
-> If you want to use a specific version you can add a version tag at the end of the command like this `npx fork-version@1.4.67`
+> If you want to use a specific version you can add a version tag to the end of the name.
 >
-> The version tag needs to match against the [published version on npm](https://www.npmjs.com/package/fork-version?activeTab=versions).
+> Example: `npx fork-version@1.4.67`
+>
+> The version tag needs to match against one of the [published versions on npm](https://www.npmjs.com/package/fork-version?activeTab=versions).
 
 ### Install Locally
 
@@ -170,7 +172,7 @@ In the schema folder in this repo we've generated a [json schema](./schema/lates
   "files": [
     "package.json",
     "package-lock.json"
-  ],
+  ]
 }
 ```
 
@@ -180,15 +182,12 @@ Alternatively you can define your config using a key in your `package.json` file
 {
   "name": "my-js-project",
   "version": "1.2.3",
-  "scripts": {
-    "release": "fork-version"
-  },
   "fork-version": {
     "header": "# My Changelog",
     "files": [
       "package.json",
       "package-lock.json"
-    ],
+    ]
   }
 }
 ```
