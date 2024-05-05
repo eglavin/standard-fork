@@ -183,12 +183,10 @@ export const ForkConfigSchema = z.object({
 	//
 
 	/**
-	 * Commit all staged changes, not just files updated by fork-version.
+	 * Commit all changes, not just files updated by fork-version.
 	 * @default false
 	 */
-	commitAll: z
-		.boolean()
-		.describe("Commit all staged changes, not just files updated by fork-version."),
+	commitAll: z.boolean().describe("Commit all changes, not just files updated by fork-version."),
 	/**
 	 * Output debug information.
 	 * @default false
