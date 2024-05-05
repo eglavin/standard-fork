@@ -20,7 +20,7 @@ writeFileSync(
 		new RegExp(`${startMarker}[\\s\\S]*${endMarker}`),
 		`${startMarker}
 
-\`\`\`txt
+\`\`\`text
 ${helperText}
 \`\`\`
 

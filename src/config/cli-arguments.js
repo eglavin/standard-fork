@@ -23,7 +23,7 @@ Options:
   --next-version        If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
 Flags:
-  --commit-all          Commit all staged changes, not just files updated by fork-version.
+  --commit-all          Commit all changes, not just files updated by fork-version.
   --debug               Output debug information.
   --dry-run             No output will be written to disk or committed.
   --silent              Run without logging to the terminal.

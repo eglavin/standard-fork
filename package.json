@@ -5,11 +5,15 @@
   "description": "Fork-Version automates version control tasks such as determining, updating, and committing versions, files, and changelogs, simplifying the process when adhering to the conventional commit standard.",
   "keywords": [
     "changelog",
+    "commit",
     "conventional changelog",
     "conventional commits",
     "git",
+    "metadata",
     "semantic version",
+    "semantic",
     "semver",
+    "tag",
     "version"
   ],
   "homepage": "https://github.com/eglavin/fork-version",
