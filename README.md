@@ -29,25 +29,25 @@ By following the [conventional commit](https://www.conventionalcommits.org) stan
 
 ## Using Fork-Version
 
-Primarily designed to be used without installation with `npx`, Fork-Version can also be installed globally or directly to the node package you're working on. The only software prerequisites you need are [git](https://git-scm.com) and [node](https://nodejs.org).
+Primarily designed to be used with `npx`, Fork-Version can also be installed globally or directly to the node package you're working on. The only software prerequisites you need are [git](https://git-scm.com) and [node](https://nodejs.org).
+
+Fork-Version can be configured either through a config file or by passing options to the tool when ran, see the [Configuration File](#configuration-file) and [Command Line Options](#command-line-options) sections below for details on the supported options.
+
+> [!NOTE]
+> Command line options override defined config files.
 
 ### Using `npx` (Recommended)
 
-By using `npx` you can use Fork-Version without installation, on more then just a node project.
-
-#### Basic usage
-
-To use Fork-Version with `npx` you can use the following command:
+To use Fork-Version with `npx` you can use the following command, by using `npx` you can also use Fork-Version without installation and on other projects including non node projects.
 
 ```sh
 npx fork-version
 ```
 
-`npx` is recommended as you will always being the latest version, otherwise you can use a version tag to use a specific version `npx fork-version@[tag]`. Example:
-
-```sh
-npx fork-version@1.4.67
-```
+> [!NOTE]
+> If you want to use a specific version you can add a version tag at the end of the command like this `npx fork-version@1.4.67`
+>
+> The version tag needs to match against the [published version on npm](https://www.npmjs.com/package/fork-version?activeTab=versions).
 
 ### Install Locally
 
@@ -59,7 +59,7 @@ To install the package locally to your project you can use one of the following 
 | yarn            | `yarn add fork-version --dev`         |
 | pnpm            | `pnpm add fork-version --save-dev`    |
 
-You can then add the following entry to your package.json scripts section and use it like the other scripts you already use in your project.
+You can then add the following entry to your package.json scripts section and use it like any other script you already use in your project.
 
 ```json
 {
@@ -68,6 +68,8 @@ You can then add the following entry to your package.json scripts section and us
   }
 }
 ```
+
+For example if you use npm you can now use `npm run release` to run Fork-Version.
 
 ### Command Line Options
 
@@ -103,3 +105,88 @@ Flags:
 ```
 
 <!-- END COMMAND LINE OPTIONS -->
+
+### Configuration File
+
+You can configure Fork-Version using one of the following files:
+
+- [A javascript file](#javascript-config):
+  - fork.config.ts
+  - fork.config.js
+  - fork.config.cjs
+  - fork.config.mjs
+- [A json file](#json-config):
+  - fork.config.json
+  - package.json >> Key Name: "fork-version"
+
+#### Javascript Config
+
+If you're using a javascript project you can define your config by using a default export.
+
+The `defineConfig` function in the following snippet is optional though using it gives you intellisense information:
+
+```js
+import { defineConfig } from 'fork-version';
+
+export default defineConfig({
+  header: `# My Changelog`,
+  files: ["package.json", "package-lock.json"],
+});
+```
+
+Alternatively you can use a typescript type annotation:
+
+```ts
+import type { ForkConfig } from 'fork-version';
+
+const myConfig: ForkConfig = {
+  header: `# My Changelog`,
+  files: ["package.json", "package-lock.json"],
+};
+
+export default myConfig;
+```
+
+Or jsdocs:
+
+```js
+/** @type {import("fork-version").ForkConfig} */
+export default {
+  header: `# My Changelog`,
+  files: ["package.json", "package-lock.json"],
+};
+```
+
+#### Json Config
+
+You can also configure fork-version using a json file, in the schema folder in this repo we've generated a [json schema](./schema/latest.json) file which can be used to give you intellisense information similar to the javascript options above:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/eglavin/fork-version/main/schema/latest.json",
+  "header": "# My Changelog",
+  "files": [
+    "package.json",
+    "package-lock.json"
+  ],
+}
+```
+
+Alternatively you can define your config using a key in your `package.json` file called `fork-version`:
+
+```json
+{
+  "name": "my-js-project",
+  "version": "1.2.3",
+  "scripts": {
+    "release": "fork-version"
+  },
+  "fork-version": {
+    "header": "# My Changelog",
+    "files": [
+      "package.json",
+      "package-lock.json"
+    ],
+  }
+}
+```
