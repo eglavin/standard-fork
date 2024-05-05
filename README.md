@@ -159,7 +159,9 @@ export default {
 
 #### Json Config
 
-You can also configure fork-version using a json file, in the schema folder in this repo we've generated a [json schema](./schema/latest.json) file which can be used to give you intellisense information similar to the javascript options above:
+You can also configure Fork-Version using a json file called `fork.config.json` this is a good option if you're using Fork-Version on a non javascript project.
+
+In the schema folder in this repo we've generated a [json schema](./schema/latest.json) file which can be used to give you intellisense information similar to the javascript options above:
 
 ```json
 {
