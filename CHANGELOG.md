@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.75 (2024-05-05)
+
+
+### Docs
+
+* start documentation for config files ([#47](https://github.com/eglavin/fork-version/issues/47)) ([0f5f2d0](https://github.com/eglavin/fork-version/commit/0f5f2d079b4658e0446948a171baaa06e808b66f))
+
+
 ## 1.4.74 (2024-05-03)
 
 
