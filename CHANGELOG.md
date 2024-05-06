@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.77 (2024-05-06)
+
+
+### Docs
+
+* add todo messages to the planned sections ([630edbd](https://github.com/eglavin/fork-version/commit/630edbd4e0efc3d8796897a7950a75bd5583f0ce))
+
+
 ## 1.4.76 (2024-05-06)
 
 
