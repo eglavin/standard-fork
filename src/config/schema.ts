@@ -153,7 +153,7 @@ export const ForkConfigSchema = z.object({
 	 * @example true, "alpha", "beta", "rc"
 	 * @default undefined
 	 */
-	preReleaseTag: z
+	preRelease: z
 		.string()
 		.or(z.boolean())
 		.optional()

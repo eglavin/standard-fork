@@ -34,7 +34,7 @@
       "type": "string",
       "description": "Specify a prefix for the created tag. Defaults to \"v\"."
     },
-    "preReleaseTag": {
+    "preRelease": {
       "type": [
         "string",
         "boolean"
@@ -51,7 +51,7 @@
     },
     "commitAll": {
       "type": "boolean",
-      "description": "Commit all staged changes, not just files updated by fork-version."
+      "description": "Commit all changes, not just files updated by fork-version."
     },
     "debug": {
       "type": "boolean",

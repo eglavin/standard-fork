@@ -20,7 +20,7 @@ export async function completedMessage(
 
 	// Print npm publish command
 	if (files.some((file) => file.name === "package.json" && file.isPrivate === false)) {
-		const npmTag = typeof config.preReleaseTag === "string" ? config.preReleaseTag : "prerelease";
+		const npmTag = typeof config.preRelease === "string" ? config.preRelease : "prerelease";
 
 		logger.log(
 			`${releaseType}`.startsWith("pre")

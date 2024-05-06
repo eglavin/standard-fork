@@ -93,7 +93,8 @@ Options:
   --changelog           Name of the changelog file. [Default: "CHANGELOG.md"]
   --header              The header text for the changelog.
   --tag-prefix          Specify a prefix for the created tag. [Default: "v"]
-  --pre-release-tag     Make a pre-release with optional label if given value is a string.
+  --pre-release         Mark this release as a pre-release.
+  --pre-release-tag     Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
   --current-version     If set, fork-version will use this version instead of trying to determine one.
   --next-version        If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
@@ -208,7 +209,7 @@ Alternatively you can define your config using a key in your `package.json` file
 | changelog                                             | string           | `CHANGELOG.md`          | Name of the changelog file                                                                     |
 | header                                                | string           | `# Changelog...`        | The header text for the changelog                                                              |
 | [tagPrefix](#configtagprefix)                         | string           | `v`                     | Prefix for the created tag                                                                     |
-| [preReleaseTag](#configprereleasetag)                 | string / boolean | -                       | Make a pre-release with optional label if given value is a string                              |
+| [preRelease](#configprerelease)                       | string / boolean | -                       | Make a pre-release with optional label if given value is a string                              |
 | currentVersion                                        | string           | -                       | Use this version instead of trying to determine one                                            |
 | nextVersion                                           | string           | -                       | Attempt to update to this version, instead of incrementing using "conventional-commit"         |
 | commitAll                                             | boolean          | false                   | Commit all changes, not just files updated by fork-version                                     |
@@ -263,9 +264,21 @@ Allows you to control the prefix for the created tag. This is useful if your usi
 | "version/"               | `version/1.2.3`               |
 | "@eglavin/fork-version-" | `@eglavin/fork-version-1.2.3` |
 
-##### config.preReleaseTag
+##### config.preRelease
 
-`TODO`
+Marking a release as a pre-release allows you to define a change as a patch to a specific version. This allows you to mark a fix for a version or an alpha build for example.
+
+| Example Value | Version Created |
+|:--------------|:----------------|
+| `true`        | `1.2.3-0`       |
+| `alpha`       | `1.2.3-alpha-0` |
+
+Fork-Version uses [meow](https://github.com/sindresorhus/meow) to parse cli arguments which is unable to take a single argument and parse it as either a string and or a boolean. So to do the above through the cli interface you'll need to use two different arguments:
+
+| Example CLI Usage                      | Version Created |
+|:---------------------------------------|:----------------|
+| `fork-version --pre-release`           | `1.2.3-0`       |
+| `fork-version --pre-release-tag alpha` | `1.2.3-alpha-0` |
 
 ##### config.changelogPresetConfig
 
@@ -283,7 +296,7 @@ Allows you to control the prefix for the created tag. This is useful if your usi
 
 `TODO` [add support for custom file readers and writers through config #5](https://github.com/eglavin/fork-version/issues/5)
 
-#### Code Usage
+### Code Usage
 
 > [!WARNING]
 > Code usage is not recommended, as the api is not stable and may change between versions.
