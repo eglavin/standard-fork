@@ -231,6 +231,8 @@ By default Fork-Version will attempt to read versions from and update these file
 - "manifest.json"
 - "bower.json"
 
+See the [Supported File Types](#supported-file-types) section below to see the currently supported file types.
+
 ##### config.glob
 
 An alternative to [config.files](#configfiles), a glob allows you to search for files using wildcard characters.
@@ -286,11 +288,43 @@ Fork-Version uses [meow](https://github.com/sindresorhus/meow) to parse cli argu
 
 #### Supported File Types
 
-- json package files
-- plain text version files
-- dotnet csproj files
+- [Json Package](#json-package)
+- [Plain Text](#plain-text)
+- [MS Build](#ms-build)
 
-`TODO`
+##### Json Package
+
+A json package is a json file which contains a version property, such as a npm package.json file.
+
+```json
+{
+  "name": "my-project",
+  "version": "1.2.3",
+  "private": false,
+}
+```
+
+##### Plain Text
+
+A plain text file will have just the version as the content.
+
+```text
+1.2.3
+```
+
+##### MS Build
+
+A MS build project is an xml file with with a `Version` property under the `Project > PropertyGroup` node group.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>1.2.3</Version>
+  </PropertyGroup>
+</Project>
+```
+
+We currently support reading and updating the following file extensions: `.csproj` `.dbproj` `.esproj` `.fsproj` `.props` `.vbproj` `.vcxproj`
 
 #### Custom File Updater's
 

@@ -39,4 +39,8 @@ export class PlainText implements IFileManager {
 	public write(fileState: FileState, newVersion: string) {
 		writeFileSync(fileState.path, newVersion, "utf8");
 	}
+
+	public isSupportedFile(fileName: string): boolean {
+		return fileName.endsWith("version.txt");
+	}
 }

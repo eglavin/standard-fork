@@ -4,7 +4,7 @@ import conventionalRecommendedBump from "conventional-recommended-bump";
 import { getLatestGitTagVersion } from "../utils/git-tag-version";
 import { getReleaseType } from "../utils/release-type";
 import type { ForkConfig } from "../config/schema";
-import type { IFileManager, FileState } from "../strategies/file-manager";
+import type { FileManager, FileState } from "../strategies/file-manager";
 import type { Logger } from "../utils/logger";
 
 export interface CurrentVersion {
@@ -15,7 +15,7 @@ export interface CurrentVersion {
 export async function getCurrentVersion(
 	config: ForkConfig,
 	logger: Logger,
-	fileManager: IFileManager,
+	fileManager: FileManager,
 ): Promise<CurrentVersion> {
 	const files: FileState[] = [];
 	const versions = new Set<string>();

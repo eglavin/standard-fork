@@ -8,7 +8,9 @@ import type { Logger } from "../utils/logger";
 import type { FileState, IFileManager } from "./file-manager";
 
 /**
- * A csproj file is an xml file with a version property under the Project > PropertyGroup node.
+ * A ms-build file is an xml file with a version property under the Project > PropertyGroup node.
+ *
+ * [Microsoft Learn - MSBuild Reference](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild?view=vs-2022)
  *
  * @example
  * ```xml
@@ -19,7 +21,7 @@ import type { FileState, IFileManager } from "./file-manager";
  * </Project>
  * ```
  */
-export class CSharpProject implements IFileManager {
+export class MSBuildProject implements IFileManager {
 	constructor(
 		private config: ForkConfig,
 		private logger: Logger,
@@ -41,7 +43,7 @@ export class CSharpProject implements IFileManager {
 				};
 			}
 
-			this.logger.warn(`[File Manager] Unable to determine csproj package: ${fileName}`);
+			this.logger.warn(`[File Manager] Unable to determine ms-build package: ${fileName}`);
 		}
 	}
 
@@ -56,5 +58,15 @@ export class CSharpProject implements IFileManager {
 		const updatedContent = $.xml().replaceAll('"/>', '" />');
 
 		writeFileSync(fileState.path, updatedContent, "utf8");
+	}
+
+	public isSupportedFile(fileName: string): boolean {
+		// List of known ms-build project file extensions.
+		// https://stackoverflow.com/questions/2007689/is-there-a-standard-file-extension-for-msbuild-files
+		return (
+			[".csproj", ".dbproj", ".esproj", ".fsproj", ".props", ".vbproj", ".vcxproj"].findIndex(
+				(ext) => fileName.endsWith(ext),
+			) !== -1
+		);
 	}
 }

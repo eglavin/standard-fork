@@ -104,4 +104,19 @@ describe("strategies json-package", () => {
 		const content = readFileSync(relativeTo("package.json"), "utf8");
 		expect(content).toBe('{\n\t"version": "4.5.6"\n}');
 	});
+
+	it("should match json files", async () => {
+		const { config, logger } = await createTestDir("strategies json-package");
+		const fileManager = new JSONPackage(config, logger);
+
+		// Supported
+		expect(fileManager.isSupportedFile("package.json")).toBe(true);
+		expect(fileManager.isSupportedFile("package-lock.json")).toBe(true);
+
+		// Not supported
+		expect(fileManager.isSupportedFile("package.json.lock")).toBe(false);
+		expect(fileManager.isSupportedFile("package-lock")).toBe(false);
+		expect(fileManager.isSupportedFile("package")).toBe(false);
+		expect(fileManager.isSupportedFile("package.json.lock")).toBe(false);
+	});
 });
