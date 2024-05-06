@@ -9,7 +9,8 @@ export const helperText = `Usage:
 
 Commands:
   --help                Show this help message.
-  --inspect-version     If set, fork-version will print the current version and exit.
+  --version             Show the current version of fork-version.
+  --inspect-version     If set, fork-version will print the current project version and exit.
 
 Options:
   --file, -F            List of the files to be updated. [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]

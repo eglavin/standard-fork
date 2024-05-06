@@ -83,7 +83,8 @@ Usage:
 
 Commands:
   --help                Show this help message.
-  --inspect-version     If set, fork-version will print the current version and exit.
+  --version             Show the current version of fork-version.
+  --inspect-version     If set, fork-version will print the current project version and exit.
 
 Options:
   --file, -F            List of the files to be updated. [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
@@ -198,26 +199,26 @@ Alternatively you can define your config using a key in your `package.json` file
 
 #### Config Properties
 
-| Property              | Type             | Default                   | Description                                                                                    |
-| :-------------------- | :--------------- | :------------------------ | :--------------------------------------------------------------------------------------------- |
-| inspectVersion        | boolean          | -                         | Print the current version and exits                                                            |
-| [files](#configfiles) | Array\<string>   | `["package.json", ...]`   | List of the files to be updated                                                                |
-| [glob](#configglob)   | string           | -                         | Glob pattern to match files to be updated                                                      |
-| path                  | string           | `process.cwd()`           | The path fork-version will run from                                                            |
-| changelog             | string           | `CHANGELOG.md`            | Name of the changelog file                                                                     |
-| header                | string           | `# Changelog...`          | The header text for the changelog                                                              |
-| tagPrefix             | string           | `v`                       | Prefix for the created tag                                                                     |
-| preReleaseTag         | string / boolean | -                         | Make a pre-release with optional label if given value is a string                              |
-| currentVersion        | string           | -                         | Use this version instead of trying to determine one                                            |
-| nextVersion           | string           | -                         | Attempt to update to this version, instead of incrementing using "conventional-commit"         |
-| commitAll             | boolean          | false                     | Commit all changes, not just files updated by fork-version                                     |
-| debug                 | boolean          | false                     | Output debug information                                                                       |
-| dryRun                | boolean          | false                     | No output will be written to disk or committed                                                 |
-| silent                | boolean          | false                     | Run without logging to the terminal                                                            |
-| gitTagFallback        | boolean          | true                      | If unable to find a version in the given files, fallback and attempt to use the latest git tag |
-| sign                  | boolean          | false                     | Sign the commit with the systems GPG key                                                       |
-| verify                | boolean          | false                     | Run user defined git hooks before committing                                                   |
-| changelogPresetConfig | object           | {}                        | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration   |
+| Property                                              | Type             | Default                 | Description                                                                                    |
+| :---------------------------------------------------- | :--------------- | :---------------------- | :--------------------------------------------------------------------------------------------- |
+| inspectVersion                                        | boolean          | -                       | Print the current version and exits                                                            |
+| [files](#configfiles)                                 | Array\<string>   | `["package.json", ...]` | List of the files to be updated                                                                |
+| [glob](#configglob)                                   | string           | -                       | Glob pattern to match files to be updated                                                      |
+| path                                                  | string           | `process.cwd()`         | The path fork-version will run from                                                            |
+| changelog                                             | string           | `CHANGELOG.md`          | Name of the changelog file                                                                     |
+| header                                                | string           | `# Changelog...`        | The header text for the changelog                                                              |
+| [tagPrefix](#configtagprefix)                         | string           | `v`                     | Prefix for the created tag                                                                     |
+| [preReleaseTag](#configprereleasetag)                 | string / boolean | -                       | Make a pre-release with optional label if given value is a string                              |
+| currentVersion                                        | string           | -                       | Use this version instead of trying to determine one                                            |
+| nextVersion                                           | string           | -                       | Attempt to update to this version, instead of incrementing using "conventional-commit"         |
+| commitAll                                             | boolean          | false                   | Commit all changes, not just files updated by fork-version                                     |
+| debug                                                 | boolean          | false                   | Output debug information                                                                       |
+| dryRun                                                | boolean          | false                   | No output will be written to disk or committed                                                 |
+| silent                                                | boolean          | false                   | Run without logging to the terminal                                                            |
+| gitTagFallback                                        | boolean          | true                    | If unable to find a version in the given files, fallback and attempt to use the latest git tag |
+| sign                                                  | boolean          | false                   | Sign the commit with the systems GPG key                                                       |
+| verify                                                | boolean          | false                   | Run user defined git hooks before committing                                                   |
+| [changelogPresetConfig](#configchangelogpresetconfig) | object           | {}                      | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration   |
 
 ##### config.files
 
@@ -250,3 +251,41 @@ Internally we're using [isaacs glob](https://github.com/isaacs/node-glob) to mat
 
 > [!WARNING]
 > Ensure you wrap your glob pattern in quotes to prevent shell expansion.
+
+##### config.tagPrefix
+
+Allows you to control the prefix for the created tag. This is useful if your using a mono repo in which you version multiple projects separately or simply want to use a different prefix for your tags.
+
+| Example Value            | Tag Created                   |
+|:-------------------------|:------------------------------|
+| "v" (Default)            | `v1.2.3`                      |
+| ""                       | `1.2.3`                       |
+| "version/"               | `version/1.2.3`               |
+| "@eglavin/fork-version-" | `@eglavin/fork-version-1.2.3` |
+
+##### config.preReleaseTag
+
+`TODO`
+
+##### config.changelogPresetConfig
+
+`TODO`
+
+#### Supported File Types
+
+- json package files
+- plain text version files
+- dotnet csproj files
+
+`TODO`
+
+#### Custom File Updater's
+
+`TODO` [add support for custom file readers and writers through config #5](https://github.com/eglavin/fork-version/issues/5)
+
+#### Code Usage
+
+> [!WARNING]
+> Code usage is not recommended, as the api is not stable and may change between versions.
+>
+> In the future this might be stabilized and documented but this is not a focus at this time.
