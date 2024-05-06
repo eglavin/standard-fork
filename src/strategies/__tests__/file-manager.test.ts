@@ -25,7 +25,7 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should read csproj when file extension is csproj", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies csproj-package");
+		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
 		const fileManager = new FileManager(config, logger);
 
 		createFile(
@@ -107,7 +107,7 @@ describe("strategies file-manager", () => {
 
 	it("should write csproj when file extension is csproj", async () => {
 		const { relativeTo, config, logger, createFile } = await createTestDir(
-			"strategies csproj-package",
+			"strategies ms-build-project",
 		);
 		const fileManager = new FileManager(config, logger);
 

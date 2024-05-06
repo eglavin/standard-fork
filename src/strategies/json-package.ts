@@ -64,4 +64,8 @@ export class JSONPackage implements IFileManager {
 			"utf8",
 		);
 	}
+
+	public isSupportedFile(fileName: string): boolean {
+		return fileName.endsWith(".json");
+	}
 }

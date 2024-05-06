@@ -56,4 +56,15 @@ describe("strategies plain-text", () => {
 
 		expect(newVersion).toEqual("1.2.4");
 	});
+
+	it('should match "version.txt" file name', async () => {
+		const { config, logger } = await createTestDir("strategies plain-text");
+		const fileManager = new PlainText(config, logger);
+
+		// Supported
+		expect(fileManager.isSupportedFile("version.txt")).toBe(true);
+
+		// Not supported
+		expect(fileManager.isSupportedFile("version.md")).toBe(false);
+	});
 });

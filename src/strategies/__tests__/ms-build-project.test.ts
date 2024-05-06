@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { createTestDir } from "../../../tests/create-test-directory";
-import { CSharpProject } from "../csharp-project";
+import { MSBuildProject } from "../ms-build-project";
 
-describe("strategies csproj-package", () => {
+describe("strategies ms-build-project", () => {
 	it("should read version from csproj file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies csproj-package");
-		const fileManager = new CSharpProject(config, logger);
+		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
+		const fileManager = new MSBuildProject(config, logger);
 
 		createFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
@@ -22,8 +22,8 @@ describe("strategies csproj-package", () => {
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies csproj-package");
-		const fileManager = new CSharpProject(config, logger);
+		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
+		const fileManager = new MSBuildProject(config, logger);
 
 		createFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
@@ -38,15 +38,15 @@ describe("strategies csproj-package", () => {
 		const file = fileManager.read("API.csproj");
 		expect(file).toBeUndefined();
 		expect(logger.warn).toBeCalledWith(
-			"[File Manager] Unable to determine csproj package: API.csproj",
+			"[File Manager] Unable to determine ms-build package: API.csproj",
 		);
 	});
 
 	it("should write a csproj file", async () => {
 		const { relativeTo, config, logger, createFile } = await createTestDir(
-			"strategies csproj-package",
+			"strategies ms-build-project",
 		);
-		const fileManager = new CSharpProject(config, logger);
+		const fileManager = new MSBuildProject(config, logger);
 
 		createFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
@@ -73,9 +73,9 @@ describe("strategies csproj-package", () => {
 
 	it("should keep the same property ordering", async () => {
 		const { relativeTo, config, logger, createFile } = await createTestDir(
-			"strategies csproj-package",
+			"strategies ms-build-project",
 		);
-		const fileManager = new CSharpProject(config, logger);
+		const fileManager = new MSBuildProject(config, logger);
 
 		createFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
@@ -136,5 +136,23 @@ describe("strategies csproj-package", () => {
 </Project>
 `,
 		);
+	});
+
+	it("should match known ms-build project file extensions", async () => {
+		const { config, logger } = await createTestDir("strategies ms-build-project");
+		const fileManager = new MSBuildProject(config, logger);
+
+		// Supported
+		expect(fileManager.isSupportedFile("API.csproj")).toBe(true);
+		expect(fileManager.isSupportedFile("API.dbproj")).toBe(true);
+		expect(fileManager.isSupportedFile("API.esproj")).toBe(true);
+		expect(fileManager.isSupportedFile("API.fsproj")).toBe(true);
+		expect(fileManager.isSupportedFile("API.props")).toBe(true);
+		expect(fileManager.isSupportedFile("API.vbproj")).toBe(true);
+		expect(fileManager.isSupportedFile("API.vcxproj")).toBe(true);
+
+		// Not supported
+		expect(fileManager.isSupportedFile("API.txt")).toBe(false);
+		expect(fileManager.isSupportedFile("API.json")).toBe(false);
 	});
 });

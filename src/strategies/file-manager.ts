@@ -1,6 +1,6 @@
 import { JSONPackage } from "./json-package";
 import { PlainText } from "./plain-text";
-import { CSharpProject } from "./csharp-project";
+import { MSBuildProject } from "./ms-build-project";
 
 import type { ForkConfig } from "../config/schema";
 import type { Logger } from "../utils/logger";
@@ -16,12 +16,13 @@ export interface FileState {
 export interface IFileManager {
 	read(fileName: string): FileState | undefined;
 	write(fileState: FileState, newVersion: string): void;
+	isSupportedFile(fileName: string): boolean;
 }
 
-export class FileManager implements IFileManager {
+export class FileManager {
 	private JSONPackage: JSONPackage;
 	private PlainText: PlainText;
-	private CSharpProject: CSharpProject;
+	private MSBuildProject: MSBuildProject;
 
 	constructor(
 		private config: ForkConfig,
@@ -29,7 +30,7 @@ export class FileManager implements IFileManager {
 	) {
 		this.JSONPackage = new JSONPackage(config, logger);
 		this.PlainText = new PlainText(config, logger);
-		this.CSharpProject = new CSharpProject(config, logger);
+		this.MSBuildProject = new MSBuildProject(config, logger);
 	}
 
 	/**
@@ -48,16 +49,16 @@ export class FileManager implements IFileManager {
 	public read(fileName: string): FileState | undefined {
 		const _fileName = fileName.toLowerCase();
 
-		if (_fileName.endsWith(".json")) {
+		if (this.JSONPackage.isSupportedFile(_fileName)) {
 			return this.JSONPackage.read(fileName);
 		}
 
-		if (_fileName.endsWith("version.txt")) {
+		if (this.PlainText.isSupportedFile(_fileName)) {
 			return this.PlainText.read(fileName);
 		}
 
-		if (_fileName.endsWith(".csproj")) {
-			return this.CSharpProject.read(fileName);
+		if (this.MSBuildProject.isSupportedFile(_fileName)) {
+			return this.MSBuildProject.read(fileName);
 		}
 
 		this.logger.error(`[File Manager] Unsupported file: ${fileName}`);
@@ -80,16 +81,16 @@ export class FileManager implements IFileManager {
 		}
 		const _fileName = fileState.name.toLowerCase();
 
-		if (_fileName.endsWith(".json")) {
+		if (this.JSONPackage.isSupportedFile(_fileName)) {
 			return this.JSONPackage.write(fileState, newVersion);
 		}
 
-		if (_fileName.endsWith("version.txt")) {
+		if (this.PlainText.isSupportedFile(_fileName)) {
 			return this.PlainText.write(fileState, newVersion);
 		}
 
-		if (_fileName.endsWith(".csproj")) {
-			return this.CSharpProject.write(fileState, newVersion);
+		if (this.MSBuildProject.isSupportedFile(_fileName)) {
+			return this.MSBuildProject.write(fileState, newVersion);
 		}
 
 		this.logger.error(`[File Manager] Unsupported file: ${fileState.path}`);
