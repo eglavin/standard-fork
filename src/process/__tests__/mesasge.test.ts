@@ -69,7 +69,7 @@ describe("completedMessage", () => {
 	it("should print npm publish command with custom pre-release tag", async () => {
 		const { testFolder, relativeTo, config, logger, createCommit } =
 			await createTestDir("completedMessage");
-		config.preReleaseTag = "alpha";
+		config.preRelease = "alpha";
 
 		createCommit("feat: A feature commit");
 		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});

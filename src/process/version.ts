@@ -110,7 +110,7 @@ export async function getNextVersion(
 		const releaseType = getReleaseType(
 			recommendedBump.releaseType,
 			currentVersion,
-			config.preReleaseTag,
+			config.preRelease,
 		);
 
 		const state: NextVersion = {
@@ -121,7 +121,7 @@ export async function getNextVersion(
 				semver.inc(
 					currentVersion,
 					releaseType,
-					typeof config.preReleaseTag === "string" ? config.preReleaseTag : undefined,
+					typeof config.preRelease === "string" ? config.preRelease : undefined,
 				) ?? "",
 		};
 

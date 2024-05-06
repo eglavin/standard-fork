@@ -19,7 +19,8 @@ Options:
   --changelog           Name of the changelog file. [Default: "CHANGELOG.md"]
   --header              The header text for the changelog.
   --tag-prefix          Specify a prefix for the created tag. [Default: "v"]
-  --pre-release-tag     Make a pre-release with optional label if given value is a string.
+  --pre-release         Mark this release as a pre-release.
+  --pre-release-tag     Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
   --current-version     If set, fork-version will use this version instead of trying to determine one.
   --next-version        If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
@@ -50,6 +51,7 @@ export function getCliArguments() {
 			changelog: { type: "string" },
 			header: { type: "string" },
 			tagPrefix: { type: "string" },
+			preRelease: { type: "boolean" },
 			preReleaseTag: { type: "string" },
 			currentVersion: { type: "string" },
 			nextVersion: { type: "string" },
