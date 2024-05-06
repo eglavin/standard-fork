@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.78 (2024-05-06)
+
+
+### Refactor
+
+* rename preReleaseTag to preRelease ([#49](https://github.com/eglavin/fork-version/issues/49)) ([0da33e1](https://github.com/eglavin/fork-version/commit/0da33e133890ca92bbba9bbb7c4adc7623d999e7))
+
+
 ## 1.4.77 (2024-05-06)
 
 
