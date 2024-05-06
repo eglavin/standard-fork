@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.79 (2024-05-06)
+
+
+### Refactor
+
+* improve support for other type of ms build projects ([#53](https://github.com/eglavin/fork-version/issues/53)) ([51ef765](https://github.com/eglavin/fork-version/commit/51ef765653a121e15fe418b339c8d1beab3ed182))
+
+
 ## 1.4.78 (2024-05-06)
 
 
