@@ -29,7 +29,9 @@ Flags:
   --silent              Run without logging to the terminal.
   --git-tag-fallback    If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
   --sign                If true, git will sign the commit with the systems GPG key.
-  --verify              If true, git will run user defined git hooks before committing.`;
+  --verify              If true, git will run user defined git hooks before committing.
+
+  To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.`;
 
 export function getCliArguments() {
 	return meow(helperText, {

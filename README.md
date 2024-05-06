@@ -104,6 +104,8 @@ Flags:
   --git-tag-fallback    If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
   --sign                If true, git will sign the commit with the systems GPG key.
   --verify              If true, git will run user defined git hooks before committing.
+
+  To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 ```
 
 <!-- END COMMAND LINE OPTIONS -->
@@ -123,9 +125,7 @@ You can configure Fork-Version using one of the following files:
 
 #### Javascript Config
 
-If you're using a javascript project you can define your config by using a default export.
-
-The `defineConfig` function in the following snippet is optional though using it gives you intellisense information:
+Configuring using a javascript file is the most flexible option. You can use any javascript file type you prefer including typescript, both commonjs and esm exports styles are supported. The `defineConfig` function in the following snippet is optional, though using it gives you intellisense information.
 
 ```js
 import { defineConfig } from 'fork-version';
@@ -136,7 +136,7 @@ export default defineConfig({
 });
 ```
 
-Alternatively you can use a typescript type annotation:
+Alternatively you can use typescript type annotations:
 
 ```ts
 import type { ForkConfig } from 'fork-version';
@@ -159,11 +159,13 @@ export default {
 };
 ```
 
+Or just raw dog it without type information. ಠ_ಠ
+
 #### Json Config
 
-You can also configure Fork-Version using a json file called `fork.config.json` this is a good option if you're using Fork-Version on a non javascript project.
+Another way you can configure Fork-Version is by using a json file called `fork.config.json`. This is a good option if you're using Fork-Version on a non javascript project, or without installation.
 
-In the schema folder in this repo we've generated a [json schema](./schema/latest.json) file which can be used to give you intellisense information similar to the javascript options above:
+If you still want intellisense information you can use the following schema in your json file, otherwise `$schema` is an optional key.
 
 ```json
 {
@@ -175,6 +177,8 @@ In the schema folder in this repo we've generated a [json schema](./schema/lates
   ]
 }
 ```
+
+Internally we're using [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema) to generate the schema. Checkout the [schema folder](./schema/latest.json) to see the current state.
 
 Alternatively you can define your config using a key in your `package.json` file called `fork-version`:
 
@@ -217,7 +221,7 @@ Alternatively you can define your config using a key in your `package.json` file
 
 ##### config.files
 
-By default Fork-Version will check for versions and update these files:
+By default Fork-Version will attempt to read versions from and update these files, if you define your own list it will override the default list instead of merging.
 
 - "package.json"
 - "package-lock.json"
@@ -225,15 +229,24 @@ By default Fork-Version will check for versions and update these files:
 - "manifest.json"
 - "bower.json"
 
-If you define your own list it will override the default list instead of merging.
-
 ##### config.glob
 
-An alternative to [config.files](#configfiles), this allows you to specify filenames with wildcard characters.
+An alternative to [config.files](#configfiles), a glob allows you to search for files using wildcard characters.
 
-For example `npx fork-version -G "*/*.csproj"` will search for any csproj files in any folder inside of the folder we're running from.
+For example if you have the following folder structure:
 
-Internally we're using [isaacs glob](https://github.com/isaacs/node-glob) to match files, Read more about the pattern syntax [here](https://github.com/isaacs/node-glob/tree/v10.3.12?tab=readme-ov-file#glob-primer).
+```text
+API/
+- MyAPI.csproj
+Library/
+- MyLibrary.csproj
+Web/
+- package.json
+```
+
+Running `npx fork-version -G "{*/*.csproj,*/package.json}"` will update both csproj files and the package.json file.
+
+Internally we're using [isaacs glob](https://github.com/isaacs/node-glob) to match files, read more about the pattern syntax [here](https://github.com/isaacs/node-glob/tree/v10.3.12?tab=readme-ov-file#glob-primer).
 
 > [!WARNING]
 > Ensure you wrap your glob pattern in quotes to prevent shell expansion.
