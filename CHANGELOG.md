@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.80 (2024-05-07)
+
+
+### Refactor
+
+* export partial config for external use instead of internal config type ([#54](https://github.com/eglavin/fork-version/issues/54)) ([d7e16e8](https://github.com/eglavin/fork-version/commit/d7e16e8e03f43d9fedcc648f6b926030a9e2a9ec))
+
+
 ## 1.4.79 (2024-05-06)
 
 
