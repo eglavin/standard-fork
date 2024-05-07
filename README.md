@@ -138,12 +138,12 @@ export default defineConfig({
 });
 ```
 
-Alternatively you can use typescript type annotations:
+Alternatively you can use typescript type annotations in a typescript file:
 
 ```ts
-import type { ForkConfig } from 'fork-version';
+import type { Config } from 'fork-version';
 
-const config: ForkConfig = {
+const config: Config = {
   header: `# My Changelog`,
   files: ["package.json", "package-lock.json"],
 };
@@ -151,10 +151,10 @@ const config: ForkConfig = {
 export default config;
 ```
 
-Or jsdocs:
+Or jsdocs in a javascript file:
 
 ```js
-/** @type {import("fork-version").ForkConfig} */
+/** @type {import("fork-version").Config} */
 export default {
   header: `# My Changelog`,
   files: ["package.json", "package-lock.json"],
