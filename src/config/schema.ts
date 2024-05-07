@@ -233,6 +233,8 @@ export const ForkConfigSchema = z.object({
 
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;
 
-export function defineConfig(config: Partial<ForkConfig>): Partial<ForkConfig> {
+export type Config = Partial<ForkConfig>;
+
+export function defineConfig(config: Config): Config {
 	return config;
 }

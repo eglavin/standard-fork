@@ -1,4 +1,4 @@
-export { ForkConfigSchema, type ForkConfig, defineConfig } from "./config/schema";
+export { ForkConfigSchema, type ForkConfig, type Config, defineConfig } from "./config/schema";
 export { getUserConfig } from "./config/user-config";
 
 export {
@@ -12,3 +12,4 @@ export { commitChanges } from "./process/commit";
 export { tagChanges } from "./process/tag";
 
 export { FileManager, type FileState, type IFileManager } from "./strategies/file-manager";
+export { Logger } from "./utils/logger";
