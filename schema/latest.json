@@ -89,6 +89,10 @@
                 "type": "string",
                 "description": "The type of commit message, such as \"feat\", \"fix\", \"chore\"."
               },
+              "scope": {
+                "type": "string",
+                "description": "The scope of the commit message."
+              },
               "section": {
                 "type": "string",
                 "description": "The section of the `CHANGELOG` the commit should show up in."

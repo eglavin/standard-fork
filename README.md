@@ -27,6 +27,8 @@ By following the [conventional commit](https://www.conventionalcommits.org) stan
 1. Commit the changed files
 1. Create a tag for the new version
 
+Fork-Version won't attempt to push changes to git or to a package manager, this allows you to decide how you publish your changes.
+
 ## Using Fork-Version
 
 Primarily designed to be used with `npx`, Fork-Version can also be installed globally or directly to the node package you're working on. The only software prerequisites you need are [git](https://git-scm.com) and [node](https://nodejs.org).
@@ -34,7 +36,7 @@ Primarily designed to be used with `npx`, Fork-Version can also be installed glo
 Fork-Version can be configured either through a config file or by passing options to the tool when ran, see the [Configuration File](#configuration-file) and [Command Line Options](#command-line-options) sections below for details on the supported options.
 
 > [!NOTE]
-> Command line options override defined config file options.
+> Command line options get merged with config file options, any options that are declared through the cli will override options that are also in the config file (Except for the list of [files](#configfiles) which get merged).
 
 ### Using `npx` (Recommended)
 
@@ -108,6 +110,19 @@ Flags:
   --verify              If true, git will run user defined git hooks before committing.
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
+
+Examples:
+  $ fork-version
+    Run fork-version in the current directory with default options.
+
+  $ fork-version --path ./packages/my-package
+    Run fork-version in the "./packages/my-package" directory.
+
+  $ fork-version --file package.json --file MyApi.csproj
+    Run fork-version and update the "package.json" and "MyApi.csproj" files.
+
+  $ fork-version --glob "*/package.json"
+    Run fork-version and update all "package.json" files in subdirectories.
 ```
 
 <!-- END COMMAND LINE OPTIONS -->
@@ -127,7 +142,7 @@ You can configure Fork-Version using one of the following files:
 
 #### Javascript Config
 
-Configuring using a javascript file is the most flexible option. You can use any javascript file type you prefer including typescript, both commonjs and esm exports styles are supported. The `defineConfig` function in the following snippet is optional, though using it gives you intellisense information.
+Configuring using a javascript file is the most flexible option. You can use any javascript file type you prefer including typescript. Both commonjs and esm exports styles are supported. The `defineConfig` function in the following snippet is optional, using it will give you intellisense information in your code editor of choice.
 
 ```js
 import { defineConfig } from 'fork-version';
@@ -250,14 +265,14 @@ Web/
 
 Running `npx fork-version -G "{*/*.csproj,*/package.json}"` will update both csproj files and the package.json file.
 
-Internally we're using [isaacs glob](https://github.com/isaacs/node-glob) to match files, read more about the pattern syntax [here](https://github.com/isaacs/node-glob/tree/v10.3.12?tab=readme-ov-file#glob-primer).
+Internally Fork-Version uses [isaacs glob](https://github.com/isaacs/node-glob) to match files. Read more about the pattern syntax [here](https://github.com/isaacs/node-glob/tree/v10.3.12?tab=readme-ov-file#glob-primer).
 
 > [!WARNING]
 > Ensure you wrap your glob pattern in quotes to prevent shell expansion.
 
 ##### config.tagPrefix
 
-Allows you to control the prefix for the created tag. This is useful if your using a mono repo in which you version multiple projects separately or simply want to use a different prefix for your tags.
+Allows you to control the prefix for the created tag. This is useful if your using a mono-repo in which you version multiple projects separately or simply want to use a different prefix for your tags.
 
 | Example Value            | Tag Created                   |
 |:-------------------------|:------------------------------|
@@ -284,15 +299,38 @@ Fork-Version uses [meow](https://github.com/sindresorhus/meow) to parse cli argu
 
 ##### config.changelogPresetConfig
 
-`TODO`
+Fork-Version uses the [conventional changelog config spec](https://github.com/conventional-changelog/conventional-changelog-config-spec). The following is an excerpt of the configurable options.
 
-#### Supported File Types
+| Property                                   | Type           | Default                                                                      | Description                                                             |
+|:-------------------------------------------|:---------------|:-----------------------------------------------------------------------------|:------------------------------------------------------------------------|
+| [types](#configchangelogpresetconfigtypes) | Array\<Type>   | {}                                                                           | List of explicitly supported commit message types                       |
+| commitUrlFormat                            | string         | `{{host}}/{{owner}}/{{repository}}/commit/{{hash}}`                          | A URL representing a specific commit at a hash                          |
+| compareUrlFormat                           | string         | `{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}` | A URL representing the comparison between two git SHAs                  |
+| issueUrlFormat                             | string         | `{{host}}/{{owner}}/{{repository}}/issues/{{id}}`                            | A URL representing the issue format                                     |
+| userUrlFormat                              | string         | `{{host}}/{{user}}`                                                          | A URL representing a user's profile                                     |
+| releaseCommitMessageFormat                 | string         | `chore(release): {{currentTag}}`                                             | A string to be used to format the auto-generated release commit message |
+| issuePrefixes                              | Array\<string> | `["#"]`                                                                      | List of prefixes used to detect references to issues                    |
+
+###### config.changelogPresetConfig.types
+
+By default only `feat` and `fix` commits are added to your changelog, you can configure extra sections to show by modifying this section.
+
+Checkout the `fork.config.js` file [here](./fork.config.js) to see an example of modifying the types.
+
+| Property | Type    | Description                                                              |
+|:---------|:--------|:-------------------------------------------------------------------------|
+| type     | string  | The type of commit message. "feat", "fix", "chore", etc..                |
+| scope    | string  | The scope of the commit message.                                         |
+| section  | string  | The name of the section in the `CHANGELOG` the commit should show up in. |
+| hidden   | boolean | Should show in the generated changelog message?                          |
+
+### Supported File Types
 
 - [Json Package](#json-package)
 - [Plain Text](#plain-text)
 - [MS Build](#ms-build)
 
-##### Json Package
+#### Json Package
 
 A json package is a json file which contains a version property, such as a npm package.json file.
 
@@ -304,7 +342,7 @@ A json package is a json file which contains a version property, such as a npm p
 }
 ```
 
-##### Plain Text
+#### Plain Text
 
 A plain text file will have just the version as the content.
 
@@ -312,7 +350,7 @@ A plain text file will have just the version as the content.
 1.2.3
 ```
 
-##### MS Build
+#### MS Build
 
 A MS build project is an xml file with with a `Version` property under the `Project > PropertyGroup` node group.
 
@@ -324,7 +362,7 @@ A MS build project is an xml file with with a `Version` property under the `Proj
 </Project>
 ```
 
-We currently support reading and updating the following file extensions: `.csproj` `.dbproj` `.esproj` `.fsproj` `.props` `.vbproj` `.vcxproj`
+Fork-Version currently supports reading and updating the following file extensions: `.csproj` `.dbproj` `.esproj` `.fsproj` `.props` `.vbproj` `.vcxproj`
 
 #### Custom File Updater's
 
@@ -333,6 +371,6 @@ We currently support reading and updating the following file extensions: `.cspro
 ### Code Usage
 
 > [!WARNING]
-> Code usage is not recommended, as the api is not stable and may change between versions.
+> Code usage is not recommended as the public api is not stable and may change between versions.
 >
-> In the future this might be stabilized and documented but this is not a focus at this time.
+> In the future the api may be stabilized and documented but this is not a focus at this time.
