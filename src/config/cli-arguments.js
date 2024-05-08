@@ -33,7 +33,20 @@ Flags:
   --sign                If true, git will sign the commit with the systems GPG key.
   --verify              If true, git will run user defined git hooks before committing.
 
-  To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.`;
+  To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
+
+Examples:
+  $ fork-version
+    Run fork-version in the current directory with default options.
+
+  $ fork-version --path ./packages/my-package
+    Run fork-version in the "./packages/my-package" directory.
+
+  $ fork-version --file package.json --file MyApi.csproj
+    Run fork-version and update the "package.json" and "MyApi.csproj" files.
+
+  $ fork-version --glob "*/package.json"
+    Run fork-version and update all "package.json" files in subdirectories.`;
 
 export function getCliArguments() {
 	return meow(helperText, {

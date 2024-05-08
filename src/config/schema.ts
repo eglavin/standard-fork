@@ -7,6 +7,10 @@ const ChangelogPresetConfigTypeSchema = z.object({
 	 */
 	type: z.string().describe('The type of commit message, such as "feat", "fix", "chore".'),
 	/**
+	 * The scope of the commit message.
+	 */
+	scope: z.string().optional().describe("The scope of the commit message."),
+	/**
 	 * The section of the `CHANGELOG` the commit should show up in.
 	 */
 	section: z
