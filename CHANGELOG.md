@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.83 (2024-05-13)
+
+
+### Refactor
+
+* add skip step options + refactor main function ([#57](https://github.com/eglavin/fork-version/issues/57)) ([3688b6d](https://github.com/eglavin/fork-version/commit/3688b6d1f54ef4fdd6e7920b7203532a193bbb66))
+
+
 ## 1.4.82 (2024-05-13)
 
 
