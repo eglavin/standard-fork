@@ -35,6 +35,14 @@ Flags:
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
+Conventional Changelog Overrides:
+  --commit-url-format               Override the default commit URL format.
+  --compare-url-format              Override the default compare URL format.
+  --issue-url-format                Override the default issue URL format.
+  --user-url-format                 Override the default user URL format.
+  --release-commit-message-format   Override the default release commit message format.
+  --release-message-suffix          Add a suffix to the end of the release message.
+
 Examples:
   $ fork-version
     Run fork-version in the current directory with default options.
@@ -77,6 +85,14 @@ export function getCliArguments() {
 			gitTagFallback: { type: "boolean" },
 			sign: { type: "boolean" },
 			verify: { type: "boolean" },
+
+			// Changelog Overrides
+			commitUrlFormat: { type: "string" },
+			compareUrlFormat: { type: "string" },
+			issueUrlFormat: { type: "string" },
+			userUrlFormat: { type: "string" },
+			releaseCommitMessageFormat: { type: "string" },
+			releaseMessageSuffix: { type: "string" },
 		},
 	});
 }
