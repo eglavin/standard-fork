@@ -6,19 +6,21 @@ import { join } from "node:path";
 import { getUserConfig } from "./config/user-config";
 import { Logger } from "./utils/logger";
 import { FileManager } from "./strategies/file-manager";
+import { Git } from "./utils/git";
 
 import { getCurrentVersion, getNextVersion } from "./process/version";
 import { updateChangelog } from "./process/changelog";
 import { commitChanges } from "./process/commit";
 import { tagChanges } from "./process/tag";
-import { completedMessage } from "./process/message";
 
 async function runFork() {
 	const startTime = Date.now();
 
 	const config = await getUserConfig();
+
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
+	const git = new Git(config, logger);
 
 	logger.log(`Running fork-version - ${new Date().toUTCString()}`);
 	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
@@ -33,11 +35,25 @@ async function runFork() {
 		fileManager.write(outFile, next.version);
 	}
 
-	const changelogResult = await updateChangelog(config, logger, next.version);
-	const commitResult = await commitChanges(config, logger, current.files, next.version);
-	const tagResult = await tagChanges(config, logger, next.version);
+	await updateChangelog(config, logger, next.version);
+	await commitChanges(config, logger, git, current.files, next.version);
+	await tagChanges(config, logger, git, next.version);
 
-	await completedMessage(config, logger, current.files, next.releaseType);
+	// Print git push command
+	const branchName = await git.currentBranch();
+	logger.log(
+		`\nRun \`git push --follow-tags origin ${branchName}\` to push the changes and the tag.`,
+	);
+
+	// Print npm publish command
+	if (current.files.some((file) => file.name === "package.json" && file.isPrivate === false)) {
+		const npmTag = typeof config.preRelease === "string" ? config.preRelease : "prerelease";
+		logger.log(
+			`${next.releaseType}`.startsWith("pre")
+				? `Run \`npm publish --tag ${npmTag}\` to publish the package.`
+				: "Run `npm publish` to publish the package.",
+		);
+	}
 
 	logger.debug(`Completed in ${Date.now() - startTime} ms`);
 
@@ -45,9 +61,6 @@ async function runFork() {
 		config,
 		current,
 		next,
-		changelogResult,
-		commitResult,
-		tagResult,
 	};
 
 	if (!config.dryRun && config.debug) {

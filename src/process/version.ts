@@ -81,6 +81,13 @@ export async function getNextVersion(
 	logger: Logger,
 	currentVersion: string,
 ): Promise<NextVersion> {
+	if (config.skipBump) {
+		logger.log("Skip bump, using current version as next version");
+		return {
+			version: currentVersion,
+		};
+	}
+
 	if (config.nextVersion && semver.valid(config.nextVersion)) {
 		logger.log(`Next version: ${config.nextVersion}`);
 		return {

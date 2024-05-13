@@ -77,6 +77,22 @@
       "type": "boolean",
       "description": "If true, git will run user defined git hooks before committing."
     },
+    "skipBump": {
+      "type": "boolean",
+      "description": "Skip the bump step."
+    },
+    "skipChangelog": {
+      "type": "boolean",
+      "description": "Skip the changelog step."
+    },
+    "skipCommit": {
+      "type": "boolean",
+      "description": "Skip the commit step."
+    },
+    "skipTag": {
+      "type": "boolean",
+      "description": "Skip the tag step."
+    },
     "changelogPresetConfig": {
       "type": "object",
       "properties": {

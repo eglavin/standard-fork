@@ -75,4 +75,26 @@ describe("changelog", () => {
 		expect(changelog).toContain("## 1.2.3");
 		expect(changelog).not.toContain("## 1.2.4");
 	});
+
+	it("should skip changelog update", async () => {
+		const { relativeTo, config, logger, createFile, createCommit } =
+			await createTestDir("changelog");
+		config.skipChangelog = true;
+
+		createFile(
+			`# Test Header
+
+## 1.2.3 (2000-01-01)
+`,
+			"CHANGELOG.md",
+		);
+
+		createCommit("feat: A feature commit", "BREAKING CHANGE: A breaking change message");
+
+		await updateChangelog(config, logger, "1.2.4");
+
+		const changelog = readFileSync(relativeTo("CHANGELOG.md"), "utf-8");
+		expect(changelog).toContain("## 1.2.3");
+		expect(changelog).not.toContain("## 1.2.4");
+	});
 });

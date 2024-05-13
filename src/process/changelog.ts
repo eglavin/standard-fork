@@ -72,17 +72,16 @@ function getNewReleaseContent(
 	});
 }
 
-interface UpdateChangelog {
-	changelogPath: string;
-	oldContent: string;
-	newContent: string;
-}
-
 export async function updateChangelog(
 	config: ForkConfig,
 	logger: Logger,
 	nextVersion: string,
-): Promise<UpdateChangelog> {
+): Promise<void> {
+	if (config.skipChangelog) {
+		logger.log("Skip changelog update");
+		return;
+	}
+
 	if (config.header.search(RELEASE_PATTERN) !== -1) {
 		// Need to ensure the header doesn't contain the release pattern
 		throw new Error("Header cannot contain release pattern");
@@ -109,10 +108,4 @@ ${oldContent}
 			"utf8",
 		);
 	}
-
-	return {
-		changelogPath,
-		oldContent,
-		newContent,
-	};
 }
