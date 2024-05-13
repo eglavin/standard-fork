@@ -233,6 +233,15 @@ export const ForkConfigSchema = z.object({
 	changelogPresetConfig: ChangelogPresetConfigSchema.partial().describe(
 		'Override the default "conventional-changelog-conventionalcommits" preset configuration.',
 	),
+
+	/**
+	 * Add a suffix to the release commit message.
+	 * @example "[skip ci]"
+	 */
+	releaseMessageSuffix: z
+		.string()
+		.optional()
+		.describe("Add a suffix to the release commit message."),
 });
 
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;

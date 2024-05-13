@@ -139,6 +139,10 @@
       },
       "additionalProperties": false,
       "description": "Override the default \"conventional-changelog-conventionalcommits\" preset configuration."
+    },
+    "releaseMessageSuffix": {
+      "type": "string",
+      "description": "Add a suffix to the release commit message."
     }
   }
 }

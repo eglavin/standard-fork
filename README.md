@@ -111,6 +111,14 @@ Flags:
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
+Conventional Changelog Overrides:
+  --commit-url-format               Override the default commit URL format.
+  --compare-url-format              Override the default compare URL format.
+  --issue-url-format                Override the default issue URL format.
+  --user-url-format                 Override the default user URL format.
+  --release-commit-message-format   Override the default release commit message format.
+  --release-message-suffix          Add a suffix to the end of the release message.
+
 Examples:
   $ fork-version
     Run fork-version in the current directory with default options.
@@ -235,6 +243,7 @@ Alternatively you can define your config using a key in your `package.json` file
 | sign                                                  | boolean          | false                   | Sign the commit with the systems GPG key                                                       |
 | verify                                                | boolean          | false                   | Run user defined git hooks before committing                                                   |
 | [changelogPresetConfig](#configchangelogpresetconfig) | object           | {}                      | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration   |
+| releaseMessageSuffix                                  | string           | -                       | Add a suffix to the end of the release message                                                 |
 
 ##### config.files
 
@@ -323,6 +332,13 @@ Checkout the `fork.config.js` file [here](./fork.config.js) to see an example of
 | scope    | string  | The scope of the commit message.                                         |
 | section  | string  | The name of the section in the `CHANGELOG` the commit should show up in. |
 | hidden   | boolean | Should show in the generated changelog message?                          |
+
+###### config.releaseMessageSuffix
+
+Adds a suffix to the end of the release message, useful to add a `[skip ci]` message to the end of the created commit.
+
+- [GitHub Actions - Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs)
+- [Azure Devops - Skipping CI for individual pushes](https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops&tabs=yaml#skipping-ci-for-individual-pushes)
 
 ### Supported File Types
 

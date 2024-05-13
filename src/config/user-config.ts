@@ -62,7 +62,7 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		preRelease:
 			// Meow doesn't support multiple flags with the same name, so we need to check both.
 			cliArguments.flags.preReleaseTag ?? cliArguments.flags.preRelease ?? configFile.preRelease,
-		changelogPresetConfig: getChangelogPresetConfig(mergedConfig?.changelogPresetConfig),
+		changelogPresetConfig: getChangelogPresetConfig(mergedConfig, cliArguments.flags),
 	};
 }
 
