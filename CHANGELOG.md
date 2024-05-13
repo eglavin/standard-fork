@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.82 (2024-05-13)
+
+
+### Refactor
+
+* add conventional changelog overrides to cli ([#56](https://github.com/eglavin/fork-version/issues/56)) ([cddeda6](https://github.com/eglavin/fork-version/commit/cddeda6c81c50682329f4a44d9036b72a6045055))
+
+
 ## 1.4.81 (2024-05-08)
 
 
