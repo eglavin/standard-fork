@@ -227,6 +227,30 @@ export const ForkConfigSchema = z.object({
 	 */
 	verify: z.boolean().describe("If true, git will run user defined git hooks before committing."),
 
+	// Skip Steps
+	//
+
+	/**
+	 * Skip the bump step.
+	 * @default false
+	 */
+	skipBump: z.boolean().describe("Skip the bump step."),
+	/**
+	 * Skip the changelog step.
+	 * @default false
+	 */
+	skipChangelog: z.boolean().describe("Skip the changelog step."),
+	/**
+	 * Skip the commit step.
+	 * @default false
+	 */
+	skipCommit: z.boolean().describe("Skip the commit step."),
+	/**
+	 * Skip the tag step.
+	 * @default false
+	 */
+	skipTag: z.boolean().describe("Skip the tag step."),
+
 	/**
 	 * Override the default "conventional-changelog-conventionalcommits" preset configuration.
 	 */

@@ -111,6 +111,12 @@ Flags:
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
+Skip Steps:
+  --skip-bump           Skip the version bump step.
+  --skip-changelog      Skip updating the changelog.
+  --skip-commit         Skip committing the changes.
+  --skip-tag            Skip tagging the commit.
+
 Conventional Changelog Overrides:
   --commit-url-format               Override the default commit URL format.
   --compare-url-format              Override the default compare URL format.
@@ -242,6 +248,10 @@ Alternatively you can define your config using a key in your `package.json` file
 | gitTagFallback                                        | boolean          | true                    | If unable to find a version in the given files, fallback and attempt to use the latest git tag |
 | sign                                                  | boolean          | false                   | Sign the commit with the systems GPG key                                                       |
 | verify                                                | boolean          | false                   | Run user defined git hooks before committing                                                   |
+| skipBump                                              | boolean          | false                   | Skip the bump step                                                                             |
+| skipChangelog                                         | boolean          | false                   | Skip the changelog step                                                                        |
+| skipCommit                                            | boolean          | false                   | Skip the commit step                                                                           |
+| skipTag                                               | boolean          | false                   | Skip the tag step                                                                              |
 | [changelogPresetConfig](#configchangelogpresetconfig) | object           | {}                      | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration   |
 | releaseMessageSuffix                                  | string           | -                       | Add a suffix to the end of the release message                                                 |
 

@@ -193,4 +193,12 @@ describe("version > getNextVersion", () => {
 		const result = await getNextVersion(config, logger, "1.2.3");
 		expect(result).toEqual({ version: "2.0.0" });
 	});
+
+	it("should skip version bump", async () => {
+		const { config, logger } = await createTestDir("version getNextVersion");
+		config.skipBump = true;
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({ version: "1.2.3" });
+	});
 });

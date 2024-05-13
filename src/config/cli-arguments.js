@@ -35,6 +35,12 @@ Flags:
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
+Skip Steps:
+  --skip-bump           Skip the version bump step.
+  --skip-changelog      Skip updating the changelog.
+  --skip-commit         Skip committing the changes.
+  --skip-tag            Skip tagging the commit.
+
 Conventional Changelog Overrides:
   --commit-url-format               Override the default commit URL format.
   --compare-url-format              Override the default compare URL format.
@@ -85,6 +91,12 @@ export function getCliArguments() {
 			gitTagFallback: { type: "boolean" },
 			sign: { type: "boolean" },
 			verify: { type: "boolean" },
+
+			// Skip Steps
+			skipBump: { type: "boolean" },
+			skipChangelog: { type: "boolean" },
+			skipCommit: { type: "boolean" },
+			skipTag: { type: "boolean" },
 
 			// Changelog Overrides
 			commitUrlFormat: { type: "string" },

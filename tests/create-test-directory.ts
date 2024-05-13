@@ -5,6 +5,7 @@ import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_pro
 
 import { getUserConfig } from "../src";
 import { Logger } from "../src/utils/logger";
+import { Git } from "../src/utils/git";
 
 export async function createTestDir(name: string) {
 	const testFolderLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.
@@ -53,10 +54,13 @@ export async function createTestDir(name: string) {
 	logger.error = vi.fn();
 	logger.debug = vi.fn();
 
+	const git = new Git(config, logger);
+
 	return {
 		testFolder,
 		config,
 		logger,
+		git,
 
 		relativeTo: function _relativeTo(...pathSegments: string[]) {
 			return join(testFolder, ...pathSegments);

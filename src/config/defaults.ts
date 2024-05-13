@@ -29,5 +29,11 @@ All notable changes to this project will be documented in this file. See [fork-v
 	sign: false,
 	verify: false,
 
+	// Skip Steps
+	skipBump: false,
+	skipChangelog: false,
+	skipCommit: false,
+	skipTag: false,
+
 	changelogPresetConfig: {},
 };
