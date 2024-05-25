@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.85 (2024-05-25)
+
+
+### Chore
+
+* add provenance to npm publish command ([#60](https://github.com/eglavin/fork-version/issues/60)) ([a366c5f](https://github.com/eglavin/fork-version/commit/a366c5fceb346559b3f4586bfa1aac73d09960b4))
+
+
 ## 1.4.84 (2024-05-25)
 
 
