@@ -1,4 +1,5 @@
 {
+	"$schema": "https://jsr.io/schema/config-file.v1.json",
 	"name": "@eglavin/fork-version",
 	"version": "1.4.84",
 	"exports": {
