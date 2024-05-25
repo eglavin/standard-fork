@@ -58,4 +58,4 @@ jobs:
           npm publish
 
       - name: Publish jsr package
-        run: npx jsr publish
+        run: npx jsr publish --allow-slow-types
