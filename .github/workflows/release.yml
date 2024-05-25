@@ -8,6 +8,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,8 +51,11 @@ jobs:
         run: |
           pnpm build
 
-      - name: Publish package
+      - name: Publish npm package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm publish
+
+      - name: Publish jsr package
+        run: npx jsr publish --allow-slow-types

@@ -13,7 +13,7 @@ export class Git {
 		this.currentBranch = this.currentBranch.bind(this);
 	}
 
-	public add(...args: (string | undefined)[]) {
+	public add(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return Promise.resolve("");
 		}
@@ -21,7 +21,7 @@ export class Git {
 		return this.execGit("add", args.filter(Boolean) as string[]);
 	}
 
-	public commit(...args: (string | undefined)[]) {
+	public commit(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return Promise.resolve("");
 		}
@@ -29,7 +29,7 @@ export class Git {
 		return this.execGit("commit", args.filter(Boolean) as string[]);
 	}
 
-	public tag(...args: (string | undefined)[]) {
+	public tag(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return Promise.resolve("");
 		}
@@ -37,7 +37,7 @@ export class Git {
 		return this.execGit("tag", args.filter(Boolean) as string[]);
 	}
 
-	public async currentBranch() {
+	public async currentBranch(): Promise<string> {
 		return (await this.execGit("rev-parse", ["--abbrev-ref", "HEAD"])).trim();
 	}
 
