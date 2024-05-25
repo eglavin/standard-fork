@@ -89,7 +89,7 @@ Commands:
   --inspect-version     If set, fork-version will print the current project version and exit.
 
 Options:
-  --file, -F            List of the files to be updated. [Default: ["bower.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+  --file, -F            List of the files to be updated. [Default: ["bower.json", "deno.json", "jsr.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
   --glob, -G            Glob pattern to match files to be updated.
   --path, -P            The path fork-version will run from. [Default: process.cwd()]
   --changelog           Name of the changelog file. [Default: "CHANGELOG.md"]
@@ -262,6 +262,8 @@ By default Fork-Version will attempt to read versions from and update these file
 - "package.json"
 - "package-lock.json"
 - "npm-shrinkwrap.json"
+- "jsr.json"
+- "deno.json"
 - "manifest.json"
 - "bower.json"
 

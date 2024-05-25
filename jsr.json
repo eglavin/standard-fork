@@ -1,0 +1,19 @@
+{
+	"name": "@eglavin/fork-version",
+	"version": "1.4.83",
+	"exports": {
+		".": "./src/index.ts",
+		"./cli": "./src/cli.ts"
+	},
+	"publish": {
+		"include": [
+			"LICENSE",
+			"README.md",
+			"CHANGELOG.md",
+			"src/**/*"
+		],
+		"exclude": [
+			"**/__tests__/**"
+		]
+	}
+}
