@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.84 (2024-05-25)
+
+
+### Chore
+
+* publish project to jsr registry ([#58](https://github.com/eglavin/fork-version/issues/58)) ([0816e93](https://github.com/eglavin/fork-version/commit/0816e9306437c7122f68c26aac1601f476d0c7d0))
+
+
 ## 1.4.83 (2024-05-13)
 
 
