@@ -1,6 +1,7 @@
 # Fork-Version
 
 [![NPM Version](https://img.shields.io/npm/v/fork-version)](https://www.npmjs.com/package/fork-version)
+[![JSR](https://jsr.io/badges/@eglavin/fork-version)](https://jsr.io/@eglavin/fork-version)
 [![Version Package](https://github.com/eglavin/fork-version/actions/workflows/version.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/version.yml)
 [![Publish Package](https://github.com/eglavin/fork-version/actions/workflows/release.yml/badge.svg)](https://github.com/eglavin/fork-version/actions/workflows/release.yml)
 
