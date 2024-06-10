@@ -111,6 +111,20 @@ describe("version > getCurrentVersion", () => {
 		);
 	});
 
+	it("should take the latest version if multiple found", async () => {
+		const { config, logger, createJSONFile, createCommits } =
+			await createTestDir("getCurrentVersion");
+		const fileManager = new FileManager(config, logger);
+
+		createJSONFile({ version: "1.2.3" });
+		createJSONFile({ version: "3.2.1" }, "package-lock.json");
+		createCommits();
+
+		const result = await getCurrentVersion(config, logger, fileManager);
+		expect(result.files.map((f) => f.version)).toEqual(["1.2.3", "3.2.1"]);
+		expect(result.version).toEqual("3.2.1");
+	});
+
 	it("should be able to define the current version using the config", async () => {
 		const { relativeTo, config, logger, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
