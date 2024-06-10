@@ -49,6 +49,10 @@
       "type": "string",
       "description": "If set, fork-version will attempt to update to this version, instead of incrementing using \"conventional-commit\"."
     },
+    "allowMultipleVersions": {
+      "type": "boolean",
+      "description": "Don't throw an error if multiple versions are found in the given files."
+    },
     "commitAll": {
       "type": "boolean",
       "description": "Commit all changes, not just files updated by fork-version."

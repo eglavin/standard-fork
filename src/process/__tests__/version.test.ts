@@ -86,11 +86,12 @@ describe("version > getCurrentVersion", () => {
 		});
 	});
 
-	it("should throw an error if multiple versions found", async () => {
+	it("should throw an error if multiple versions found and not allowing multiple versions", async () => {
 		const { config, logger, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		const fileManager = new FileManager(config, logger);
+		config.allowMultipleVersions = false;
 
 		createJSONFile({ version: "1.2.3" });
 		createJSONFile({ version: "3.2.1" }, "package-lock.json");

@@ -50,7 +50,11 @@ export async function getCurrentVersion(
 	if (versions.size === 0) {
 		throw new Error("Unable to find current version");
 	} else if (versions.size > 1) {
-		throw new Error("Found multiple versions");
+		if (!config.allowMultipleVersions) {
+			throw new Error("Found multiple versions");
+		}
+		logger.warn("[WARNING] Found multiple versions, using the first one.");
+		logger.log(`Versions: ${Array.from(versions).join(", ")}`);
 	}
 
 	const currentVersion = versions.entries().next().value[0];
