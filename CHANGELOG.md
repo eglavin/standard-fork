@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.86 (2024-06-10)
+
+
+### Refactor
+
+* don't throw when multiple versions are found. ([#61](https://github.com/eglavin/fork-version/issues/61)) ([dfa112e](https://github.com/eglavin/fork-version/commit/dfa112eb55432a58d33003bd94706043b267b665))
+
+
 ## 1.4.85 (2024-05-25)
 
 
