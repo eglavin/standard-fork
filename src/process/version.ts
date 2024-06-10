@@ -57,7 +57,7 @@ export async function getCurrentVersion(
 		logger.log(`Versions: ${Array.from(versions).join(", ")}`);
 	}
 
-	const currentVersion = versions.entries().next().value[0];
+	const currentVersion = semver.rsort(Array.from(versions))[0];
 
 	// If we're just inspecting the version, output the version and exit
 	if (config.inspectVersion) {
