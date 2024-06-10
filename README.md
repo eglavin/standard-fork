@@ -102,13 +102,14 @@ Options:
   --next-version        If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
 Flags:
-  --commit-all          Commit all changes, not just files updated by fork-version.
-  --debug               Output debug information.
-  --dry-run             No output will be written to disk or committed.
-  --silent              Run without logging to the terminal.
-  --git-tag-fallback    If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
-  --sign                If true, git will sign the commit with the systems GPG key.
-  --verify              If true, git will run user defined git hooks before committing.
+  --allow-multiple-versions   Don't throw an error if multiple versions are found in the given files. [Default: true]
+  --commit-all                Commit all changes, not just files updated by fork-version.
+  --debug                     Output debug information.
+  --dry-run                   No output will be written to disk or committed.
+  --silent                    Run without logging to the terminal.
+  --git-tag-fallback          If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
+  --sign                      If true, git will sign the commit with the systems GPG key.
+  --verify                    If true, git will run user defined git hooks before committing.
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
@@ -242,6 +243,7 @@ Alternatively you can define your config using a key in your `package.json` file
 | [preRelease](#configprerelease)                       | string / boolean | -                       | Make a pre-release with optional label if given value is a string                              |
 | currentVersion                                        | string           | -                       | Use this version instead of trying to determine one                                            |
 | nextVersion                                           | string           | -                       | Attempt to update to this version, instead of incrementing using "conventional-commit"         |
+| allowMultipleVersions                                 | boolean          | true                    | Don't throw an error if multiple versions are found in the given files.                        |
 | commitAll                                             | boolean          | false                   | Commit all changes, not just files updated by fork-version                                     |
 | debug                                                 | boolean          | false                   | Output debug information                                                                       |
 | dryRun                                                | boolean          | false                   | No output will be written to disk or committed                                                 |

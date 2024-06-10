@@ -187,6 +187,13 @@ export const ForkConfigSchema = z.object({
 	//
 
 	/**
+	 * Don't throw an error if multiple versions are found in the given files.
+	 * @default true
+	 */
+	allowMultipleVersions: z
+		.boolean()
+		.describe("Don't throw an error if multiple versions are found in the given files."),
+	/**
 	 * Commit all changes, not just files updated by fork-version.
 	 * @default false
 	 */

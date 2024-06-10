@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file. See [fork-v
 	tagPrefix: "v",
 
 	// Flags
+	allowMultipleVersions: true,
 	commitAll: false,
 	debug: false,
 	dryRun: false,
