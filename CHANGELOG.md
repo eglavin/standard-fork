@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.88 (2024-06-11)
+
+
+### Refactor
+
+* add azure devops detection ([#63](https://github.com/eglavin/fork-version/issues/63)) ([25e4e02](https://github.com/eglavin/fork-version/commit/25e4e0252ea8db7d01273fa4bce5d2aff1186373))
+
+
 ## 1.4.87 (2024-06-10)
 
 
