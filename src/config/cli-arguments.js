@@ -85,6 +85,7 @@ export function getCliArguments() {
 			nextVersion: { type: "string" },
 
 			// Flags
+			allowMultipleVersions: { type: "boolean" },
 			commitAll: { type: "boolean" },
 			debug: { type: "boolean" },
 			dryRun: { type: "boolean" },

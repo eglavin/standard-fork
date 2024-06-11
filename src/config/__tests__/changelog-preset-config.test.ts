@@ -2,7 +2,7 @@ import { getChangelogPresetConfig } from "../changelog-preset-config";
 
 describe("changelog-preset-config", () => {
 	it("should return the default config", () => {
-		const config = getChangelogPresetConfig({}, {} as never);
+		const config = getChangelogPresetConfig({}, {} as never, null);
 
 		expect(config).toMatchObject({
 			commitUrlFormat: "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
@@ -69,6 +69,7 @@ describe("changelog-preset-config", () => {
 				},
 			},
 			{} as never,
+			null,
 		);
 
 		expect(config).toMatchObject({
@@ -98,14 +99,18 @@ describe("changelog-preset-config", () => {
 	});
 
 	it("should be able to override from CLI arguments", () => {
-		const config = getChangelogPresetConfig({}, {
-			commitUrlFormat: "{{host}}/fork-version/commit/{{hash}}",
-			compareUrlFormat:
-				"{{host}}/fork-version/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
-			issueUrlFormat: "{{host}}/fork-version/issues/{{id}}",
-			userUrlFormat: "{{host}}/fork-version/user/{{user}}",
-			releaseCommitMessageFormat: "chore(release): {{currentTag}} [skip ci]",
-		} as never);
+		const config = getChangelogPresetConfig(
+			{},
+			{
+				commitUrlFormat: "{{host}}/fork-version/commit/{{hash}}",
+				compareUrlFormat:
+					"{{host}}/fork-version/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+				issueUrlFormat: "{{host}}/fork-version/issues/{{id}}",
+				userUrlFormat: "{{host}}/fork-version/user/{{user}}",
+				releaseCommitMessageFormat: "chore(release): {{currentTag}} [skip ci]",
+			} as never,
+			null,
+		);
 
 		expect(config.commitUrlFormat).toBe("{{host}}/fork-version/commit/{{hash}}");
 		expect(config.compareUrlFormat).toBe(
@@ -122,16 +127,66 @@ describe("changelog-preset-config", () => {
 				releaseMessageSuffix: "[skip ci]",
 			},
 			{} as never,
+			null,
 		);
 
 		expect(config.releaseCommitMessageFormat).toBe("chore(release): {{currentTag}} [skip ci]");
 	});
 
 	it("should be able to append a releaseMessageSuffix to the releaseCommitMessageFormat from CLI arguments", () => {
-		const config = getChangelogPresetConfig({}, {
-			releaseMessageSuffix: "[no ci]",
-		} as never);
+		const config = getChangelogPresetConfig(
+			{},
+			{
+				releaseMessageSuffix: "[no ci]",
+			} as never,
+			null,
+		);
 
 		expect(config.releaseCommitMessageFormat).toBe("chore(release): {{currentTag}} [no ci]");
+	});
+
+	it("should be able to detect the git host", () => {
+		const config = getChangelogPresetConfig({}, {} as never, {
+			detectedGitHost: "Azure",
+			commitUrlFormat:
+				"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+			compareUrlFormat: "{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
+			issueUrlFormat: "{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}",
+		});
+
+		expect(config.commitUrlFormat).toBe(
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+		);
+		expect(config.compareUrlFormat).toBe(
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
+		);
+		expect(config.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
+	});
+
+	it("should still be able to override the detected git host from configs", () => {
+		const config = getChangelogPresetConfig(
+			{
+				changelogPresetConfig: {
+					commitUrlFormat: "{{host}}/fork-version/commit/{{hash}}",
+				},
+			},
+			{
+				compareUrlFormat:
+					"{{host}}/fork-version/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+			} as never,
+			{
+				detectedGitHost: "Azure",
+				commitUrlFormat:
+					"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+				compareUrlFormat: "{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
+				issueUrlFormat: "{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}",
+			},
+		);
+
+		expect(config.commitUrlFormat).toBe("{{host}}/fork-version/commit/{{hash}}");
+		expect(config.compareUrlFormat).toBe(
+			"{{host}}/fork-version/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+		);
+		expect(config.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
 	});
 });

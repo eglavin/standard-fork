@@ -2,10 +2,12 @@ import conventionalChangelogConfigSpec from "conventional-changelog-config-spec"
 
 import { ChangelogPresetConfigSchema, type ForkConfig } from "./schema";
 import type { getCliArguments } from "./cli-arguments";
+import type { DetectedGitHost } from "./detect-git-host";
 
 export function getChangelogPresetConfig(
 	mergedConfig: Partial<ForkConfig> | undefined,
 	cliArgumentsFlags: ReturnType<typeof getCliArguments>["flags"],
+	detectedGitHost: DetectedGitHost | null,
 ) {
 	const preset: { name: string; [_: string]: unknown } = {
 		name: "conventionalcommits",
@@ -16,6 +18,16 @@ export function getChangelogPresetConfig(
 		Object.entries(conventionalChangelogConfigSpec.properties).forEach(([key, value]) => {
 			if ("default" in value && value.default !== undefined) {
 				preset[key] = value.default;
+			}
+		});
+	}
+
+	// If we've detected a git host, use the values from the detected host now so that they can
+	// be overwritten by the users config later
+	if (detectedGitHost) {
+		Object.entries(detectedGitHost).forEach(([key, value]) => {
+			if (value !== undefined) {
+				preset[key] = value;
 			}
 		});
 	}
