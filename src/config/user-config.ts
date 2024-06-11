@@ -9,6 +9,7 @@ import { ForkConfigSchema, type ForkConfig } from "./schema";
 import { DEFAULT_CONFIG } from "./defaults";
 import { getCliArguments } from "./cli-arguments";
 import { getChangelogPresetConfig } from "./changelog-preset-config";
+import { detectGitHost } from "./detect-git-host";
 
 /**
  * Name of the key in the package.json file that contains the users configuration.
@@ -51,6 +52,8 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		});
 	}
 
+	const detectedGitHost = await detectGitHost(cwd);
+
 	return {
 		...mergedConfig,
 
@@ -62,7 +65,11 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		preRelease:
 			// Meow doesn't support multiple flags with the same name, so we need to check both.
 			cliArguments.flags.preReleaseTag ?? cliArguments.flags.preRelease ?? configFile.preRelease,
-		changelogPresetConfig: getChangelogPresetConfig(mergedConfig, cliArguments.flags),
+		changelogPresetConfig: getChangelogPresetConfig(
+			mergedConfig,
+			cliArguments.flags,
+			detectedGitHost,
+		),
 	};
 }
 

@@ -48,7 +48,7 @@ function getNewReleaseContent(
 					...config.changelogPresetConfig,
 				},
 				tagPrefix: config.tagPrefix,
-				warn: (...message: string[]) => logger.error("[conventional-changelog] ", ...message),
+				warn: (...message: string[]) => logger.debug("[conventional-changelog] ", ...message),
 				cwd: config.path,
 			},
 			{
