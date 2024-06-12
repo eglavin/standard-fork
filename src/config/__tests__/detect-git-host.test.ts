@@ -21,10 +21,10 @@ describe("detect-git-host", () => {
 
 		expect(gitHost?.detectedGitHost).toBe("Azure");
 		expect(gitHost?.commitUrlFormat).toBe(
-			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
 		);
 		expect(gitHost?.compareUrlFormat).toBe(
-			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
 		);
 		expect(gitHost?.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
 	});
@@ -42,10 +42,10 @@ describe("detect-git-host", () => {
 
 		expect(gitHost?.detectedGitHost).toBe("Azure");
 		expect(gitHost?.commitUrlFormat).toBe(
-			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
 		);
 		expect(gitHost?.compareUrlFormat).toBe(
-			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/commit/{{hash}}",
+			"{{host}}/ORGANISATION/PROJECT/_git/REPOSITORY/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
 		);
 		expect(gitHost?.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
 	});
