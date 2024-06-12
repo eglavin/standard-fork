@@ -48,8 +48,8 @@ export async function detectGitHost(cwd: string): Promise<DetectedGitHost | null
 
 			return {
 				detectedGitHost: "Azure",
-				commitUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}`,
-				compareUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/commit/{{hash}}`,
+				commitUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/commit/{{hash}}`,
+				compareUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}`,
 				issueUrlFormat: `{{host}}/${organisation}/${project}/_workitems/edit/{{id}}`,
 			};
 		}
@@ -67,8 +67,8 @@ export async function detectGitHost(cwd: string): Promise<DetectedGitHost | null
 
 			return {
 				detectedGitHost: "Azure",
-				commitUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}`,
-				compareUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/commit/{{hash}}`,
+				commitUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/commit/{{hash}}`,
+				compareUrlFormat: `{{host}}/${organisation}/${project}/_git/${repository}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}`,
 				issueUrlFormat: `{{host}}/${organisation}/${project}/_workitems/edit/{{id}}`,
 			};
 		}
