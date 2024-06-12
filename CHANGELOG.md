@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.89 (2024-06-12)
+
+
+### Bug Fixes
+
+* swap commiturl and compareurl formats for azure ([#64](https://github.com/eglavin/fork-version/issues/64)) ([7aea340](https://github.com/eglavin/fork-version/commit/7aea34045b2ee0db25005742000ae20042f31b54))
+
+
 ## 1.4.88 (2024-06-11)
 
 
