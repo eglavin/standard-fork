@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file. See [fork-v
 	// Flags
 	allowMultipleVersions: true,
 	commitAll: false,
+	changelogAll: false,
 	debug: false,
 	dryRun: false,
 	silent: false,

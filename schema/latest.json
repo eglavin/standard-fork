@@ -57,6 +57,10 @@
       "type": "boolean",
       "description": "Commit all changes, not just files updated by fork-version."
     },
+    "changelogAll": {
+      "type": "boolean",
+      "description": "If this flag is set, all default commit types will be added to the changelog, not just `feat` and `fix`."
+    },
     "debug": {
       "type": "boolean",
       "description": "Output debug information."
