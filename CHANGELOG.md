@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.90 (2024-06-13)
+
+
+### Refactor
+
+* add change log all support ([#65](https://github.com/eglavin/fork-version/issues/65)) ([93a76cb](https://github.com/eglavin/fork-version/commit/93a76cb4ca0934335c40f8d28d61355730cb64da))
+
+
 ## 1.4.89 (2024-06-12)
 
 
