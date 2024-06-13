@@ -189,4 +189,88 @@ describe("changelog-preset-config", () => {
 		);
 		expect(config.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
 	});
+
+	it("should not change log all if not set", () => {
+		const config = getChangelogPresetConfig({}, {} as never, null);
+
+		expect(config.types).toEqual([
+			{
+				type: "feat",
+				section: "Features",
+			},
+			{
+				type: "fix",
+				section: "Bug Fixes",
+			},
+			{
+				type: "chore",
+				hidden: true,
+			},
+			{
+				type: "docs",
+				hidden: true,
+			},
+			{
+				type: "style",
+				hidden: true,
+			},
+			{
+				type: "refactor",
+				hidden: true,
+			},
+			{
+				type: "perf",
+				hidden: true,
+			},
+			{
+				type: "test",
+				hidden: true,
+			},
+		]);
+	});
+
+	it("should be able to changelog all default types", () => {
+		const config = getChangelogPresetConfig(
+			{
+				changelogAll: true,
+			},
+			{} as never,
+			null,
+		);
+
+		expect(config.types).toEqual([
+			{
+				type: "feat",
+				section: "Features",
+			},
+			{
+				type: "fix",
+				section: "Bug Fixes",
+			},
+			{
+				type: "chore",
+				section: "Other Changes",
+			},
+			{
+				type: "docs",
+				section: "Other Changes",
+			},
+			{
+				type: "style",
+				section: "Other Changes",
+			},
+			{
+				type: "refactor",
+				section: "Other Changes",
+			},
+			{
+				type: "perf",
+				section: "Other Changes",
+			},
+			{
+				type: "test",
+				section: "Other Changes",
+			},
+		]);
+	});
 });

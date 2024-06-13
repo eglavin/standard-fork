@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const ChangelogPresetConfigTypeSchema = z.object({
+export const ChangelogPresetConfigTypeSchema = z.object({
 	/**
 	 * The type of commit message.
 	 * @example "feat", "fix", "chore", etc..
@@ -198,6 +198,17 @@ export const ForkConfigSchema = z.object({
 	 * @default false
 	 */
 	commitAll: z.boolean().describe("Commit all changes, not just files updated by fork-version."),
+	/**
+	 * By default the conventional-changelog spec will only add commit types of `feat` and `fix` to the generated changelog.
+	 * If this flag is set, all [default commit types](https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/238093090c14bd7d5151eb5316e635623ce633f9/versions/2.2.0/schema.json#L18)
+	 * will be added to the changelog.
+	 * @default false
+	 */
+	changelogAll: z
+		.boolean()
+		.describe(
+			"If this flag is set, all default commit types will be added to the changelog, not just `feat` and `fix`.",
+		),
 	/**
 	 * Output debug information.
 	 * @default false

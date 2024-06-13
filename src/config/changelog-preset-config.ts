@@ -1,6 +1,11 @@
+import { z } from "zod";
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
 
-import { ChangelogPresetConfigSchema, type ForkConfig } from "./schema";
+import {
+	ChangelogPresetConfigTypeSchema,
+	ChangelogPresetConfigSchema,
+	type ForkConfig,
+} from "./schema";
 import type { getCliArguments } from "./cli-arguments";
 import type { DetectedGitHost } from "./detect-git-host";
 
@@ -17,6 +22,23 @@ export function getChangelogPresetConfig(
 	if (typeof conventionalChangelogConfigSpec.properties === "object") {
 		Object.entries(conventionalChangelogConfigSpec.properties).forEach(([key, value]) => {
 			if ("default" in value && value.default !== undefined) {
+				// If the user has requested to see all types, we need to remove the hidden flag from the default types.
+				if (mergedConfig?.changelogAll && key === "types") {
+					const parsedTypes = z.array(ChangelogPresetConfigTypeSchema).safeParse(value.default);
+
+					if (parsedTypes.success) {
+						parsedTypes.data.forEach((type) => {
+							if (!type.section) {
+								delete type.hidden;
+								type.section = "Other Changes";
+							}
+						});
+						preset[key] = parsedTypes.data;
+
+						return;
+					}
+				}
+
 				preset[key] = value.default;
 			}
 		});
