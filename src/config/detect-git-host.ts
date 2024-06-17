@@ -18,12 +18,9 @@ export interface DetectedGitHost {
  * correctly.
  */
 export async function detectGitHost(cwd: string): Promise<DetectedGitHost | null> {
-	const remoteUrl = (await new Promise((onResolve, onReject) => {
-		execFile("git", ["config", "--get", "remote.origin.url"], { cwd }, (error, stdout, stderr) => {
-			if (error) {
-				onReject(error);
-			}
-			onResolve(stdout ? stdout.trim() : stderr);
+	const remoteUrl = (await new Promise((onResolve) => {
+		execFile("git", ["config", "--get", "remote.origin.url"], { cwd }, (_error, stdout) => {
+			onResolve(stdout ? stdout.trim() : "");
 		});
 	})) as string;
 
