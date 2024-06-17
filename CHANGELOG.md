@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.91 (2024-06-17)
+
+
+### Bug Fixes
+
+* dont throw an error when no remote is defined ([#66](https://github.com/eglavin/fork-version/issues/66)) ([7e9c687](https://github.com/eglavin/fork-version/commit/7e9c68743571b061d7165e63b3c7eeeca7dbaaef))
+
+
 ## 1.4.90 (2024-06-13)
 
 
