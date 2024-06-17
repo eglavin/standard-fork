@@ -49,4 +49,10 @@ describe("detect-git-host", () => {
 		);
 		expect(gitHost?.issueUrlFormat).toBe("{{host}}/ORGANISATION/PROJECT/_workitems/edit/{{id}}");
 	});
+
+	it("should not throw when no remote defined", async () => {
+		const { testFolder } = await createTestDir("detect-git-host");
+
+		expect(await detectGitHost(testFolder)).toBe(null);
+	});
 });
