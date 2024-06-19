@@ -29,9 +29,9 @@ export class DotGitIgnore {
 	private createMatches(fileContent: string): (false | MMRegExp | null)[] {
 		return fileContent.split(/\r?\n|\r/).map((line, idx) => {
 			const isNegatedLine = line.startsWith("!");
-			const idRootedLine = line.startsWith("/");
+			const isRootedLine = line.startsWith("/");
 
-			if (isNegatedLine || idRootedLine) {
+			if (isNegatedLine || isRootedLine) {
 				line = line.substring(1);
 			}
 
@@ -43,7 +43,7 @@ export class DotGitIgnore {
 			const isShellGlob = line.indexOf("/") >= 0;
 
 			this.negated[idx] = isNegatedLine;
-			this.rooted[idx] = idRootedLine || isShellGlob;
+			this.rooted[idx] = isRootedLine || isShellGlob;
 
 			return makeRe(line);
 		});
