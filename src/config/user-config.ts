@@ -8,7 +8,6 @@ import { ForkConfigSchema, type ForkConfig } from "./schema";
 import { DEFAULT_CONFIG } from "./defaults";
 import { getCliArguments } from "./cli-arguments";
 import { getChangelogPresetConfig } from "./changelog-preset-config";
-import { DotGitIgnore } from "../libs/dot-git-ignore";
 import { detectGitHost } from "./detect-git-host";
 
 /**
@@ -52,15 +51,12 @@ export async function getUserConfig(): Promise<ForkConfig> {
 		});
 	}
 
-	const dotGitIgnore = new DotGitIgnore(cwd);
 	const detectedGitHost = await detectGitHost(cwd);
 
 	return {
 		...mergedConfig,
 
-		files: getFilesList(configFile?.files, cliArguments.flags?.files, globResults).filter(
-			(file) => !dotGitIgnore.shouldIgnore(file),
-		),
+		files: getFilesList(configFile?.files, cliArguments.flags?.files, globResults),
 		path: cwd,
 		preRelease:
 			// Meow doesn't support multiple flags with the same name, so we need to check both.
