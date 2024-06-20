@@ -15,20 +15,22 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should read plain text when file is version.txt", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createAndCommitFile } = await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createFile("1.2.3", "version.txt");
+		createAndCommitFile("1.2.3", "version.txt");
 
 		const file = fileManager.read("version.txt");
 		expect(file?.version).toEqual("1.2.3");
 	});
 
 	it("should read csproj when file extension is csproj", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
+		const { config, logger, createAndCommitFile } = await createTestDir(
+			"strategies ms-build-project",
+		);
 		const fileManager = new FileManager(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -43,10 +45,10 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should log an error when read file type is not supported", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createAndCommitFile } = await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createFile("Version: 1.2.3", "version.unknown");
+		createAndCommitFile("Version: 1.2.3", "version.unknown");
 
 		fileManager.read("version.unknown");
 		expect(logger.error).toHaveBeenCalledWith("[File Manager] Unsupported file: version.unknown");
@@ -87,11 +89,11 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should write plain text when file is version.txt", async () => {
-		const { relativeTo, config, logger, createFile } =
+		const { relativeTo, config, logger, createAndCommitFile } =
 			await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createFile("1.0.0", "version.txt");
+		createAndCommitFile("1.0.0", "version.txt");
 
 		fileManager.write(
 			{
@@ -106,12 +108,12 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should write csproj when file extension is csproj", async () => {
-		const { relativeTo, config, logger, createFile } = await createTestDir(
+		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
 			"strategies ms-build-project",
 		);
 		const fileManager = new FileManager(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>

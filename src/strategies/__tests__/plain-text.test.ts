@@ -5,10 +5,10 @@ import { PlainText } from "../plain-text";
 
 describe("strategies plain-text", () => {
 	it("should be able to read version from version.txt file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies plain-text");
+		const { config, logger, createAndCommitFile } = await createTestDir("strategies plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createFile("1.2.3", "version.txt");
+		createAndCommitFile("1.2.3", "version.txt");
 
 		const file = fileManager.read("version.txt");
 
@@ -28,10 +28,11 @@ describe("strategies plain-text", () => {
 	});
 
 	it("should return empty string when version.txt is empty", async () => {
-		const { relativeTo, config, logger, createFile } = await createTestDir("strategies plain-text");
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("strategies plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createFile("", "version.txt");
+		createAndCommitFile("", "version.txt");
 
 		const file = fileManager.read(relativeTo("version.txt"));
 
@@ -39,10 +40,11 @@ describe("strategies plain-text", () => {
 	});
 
 	it("should be able to write version to version.txt file", async () => {
-		const { relativeTo, config, logger, createFile } = await createTestDir("strategies plain-text");
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("strategies plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createFile("1.2.3", "version.txt");
+		createAndCommitFile("1.2.3", "version.txt");
 
 		fileManager.write(
 			{

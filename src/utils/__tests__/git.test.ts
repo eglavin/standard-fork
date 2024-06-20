@@ -62,4 +62,28 @@ describe("git", () => {
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/\[git add\] $/));
 	});
+
+	it("should check if a file is ignored by git", async () => {
+		const { config, logger, createAndCommitFile, createFile, createDirectory } =
+			await createTestDir("execute-file");
+		const git = new Git(config, logger);
+
+		createAndCommitFile(
+			`
+src/*.txt
+test/**
+`,
+			".gitignore",
+		);
+
+		createDirectory("src");
+		createFile("", "src", "my-file.txt");
+		createFile("", "src", "my-file.js");
+		expect(await git.shouldIgnore("src/my-file.txt")).toBe(true);
+		expect(await git.shouldIgnore("src/my-file.js")).toBe(false);
+
+		createDirectory("test");
+		createFile("", "test", "my-file.txt");
+		expect(await git.shouldIgnore("test/my-file.txt")).toBe(true);
+	});
 });

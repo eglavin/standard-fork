@@ -37,6 +37,18 @@ export class Git {
 		return this.execGit("tag", args.filter(Boolean) as string[]);
 	}
 
+	public shouldIgnore(file: string): Promise<boolean> {
+		return new Promise((onResolve) => {
+			execFile("git", ["check-ignore", file], { cwd: this.config.path }, (error) => {
+				if (error) {
+					onResolve(false);
+				}
+
+				onResolve(true);
+			});
+		});
+	}
+
 	public async currentBranch(): Promise<string> {
 		return (await this.execGit("rev-parse", ["--abbrev-ref", "HEAD"])).trim();
 	}

@@ -86,11 +86,11 @@ describe("strategies json-package", () => {
 	});
 
 	it("should write output with tabs if input file is using tabs", async () => {
-		const { relativeTo, config, logger, createFile } =
+		const { relativeTo, config, logger, createAndCommitFile } =
 			await createTestDir("strategies json-package");
 		const fileManager = new JSONPackage(config, logger);
 
-		createFile('{\n\t"version": "1.2.3"\n}', "package.json");
+		createAndCommitFile('{\n\t"version": "1.2.3"\n}', "package.json");
 
 		fileManager.write(
 			{
