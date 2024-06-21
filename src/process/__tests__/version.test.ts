@@ -12,7 +12,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -35,7 +35,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3", private: true });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -66,7 +66,7 @@ describe("version > getCurrentVersion", () => {
 		);
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -97,7 +97,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "3.2.1" }, "package-lock.json");
 		createCommits();
 
-		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
+		expect(getCurrentVersion(config, logger, fileManager, config.files)).rejects.toThrow(
 			"Found multiple versions",
 		);
 	});
@@ -106,7 +106,7 @@ describe("version > getCurrentVersion", () => {
 		const { config, logger } = await createTestDir("getCurrentVersion");
 		const fileManager = new FileManager(config, logger);
 
-		expect(getCurrentVersion(config, logger, fileManager)).rejects.toThrow(
+		expect(getCurrentVersion(config, logger, fileManager, config.files)).rejects.toThrow(
 			"Unable to find current version",
 		);
 	});
@@ -120,7 +120,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "3.2.1" }, "package-lock.json");
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(result.files.map((f) => f.version)).toEqual(["1.2.3", "3.2.1"]);
 		expect(result.version).toEqual("3.2.1");
 	});
@@ -135,7 +135,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager);
+		const result = await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -162,7 +162,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		await getCurrentVersion(config, logger, fileManager);
+		await getCurrentVersion(config, logger, fileManager, config.files);
 		expect(spyOnConsole).toHaveBeenCalledWith("1.2.3");
 		expect(spyOnProcess).toHaveBeenCalledWith(0);
 

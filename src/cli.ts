@@ -25,7 +25,17 @@ async function runFork() {
 	logger.log(`Running fork-version - ${new Date().toUTCString()}`);
 	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
 
-	const current = await getCurrentVersion(config, logger, fileManager);
+	/**
+	 * Get the list of files to update, excluding any files that are ignored by git.
+	 */
+	const filesToUpdate: string[] = [];
+	for (const file of config.files) {
+		if (!(await git.shouldIgnore(file))) {
+			filesToUpdate.push(file);
+		}
+	}
+
+	const current = await getCurrentVersion(config, logger, fileManager, filesToUpdate);
 	const next = await getNextVersion(config, logger, current.version);
 
 	logger.log("Updating Files: ");

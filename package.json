@@ -80,7 +80,6 @@
     "conventional-recommended-bump": "9.0.0",
     "detect-indent": "7.0.1",
     "detect-newline": "4.0.1",
-    "dotgitignore": "2.1.0",
     "esbuild": "0.20.2",
     "git-semver-tags": "7.0.1",
     "glob": "10.3.12",

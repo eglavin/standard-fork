@@ -15,10 +15,10 @@ describe("changelog", () => {
 	});
 
 	it("should update changelog file", async () => {
-		const { relativeTo, config, logger, createCommit, createFile } =
+		const { relativeTo, config, logger, createCommit, createAndCommitFile } =
 			await createTestDir("changelog");
 
-		createFile(
+		createAndCommitFile(
 			`# Test Header
 
 ## 1.2.3 (2000-01-01)
@@ -38,10 +38,10 @@ describe("changelog", () => {
 	});
 
 	it("should throw an error if header contains a release pattern", async () => {
-		const { config, logger, createFile, createCommit } = await createTestDir("changelog");
+		const { config, logger, createAndCommitFile, createCommit } = await createTestDir("changelog");
 		config.header = "# [1.2.3]\n";
 
-		createFile(
+		createAndCommitFile(
 			`# Test Header
 
 ## 1.2.3 (2000-01-01)
@@ -56,11 +56,11 @@ describe("changelog", () => {
 	});
 
 	it("should not update changelog if dryRun is set", async () => {
-		const { relativeTo, config, logger, createFile, createCommit } =
+		const { relativeTo, config, logger, createAndCommitFile, createCommit } =
 			await createTestDir("changelog");
 		config.dryRun = true;
 
-		createFile(
+		createAndCommitFile(
 			`# Test Header
 
 ## 1.2.3 (2000-01-01)
@@ -77,11 +77,11 @@ describe("changelog", () => {
 	});
 
 	it("should skip changelog update", async () => {
-		const { relativeTo, config, logger, createFile, createCommit } =
+		const { relativeTo, config, logger, createAndCommitFile, createCommit } =
 			await createTestDir("changelog");
 		config.skipChangelog = true;
 
-		createFile(
+		createAndCommitFile(
 			`# Test Header
 
 ## 1.2.3 (2000-01-01)

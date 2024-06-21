@@ -4,10 +4,12 @@ import { MSBuildProject } from "../ms-build-project";
 
 describe("strategies ms-build-project", () => {
 	it("should read version from csproj file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
+		const { config, logger, createAndCommitFile } = await createTestDir(
+			"strategies ms-build-project",
+		);
 		const fileManager = new MSBuildProject(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -22,10 +24,12 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies ms-build-project");
+		const { config, logger, createAndCommitFile } = await createTestDir(
+			"strategies ms-build-project",
+		);
 		const fileManager = new MSBuildProject(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version></Version>
@@ -43,12 +47,12 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should write a csproj file", async () => {
-		const { relativeTo, config, logger, createFile } = await createTestDir(
+		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
 			"strategies ms-build-project",
 		);
 		const fileManager = new MSBuildProject(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -72,12 +76,12 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should keep the same property ordering", async () => {
-		const { relativeTo, config, logger, createFile } = await createTestDir(
+		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
 			"strategies ms-build-project",
 		);
 		const fileManager = new MSBuildProject(config, logger);
 
-		createFile(
+		createAndCommitFile(
 			`<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>

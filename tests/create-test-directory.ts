@@ -73,9 +73,17 @@ export async function createTestDir(name: string) {
 			execSync(`git add ${file}`, execSyncOptions);
 		},
 
-		createFile: function _createFile(content: string, file: string) {
-			writeFileSync(join(testFolder, file), content, "utf-8");
-			execSync(`git add ${file}`, execSyncOptions);
+		createDirectory: function _createDirectory(...dir: string[]) {
+			mkdirSync(join(testFolder, ...dir), { recursive: true });
+		},
+
+		createAndCommitFile: function _createFile(content: string, ...file: string[]) {
+			writeFileSync(join(testFolder, ...file), content, "utf-8");
+			execSync(`git add ${file.join("/")}`, execSyncOptions);
+		},
+
+		createFile: function _createFile(content: string, ...file: string[]) {
+			writeFileSync(join(testFolder, ...file), content, "utf-8");
 		},
 
 		createCommits: function _createCommits(commits?: string[]) {
