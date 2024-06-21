@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.92 (2024-06-21)
+
+
+### Refactor
+
+* add should ignore option to git class + remove dotgitignore ([#67](https://github.com/eglavin/fork-version/issues/67)) ([527b8a4](https://github.com/eglavin/fork-version/commit/527b8a4766e59a509794a0de5ad978f92e3226bf))
+
+
 ## 1.4.91 (2024-06-17)
 
 
