@@ -16,11 +16,12 @@ export async function getCurrentVersion(
 	config: ForkConfig,
 	logger: Logger,
 	fileManager: FileManager,
+	filesToUpdate: string[],
 ): Promise<CurrentVersion> {
 	const files: FileState[] = [];
 	const versions = new Set<string>();
 
-	for (const file of config.files) {
+	for (const file of filesToUpdate) {
 		const fileState = fileManager.read(file);
 
 		if (fileState) {

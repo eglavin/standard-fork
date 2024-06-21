@@ -39,7 +39,7 @@ export class Git {
 
 	public shouldIgnore(file: string): Promise<boolean> {
 		return new Promise((onResolve) => {
-			execFile("git", ["check-ignore", file], { cwd: this.config.path }, (error) => {
+			execFile("git", ["check-ignore", "--no-index", file], { cwd: this.config.path }, (error) => {
 				if (error) {
 					onResolve(false);
 				}
