@@ -6,7 +6,5 @@ declare module "git-semver-tags" {
 		skipUnstable: boolean;
 	}
 
-	declare function gitSemverTags(options: Partial<IOptions>): Promise<string[]>;
-
-	export default gitSemverTags;
+	export default function gitSemverTags(options: Partial<IOptions>): Promise<string[]>;
 }

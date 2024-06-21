@@ -1,6 +1,6 @@
 declare module "conventional-changelog" {
-	import steam from "node:stream";
-	import gitRawCommits from "git-raw-commits";
+	import type steam from "node:stream";
+	import type gitRawCommits from "git-raw-commits";
 
 	interface IOptions {
 		cwd?: string;
@@ -19,11 +19,11 @@ declare module "conventional-changelog" {
 		version: string;
 	}
 
-	declare function conventionalChangelog(
+	export default function conventionalChangelog(
 		options: IOptions,
 		context: IContext,
 		gitRawCommitsOpts: gitRawCommits.GitOptions,
+		parserOpts?: unknown,
+		writerOpts?: unknown,
 	): steam.Readable;
-
-	export default conventionalChangelog;
 }

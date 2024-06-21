@@ -1,5 +1,5 @@
 import semver, { type ReleaseType } from "semver";
-import conventionalRecommendedBump from "conventional-recommended-bump";
+import { Bumper, type BumperRecommendation } from "conventional-recommended-bump";
 
 import { getLatestGitTagVersion } from "../utils/git-tag-version";
 import { getReleaseType } from "../utils/release-type";
@@ -102,25 +102,24 @@ export async function getNextVersion(
 
 	const isPreMajor = semver.lt(currentVersion, "1.0.0");
 
-	let recommendedBump: Awaited<ReturnType<typeof conventionalRecommendedBump>>;
+	const bumper = new Bumper(config.path);
+	bumper.tag({ prefix: config.tagPrefix });
+	bumper.loadPreset({
+		name: "conventionalcommits",
+		...config.changelogPresetConfig,
+		preMajor: isPreMajor,
+	});
+
+	let recommendedBump: BumperRecommendation;
 	try {
-		recommendedBump = await conventionalRecommendedBump({
-			preset: {
-				name: "conventionalcommits",
-				...config.changelogPresetConfig,
-				preMajor: isPreMajor,
-			},
-			path: config.path,
-			tagPrefix: config.tagPrefix,
-			cwd: config.path,
-		});
+		recommendedBump = await bumper.bump();
 	} catch (error) {
 		throw new Error(`[conventional-recommended-bump] Unable to determine next version`);
 	}
 
 	if (recommendedBump.releaseType) {
 		const releaseType = getReleaseType(
-			recommendedBump.releaseType,
+			recommendedBump.releaseType as "major" | "minor" | "patch",
 			currentVersion,
 			config.preRelease,
 		);
