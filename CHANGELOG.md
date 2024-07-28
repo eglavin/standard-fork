@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.93 (2024-07-28)
+
+
+### Refactor
+
+* extract types from schema + use js file to define schema ([#69](https://github.com/eglavin/fork-version/issues/69)) ([01fccbe](https://github.com/eglavin/fork-version/commit/01fccbe020a70d2c5f8c3c3b6c33da6cb9260ebd))
+
+
 ## 1.4.92 (2024-06-21)
 
 
