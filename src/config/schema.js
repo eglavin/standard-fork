@@ -285,11 +285,3 @@ export const ForkConfigSchema = z.object({
 		.optional()
 		.describe("Add a suffix to the release commit message."),
 });
-
-export type ForkConfig = z.infer<typeof ForkConfigSchema>;
-
-export type Config = Partial<ForkConfig>;
-
-export function defineConfig(config: Config): Config {
-	return config;
-}

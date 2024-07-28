@@ -1,6 +1,6 @@
-import { defineConfig } from "../schema";
+import { defineConfig } from "../user-config";
 
-describe("schema", () => {
+describe("user-config", () => {
 	it("should return the given config", () => {
 		const config = defineConfig({ changelog: "MY_CHANGELOG.md" });
 

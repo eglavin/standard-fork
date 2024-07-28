@@ -1,5 +1,6 @@
-export { ForkConfigSchema, type ForkConfig, type Config, defineConfig } from "./config/schema";
-export { getUserConfig } from "./config/user-config";
+export { ForkConfigSchema } from "./config/schema";
+export type { ForkConfig, Config } from "./config/types";
+export { getUserConfig, defineConfig } from "./config/user-config";
 
 export {
 	getCurrentVersion,

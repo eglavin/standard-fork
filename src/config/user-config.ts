@@ -4,11 +4,12 @@ import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { glob } from "glob";
 
-import { ForkConfigSchema, type ForkConfig } from "./schema";
+import { ForkConfigSchema } from "./schema";
 import { DEFAULT_CONFIG } from "./defaults";
 import { getCliArguments } from "./cli-arguments";
 import { getChangelogPresetConfig } from "./changelog-preset-config";
 import { detectGitHost } from "./detect-git-host";
+import type { Config, ForkConfig } from "./types";
 
 /**
  * Name of the key in the package.json file that contains the users configuration.
@@ -137,4 +138,8 @@ function getFilesList(
 	}
 
 	return DEFAULT_CONFIG.files;
+}
+
+export function defineConfig(config: Config): Config {
+	return config;
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 
 export class Logger {
 	disableLogs = false;

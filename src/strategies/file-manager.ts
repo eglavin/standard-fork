@@ -2,7 +2,7 @@ import { JSONPackage } from "./json-package";
 import { PlainText } from "./plain-text";
 import { MSBuildProject } from "./ms-build-project";
 
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "../utils/logger";
 
 export interface FileState {

@@ -1,5 +1,5 @@
 import { formatCommitMessage } from "../utils/format-commit-message";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "../utils/logger";
 import type { Git } from "../utils/git";
 
