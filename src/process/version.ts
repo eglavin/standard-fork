@@ -3,7 +3,7 @@ import conventionalRecommendedBump from "conventional-recommended-bump";
 
 import { getLatestGitTagVersion } from "../utils/git-tag-version";
 import { getReleaseType } from "../utils/release-type";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { FileManager, FileState } from "../strategies/file-manager";
 import type { Logger } from "../utils/logger";
 

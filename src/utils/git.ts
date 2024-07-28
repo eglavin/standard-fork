@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "./logger";
 
 export class Git {

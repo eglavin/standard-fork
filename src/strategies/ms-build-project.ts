@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import * as cheerio from "cheerio/lib/slim";
 
 import { fileExists } from "../utils/file-state";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "../utils/logger";
 import type { FileState, IFileManager } from "./file-manager";
 

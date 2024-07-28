@@ -28,7 +28,7 @@
     "name": "Eanna Glavin",
     "url": "https://eglavin.com"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@8.15.9",
   "private": false,
   "type": "module",
   "main": "dist/index.cjs",

@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readFileSync, writeFileSync } from "node:fs";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { ForkConfigSchema } from "../dist/index.js";
+import { ForkConfigSchema } from "../src/config/schema.js";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const { name, version } = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf-8"));

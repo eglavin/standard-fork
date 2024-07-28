@@ -1,11 +1,8 @@
 import { z } from "zod";
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
 
-import {
-	ChangelogPresetConfigTypeSchema,
-	ChangelogPresetConfigSchema,
-	type ForkConfig,
-} from "./schema";
+import { ChangelogPresetConfigTypeSchema, ChangelogPresetConfigSchema } from "./schema";
+import type { ForkConfig } from "./types";
 import type { getCliArguments } from "./cli-arguments";
 import type { DetectedGitHost } from "./detect-git-host";
 

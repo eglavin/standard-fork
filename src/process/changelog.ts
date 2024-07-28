@@ -3,7 +3,7 @@ import { writeFileSync, readFileSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
 
 import { fileExists } from "../utils/file-state";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "../utils/logger";
 
 /**

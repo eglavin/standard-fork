@@ -5,7 +5,7 @@ import { detectNewline } from "detect-newline";
 
 import { stringifyPackage } from "../libs/stringify-package";
 import { fileExists } from "../utils/file-state";
-import type { ForkConfig } from "../config/schema";
+import type { ForkConfig } from "../config/types";
 import type { Logger } from "../utils/logger";
 import type { FileState, IFileManager } from "./file-manager";
 
