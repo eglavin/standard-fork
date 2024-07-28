@@ -29,6 +29,9 @@
     "url": "https://eglavin.com"
   },
   "packageManager": "pnpm@8.15.9",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "private": false,
   "type": "module",
   "main": "dist/index.cjs",
