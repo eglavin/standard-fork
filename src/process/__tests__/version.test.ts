@@ -263,4 +263,21 @@ describe("version > getNextVersion", () => {
 			version: "1.3.0",
 		});
 	});
+
+	it("should recommend a major bump", async () => {
+		const { config, logger, createAndCommitFile, createCommits } =
+			await createTestDir("version getNextVersion");
+
+		createAndCommitFile("TEST_CONTENT", "CHANGELOG.md");
+		createCommits(["feat!: A feature commit"]);
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({
+			level: 0,
+			preMajor: false,
+			reason: "There is 1 BREAKING CHANGE and 0 features",
+			releaseType: "major",
+			version: "2.0.0",
+		});
+	});
 });
