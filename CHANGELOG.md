@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.94 (2024-10-04)
+
+
+### Test
+
+* improve versioning tests ([#68](https://github.com/eglavin/fork-version/issues/68)) ([635329c](https://github.com/eglavin/fork-version/commit/635329c6b9beb1929f5e03da6ecd76c340b7c406))
+
+
 ## 1.4.93 (2024-07-28)
 
 
