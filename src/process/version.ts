@@ -114,7 +114,7 @@ export async function getNextVersion(
 			tagPrefix: config.tagPrefix,
 			cwd: config.path,
 		});
-	} catch (error) {
+	} catch (_error) {
 		throw new Error(`[conventional-recommended-bump] Unable to determine next version`);
 	}
 

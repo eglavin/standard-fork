@@ -57,7 +57,7 @@ describe("git", () => {
 
 		try {
 			await git.add("non-existing-file");
-		} catch (_) {}
+		} catch (_error) {}
 
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/\[git add\] $/));
