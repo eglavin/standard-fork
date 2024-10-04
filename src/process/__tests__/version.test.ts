@@ -247,16 +247,18 @@ describe("version > getNextVersion", () => {
 		});
 	});
 
-	it.only("should recommend a minor bump", async () => {
-		const { config, logger, createCommits } = await createTestDir("version getNextVersion");
+	it("should recommend a minor bump", async () => {
+		const { config, logger, createAndCommitFile, createCommits } =
+			await createTestDir("version getNextVersion");
 
+		createAndCommitFile("TEST_CONTENT", "CHANGELOG.md");
 		createCommits(["feat: A feature commit"]);
 
 		const result = await getNextVersion(config, logger, "1.2.3");
 		expect(result).toEqual({
 			level: 1,
 			preMajor: false,
-			reason: "There are 0 BREAKING CHANGES and 0 features",
+			reason: "There are 0 BREAKING CHANGES and 1 features",
 			releaseType: "minor",
 			version: "1.3.0",
 		});
