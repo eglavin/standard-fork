@@ -39,14 +39,14 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./cli": {
+      "types": "./dist/cli.d.ts",
       "import": "./dist/cli.js",
-      "require": "./dist/cli.cjs",
-      "types": "./dist/cli.d.ts"
+      "require": "./dist/cli.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -75,7 +75,7 @@
     "test:cleanup": "rimraf -g ../fork-version.tests/*"
   },
   "dependencies": {
-    "bundle-require": "4.0.2",
+    "bundle-require": "5.0.0",
     "cheerio": "1.0.0-rc.12",
     "conventional-changelog": "5.1.0",
     "conventional-changelog-config-spec": "2.1.0",
@@ -83,7 +83,7 @@
     "conventional-recommended-bump": "9.0.0",
     "detect-indent": "7.0.1",
     "detect-newline": "4.0.1",
-    "esbuild": "0.20.2",
+    "esbuild": "0.24.0",
     "git-semver-tags": "7.0.1",
     "glob": "10.3.12",
     "joycon": "3.1.1",
@@ -103,7 +103,7 @@
     "globals": "15.10.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
-    "tsup": "8.0.2",
+    "tsup": "8.3.0",
     "typescript": "5.6.2",
     "typescript-eslint": "8.8.0",
     "vitest": "2.1.2",
