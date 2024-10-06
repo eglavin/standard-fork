@@ -76,7 +76,7 @@
   },
   "dependencies": {
     "bundle-require": "5.0.0",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0",
     "conventional-changelog": "5.1.0",
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "7.0.2",
@@ -88,8 +88,8 @@
     "glob": "10.3.12",
     "joycon": "3.1.1",
     "meow": "13.2.0",
-    "semver": "7.6.0",
-    "zod": "3.22.4"
+    "semver": "7.6.3",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@types/json-schema": "7.0.15",
@@ -107,6 +107,6 @@
     "typescript": "5.6.2",
     "typescript-eslint": "8.8.0",
     "vitest": "2.1.2",
-    "zod-to-json-schema": "3.22.5"
+    "zod-to-json-schema": "3.23.3"
   }
 }
