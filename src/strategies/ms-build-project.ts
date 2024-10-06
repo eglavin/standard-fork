@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
-import * as cheerio from "cheerio/lib/slim";
+import * as cheerio from "cheerio/slim";
 
 import { fileExists } from "../utils/file-state";
 import type { ForkConfig } from "../config/types";
@@ -32,7 +32,10 @@ export class MSBuildProject implements IFileManager {
 
 		if (fileExists(filePath)) {
 			const fileContents = readFileSync(filePath, "utf8");
-			const $ = cheerio.load(fileContents, { xmlMode: true, decodeEntities: false });
+			const $ = cheerio.load(fileContents, {
+				xmlMode: true,
+				xml: { decodeEntities: false },
+			});
 
 			const version = $("Project > PropertyGroup > Version").text();
 			if (version) {
@@ -49,7 +52,10 @@ export class MSBuildProject implements IFileManager {
 
 	public write(fileState: FileState, newVersion: string) {
 		const fileContents = readFileSync(fileState.path, "utf8");
-		const $ = cheerio.load(fileContents, { xmlMode: true, decodeEntities: false });
+		const $ = cheerio.load(fileContents, {
+			xmlMode: true,
+			xml: { decodeEntities: false },
+		});
 
 		$("Project > PropertyGroup > Version").text(newVersion);
 

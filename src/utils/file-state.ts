@@ -11,7 +11,7 @@ import { lstatSync } from "fs";
 export function fileExists(filePath: string): boolean {
 	try {
 		return lstatSync(filePath).isFile();
-	} catch (e) {
+	} catch (_error) {
 		return false;
 	}
 }

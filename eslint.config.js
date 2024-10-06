@@ -33,6 +33,7 @@ export default tsEslint.config(
 				1,
 				{
 					ignoreRestSiblings: true,
+					caughtErrorsIgnorePattern: "^_",
 					argsIgnorePattern: "^_",
 				},
 			],
