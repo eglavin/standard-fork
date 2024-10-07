@@ -8,48 +8,48 @@ export const helperText = `Usage:
   $ fork-version [options]
 
 Commands:
-  --help                Show this help message.
-  --version             Show the current version of fork-version.
-  --inspect-version     If set, fork-version will print the current project version and exit.
+  --help                           Show this help message.
+  --version                        Show the current version of fork-version.
+  --inspect-version                If set, fork-version will print the current project version and exit.
 
 Options:
-  --file, -F            List of the files to be updated. [Default: ["bower.json", "deno.json", "jsr.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
-  --glob, -G            Glob pattern to match files to be updated.
-  --path, -P            The path fork-version will run from. [Default: process.cwd()]
-  --changelog           Name of the changelog file. [Default: "CHANGELOG.md"]
-  --header              The header text for the changelog.
-  --tag-prefix          Specify a prefix for the created tag. [Default: "v"]
-  --pre-release         Mark this release as a pre-release.
-  --pre-release-tag     Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
-  --current-version     If set, fork-version will use this version instead of trying to determine one.
-  --next-version        If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+  --file, -F                       List of the files to be updated. [Default: ["bower.json", "deno.json", "jsr.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
+  --glob, -G                       Glob pattern to match files to be updated.
+  --path, -P                       The path fork-version will run from. [Default: process.cwd()]
+  --changelog                      Name of the changelog file. [Default: "CHANGELOG.md"]
+  --header                         The header text for the changelog.
+  --tag-prefix                     Specify a prefix for the created tag. [Default: "v"]
+  --pre-release                    Mark this release as a pre-release.
+  --pre-release-tag                Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
+  --current-version                If set, fork-version will use this version instead of trying to determine one.
+  --next-version                   If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
 
 Flags:
-  --allow-multiple-versions   Don't throw an error if multiple versions are found in the given files. [Default: true]
-  --commit-all                Commit all changes, not just files updated by fork-version.
-  --changelog-all             If this flag is set, all default commit types will be added to the changelog.
-  --debug                     Output debug information.
-  --dry-run                   No output will be written to disk or committed.
-  --silent                    Run without logging to the terminal.
-  --git-tag-fallback          If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
-  --sign                      If true, git will sign the commit with the systems GPG key.
-  --verify                    If true, git will run user defined git hooks before committing.
+  --allow-multiple-versions        Don't throw an error if multiple versions are found in the given files. [Default: true]
+  --commit-all                     Commit all changes, not just files updated by fork-version.
+  --changelog-all                  If this flag is set, all default commit types will be added to the changelog.
+  --debug                          Output debug information.
+  --dry-run                        No output will be written to disk or committed.
+  --silent                         Run without logging to the terminal.
+  --git-tag-fallback               If unable to find a version in the given files, fallback and attempt to use the latest git tag. [Default: true]
+  --sign                           If true, git will sign the commit with the systems GPG key.
+  --verify                         If true, git will run user defined git hooks before committing.
 
   To negate a flag you can prefix it with "no-", for example "--no-git-tag-fallback" will not fallback to the latest git tag.
 
 Skip Steps:
-  --skip-bump           Skip the version bump step.
-  --skip-changelog      Skip updating the changelog.
-  --skip-commit         Skip committing the changes.
-  --skip-tag            Skip tagging the commit.
+  --skip-bump                      Skip the version bump step.
+  --skip-changelog                 Skip updating the changelog.
+  --skip-commit                    Skip committing the changes.
+  --skip-tag                       Skip tagging the commit.
 
 Conventional Changelog Overrides:
-  --commit-url-format               Override the default commit URL format.
-  --compare-url-format              Override the default compare URL format.
-  --issue-url-format                Override the default issue URL format.
-  --user-url-format                 Override the default user URL format.
-  --release-commit-message-format   Override the default release commit message format.
-  --release-message-suffix          Add a suffix to the end of the release message.
+  --commit-url-format              Override the default commit URL format.
+  --compare-url-format             Override the default compare URL format.
+  --issue-url-format               Override the default issue URL format.
+  --user-url-format                Override the default user URL format.
+  --release-commit-message-format  Override the default release commit message format.
+  --release-message-suffix         Add a suffix to the end of the release message.
 
 Examples:
   $ fork-version
