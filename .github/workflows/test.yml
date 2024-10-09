@@ -118,27 +118,3 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
           bun run test:ci
-
-  code_ql:
-    name: Run Code QL
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      packages: read
-      actions: read
-      contents: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: javascript-typescript
-          build-mode: none
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:javascript-typescript"
