@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.4.96 (2024-10-20)
+
+
+### Docs
+
+* align cli helper text ([#73](https://github.com/eglavin/fork-version/issues/73)) ([ca13862](https://github.com/eglavin/fork-version/commit/ca1386244dc0ac4a9ed71904d4eaa1471d8d21a2))
+
+
 ## 1.4.95 (2024-10-06)
 
 
