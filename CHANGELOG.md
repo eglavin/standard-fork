@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.5.0 (2024-10-20)
+
+
+### Features
+
+* add release as support ([9ed9c19](https://github.com/eglavin/fork-version/commit/9ed9c19d8b1b8bad94fe01a7eb7559af02f8084f))
+
+
 ## 1.4.96 (2024-10-20)
 
 
