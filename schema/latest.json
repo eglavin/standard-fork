@@ -5,7 +5,7 @@
   "properties": {
     "inspectVersion": {
       "type": "boolean",
-      "description": "If set, fork-version will print the current version and exit."
+      "description": "If set, Fork-Version will print the current version and exit."
     },
     "files": {
       "type": "array",
@@ -20,7 +20,7 @@
     },
     "path": {
       "type": "string",
-      "description": "The path fork-version will run from. Defaults to \"process.cwd()\"."
+      "description": "The path Fork-Version will run from. Defaults to \"process.cwd()\"."
     },
     "changelog": {
       "type": "string",
@@ -43,11 +43,20 @@
     },
     "currentVersion": {
       "type": "string",
-      "description": "If set, fork-version will use this version instead of trying to determine one."
+      "description": "If set, Fork-Version will use this version instead of trying to determine one."
     },
     "nextVersion": {
       "type": "string",
-      "description": "If set, fork-version will attempt to update to this version, instead of incrementing using \"conventional-commit\"."
+      "description": "If set, Fork-Version will attempt to update to this version, instead of incrementing using \"conventional-commit\"."
+    },
+    "releaseAs": {
+      "type": "string",
+      "enum": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "description": "Release as increments the version by the specified level. Overrides the default behaviour of \"conventional-commit\"."
     },
     "allowMultipleVersions": {
       "type": "boolean",
@@ -55,7 +64,7 @@
     },
     "commitAll": {
       "type": "boolean",
-      "description": "Commit all changes, not just files updated by fork-version."
+      "description": "Commit all changes, not just files updated by Fork-Version."
     },
     "changelogAll": {
       "type": "boolean",

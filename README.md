@@ -86,24 +86,25 @@ Usage:
 
 Commands:
   --help                           Show this help message.
-  --version                        Show the current version of fork-version.
-  --inspect-version                If set, fork-version will print the current project version and exit.
+  --version                        Show the current version of Fork-Version.
+  --inspect-version                If set, Fork-Version will print the current project version and exit.
 
 Options:
   --file, -F                       List of the files to be updated. [Default: ["bower.json", "deno.json", "jsr.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
   --glob, -G                       Glob pattern to match files to be updated.
-  --path, -P                       The path fork-version will run from. [Default: process.cwd()]
+  --path, -P                       The path Fork-Version will run from. [Default: process.cwd()]
   --changelog                      Name of the changelog file. [Default: "CHANGELOG.md"]
   --header                         The header text for the changelog.
   --tag-prefix                     Specify a prefix for the created tag. [Default: "v"]
   --pre-release                    Mark this release as a pre-release.
   --pre-release-tag                Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
-  --current-version                If set, fork-version will use this version instead of trying to determine one.
-  --next-version                   If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+  --current-version                If set, Fork-Version will use this version instead of trying to determine one.
+  --next-version                   If set, Fork-Version will attempt to update to this version, instead of incrementing using "conventional-commit".
+  --release-as                     Release as increments the version by the specified level. [Choices: "major", "minor", "patch"]
 
 Flags:
   --allow-multiple-versions        Don't throw an error if multiple versions are found in the given files. [Default: true]
-  --commit-all                     Commit all changes, not just files updated by fork-version.
+  --commit-all                     Commit all changes, not just files updated by Fork-Version.
   --changelog-all                  If this flag is set, all default commit types will be added to the changelog.
   --debug                          Output debug information.
   --dry-run                        No output will be written to disk or committed.
@@ -232,33 +233,34 @@ Alternatively you can define your config using a key in your `package.json` file
 
 #### Config Properties
 
-| Property                                              | Type             | Default                 | Description                                                                                              |
-| :---------------------------------------------------- | :--------------- | :---------------------- | :------------------------------------------------------------------------------------------------------- |
-| inspectVersion                                        | boolean          | -                       | Print the current version and exits                                                                      |
-| [files](#configfiles)                                 | Array\<string>   | `["package.json", ...]` | List of the files to be updated                                                                          |
-| [glob](#configglob)                                   | string           | -                       | Glob pattern to match files to be updated                                                                |
-| path                                                  | string           | `process.cwd()`         | The path fork-version will run from                                                                      |
-| changelog                                             | string           | `CHANGELOG.md`          | Name of the changelog file                                                                               |
-| header                                                | string           | `# Changelog...`        | The header text for the changelog                                                                        |
-| [tagPrefix](#configtagprefix)                         | string           | `v`                     | Prefix for the created tag                                                                               |
-| [preRelease](#configprerelease)                       | string / boolean | -                       | Make a pre-release with optional label if given value is a string                                        |
-| currentVersion                                        | string           | -                       | Use this version instead of trying to determine one                                                      |
-| nextVersion                                           | string           | -                       | Attempt to update to this version, instead of incrementing using "conventional-commit"                   |
-| allowMultipleVersions                                 | boolean          | true                    | Don't throw an error if multiple versions are found in the given files.                                  |
-| commitAll                                             | boolean          | false                   | Commit all changes, not just files updated by fork-version                                               |
-| changelogAll                                          | boolean          | false                   | If this flag is set, all default commit types will be added to the changelog, not just `feat` and `fix`. |
-| debug                                                 | boolean          | false                   | Output debug information                                                                                 |
-| dryRun                                                | boolean          | false                   | No output will be written to disk or committed                                                           |
-| silent                                                | boolean          | false                   | Run without logging to the terminal                                                                      |
-| gitTagFallback                                        | boolean          | true                    | If unable to find a version in the given files, fallback and attempt to use the latest git tag           |
-| sign                                                  | boolean          | false                   | Sign the commit with the systems GPG key                                                                 |
-| verify                                                | boolean          | false                   | Run user defined git hooks before committing                                                             |
-| skipBump                                              | boolean          | false                   | Skip the bump step                                                                                       |
-| skipChangelog                                         | boolean          | false                   | Skip the changelog step                                                                                  |
-| skipCommit                                            | boolean          | false                   | Skip the commit step                                                                                     |
-| skipTag                                               | boolean          | false                   | Skip the tag step                                                                                        |
-| [changelogPresetConfig](#configchangelogpresetconfig) | object           | {}                      | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration             |
-| releaseMessageSuffix                                  | string           | -                       | Add a suffix to the end of the release message                                                           |
+| Property                                              | Type             | Default                 | Description                                                                                                         |
+| :---------------------------------------------------- | :--------------- | :---------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| inspectVersion                                        | boolean          | -                       | Print the current version and exits                                                                                 |
+| [files](#configfiles)                                 | Array\<string>   | `["package.json", ...]` | List of the files to be updated                                                                                     |
+| [glob](#configglob)                                   | string           | -                       | Glob pattern to match files to be updated                                                                           |
+| path                                                  | string           | `process.cwd()`         | The path Fork-Version will run from                                                                                 |
+| changelog                                             | string           | `CHANGELOG.md`          | Name of the changelog file                                                                                          |
+| header                                                | string           | `# Changelog...`        | The header text for the changelog                                                                                   |
+| [tagPrefix](#configtagprefix)                         | string           | `v`                     | Prefix for the created tag                                                                                          |
+| [preRelease](#configprerelease)                       | string / boolean | -                       | Make a pre-release with optional label if given value is a string                                                   |
+| currentVersion                                        | string           | -                       | Use this version instead of trying to determine one                                                                 |
+| nextVersion                                           | string           | -                       | Attempt to update to this version, instead of incrementing using "conventional-commit"                              |
+| [releaseAs](#configreleaseas)                         | string           | -                       | Release as increments the version by the specified level. Overrides the default behaviour of "conventional-commit". |
+| allowMultipleVersions                                 | boolean          | true                    | Don't throw an error if multiple versions are found in the given files.                                             |
+| commitAll                                             | boolean          | false                   | Commit all changes, not just files updated by Fork-Version                                                          |
+| changelogAll                                          | boolean          | false                   | If this flag is set, all default commit types will be added to the changelog, not just `feat` and `fix`.            |
+| debug                                                 | boolean          | false                   | Output debug information                                                                                            |
+| dryRun                                                | boolean          | false                   | No output will be written to disk or committed                                                                      |
+| silent                                                | boolean          | false                   | Run without logging to the terminal                                                                                 |
+| gitTagFallback                                        | boolean          | true                    | If unable to find a version in the given files, fallback and attempt to use the latest git tag                      |
+| sign                                                  | boolean          | false                   | Sign the commit with the systems GPG key                                                                            |
+| verify                                                | boolean          | false                   | Run user defined git hooks before committing                                                                        |
+| skipBump                                              | boolean          | false                   | Skip the bump step                                                                                                  |
+| skipChangelog                                         | boolean          | false                   | Skip the changelog step                                                                                             |
+| skipCommit                                            | boolean          | false                   | Skip the commit step                                                                                                |
+| skipTag                                               | boolean          | false                   | Skip the tag step                                                                                                   |
+| [changelogPresetConfig](#configchangelogpresetconfig) | object           | {}                      | Override defaults from the "conventional-changelog-conventionalcommits" preset configuration                        |
+| releaseMessageSuffix                                  | string           | -                       | Add a suffix to the end of the release message                                                                      |
 
 ##### config.files
 
@@ -322,6 +324,16 @@ Fork-Version uses [meow](https://github.com/sindresorhus/meow) to parse cli argu
 |:---------------------------------------|:----------------|
 | `fork-version --pre-release`           | `1.2.3-0`       |
 | `fork-version --pre-release-tag alpha` | `1.2.3-alpha-0` |
+
+##### config.releaseAs
+
+Allows you to override the default versioning behaviour of Fork-Version and increment by the specified level. For example if the current version is `1.2.3` and you run Fork-Version with one of the following arguments, the version will be incremented as shown below.
+
+| Example Value | Version Created |
+|:--------------|:----------------|
+| `major`       | 2.0.0           |
+| `minor`       | 1.3.0           |
+| `patch`       | 1.2.4           |
 
 ##### config.changelogPresetConfig
 

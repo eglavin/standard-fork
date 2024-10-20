@@ -280,4 +280,70 @@ describe("version > getNextVersion", () => {
 			version: "2.0.0",
 		});
 	});
+
+	it('should be able to set "releaseAs" as a major bump', async () => {
+		const { config, logger } = await createTestDir("version getNextVersion");
+		config.releaseAs = "major";
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({
+			level: -1,
+			preMajor: false,
+			reason: "User defined",
+			releaseType: "major",
+			version: "2.0.0",
+		});
+	});
+
+	it('should be able to set "releaseAs" as a minor bump', async () => {
+		const { config, logger } = await createTestDir("version getNextVersion");
+		config.releaseAs = "minor";
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({
+			level: -1,
+			preMajor: false,
+			reason: "User defined",
+			releaseType: "minor",
+			version: "1.3.0",
+		});
+	});
+
+	it('should be able to set "releaseAs" as a patch bump', async () => {
+		const { config, logger } = await createTestDir("version getNextVersion");
+		config.releaseAs = "patch";
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({
+			level: -1,
+			preMajor: false,
+			reason: "User defined",
+			releaseType: "patch",
+			version: "1.2.4",
+		});
+	});
+
+	it('should be able to set "releaseAs" and "preRelease" to create an alpha release', async () => {
+		const { config, logger } = await createTestDir("version getNextVersion");
+		config.releaseAs = "major";
+		config.preRelease = "alpha";
+
+		const result = await getNextVersion(config, logger, "1.2.3");
+		expect(result).toEqual({
+			level: -1,
+			preMajor: false,
+			reason: "User defined",
+			releaseType: "premajor",
+			version: "2.0.0-alpha.0",
+		});
+
+		const result2 = await getNextVersion(config, logger, "2.0.0-alpha.0");
+		expect(result2).toEqual({
+			level: -1,
+			preMajor: false,
+			reason: "User defined",
+			releaseType: "prerelease",
+			version: "2.0.0-alpha.1",
+		});
+	});
 });

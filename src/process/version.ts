@@ -104,16 +104,24 @@ export async function getNextVersion(
 
 	let recommendedBump: Awaited<ReturnType<typeof conventionalRecommendedBump>>;
 	try {
-		recommendedBump = await conventionalRecommendedBump({
-			preset: {
-				name: "conventionalcommits",
-				...config.changelogPresetConfig,
-				preMajor: isPreMajor,
-			},
-			path: config.path,
-			tagPrefix: config.tagPrefix,
-			cwd: config.path,
-		});
+		if (config.releaseAs) {
+			recommendedBump = {
+				releaseType: config.releaseAs,
+				level: -1,
+				reason: "User defined",
+			};
+		} else {
+			recommendedBump = await conventionalRecommendedBump({
+				preset: {
+					name: "conventionalcommits",
+					...config.changelogPresetConfig,
+					preMajor: isPreMajor,
+				},
+				path: config.path,
+				tagPrefix: config.tagPrefix,
+				cwd: config.path,
+			});
+		}
 	} catch (_error) {
 		throw new Error(`[conventional-recommended-bump] Unable to determine next version`);
 	}

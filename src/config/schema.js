@@ -73,12 +73,12 @@ export const ForkConfigSchema = z.object({
 	//
 
 	/**
-	 * If set, fork-version will print the current version and exit.
+	 * If set, Fork-Version will print the current version and exit.
 	 * @default false
 	 */
 	inspectVersion: z
 		.boolean()
-		.describe("If set, fork-version will print the current version and exit."),
+		.describe("If set, Fork-Version will print the current version and exit."),
 
 	// Options
 	//
@@ -103,13 +103,13 @@ export const ForkConfigSchema = z.object({
 	 */
 	glob: z.string().optional().describe("Glob pattern to match files to be updated."),
 	/**
-	 * The path fork-version will run from.
+	 * The path Fork-Version will run from.
 	 * @default
 	 * ```js
 	 * process.cwd()
 	 * ```
 	 */
-	path: z.string().describe('The path fork-version will run from. Defaults to "process.cwd()".'),
+	path: z.string().describe('The path Fork-Version will run from. Defaults to "process.cwd()".'),
 	/**
 	 * Name of the changelog file.
 	 * @default "CHANGELOG.md"
@@ -163,16 +163,16 @@ export const ForkConfigSchema = z.object({
 		.optional()
 		.describe("Make a pre-release with optional label if given value is a string."),
 	/**
-	 * If set, fork-version will use this version instead of trying to determine one.
+	 * If set, Fork-Version will use this version instead of trying to determine one.
 	 * @example "1.0.0"
 	 * @default undefined
 	 */
 	currentVersion: z
 		.string()
 		.optional()
-		.describe("If set, fork-version will use this version instead of trying to determine one."),
+		.describe("If set, Fork-Version will use this version instead of trying to determine one."),
 	/**
-	 * If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+	 * If set, Fork-Version will attempt to update to this version, instead of incrementing using "conventional-commit".
 	 * @example "2.0.0"
 	 * @default undefined
 	 */
@@ -180,7 +180,18 @@ export const ForkConfigSchema = z.object({
 		.string()
 		.optional()
 		.describe(
-			'If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".',
+			'If set, Fork-Version will attempt to update to this version, instead of incrementing using "conventional-commit".',
+		),
+	/**
+	 * Release as increments the version by the specified level. Overrides the default behaviour of "conventional-commit".
+	 * @example "major", "minor", "patch"
+	 * @default undefined
+	 */
+	releaseAs: z
+		.union([z.literal("major"), z.literal("minor"), z.literal("patch")])
+		.optional()
+		.describe(
+			'Release as increments the version by the specified level. Overrides the default behaviour of "conventional-commit".',
 		),
 
 	// Flags
@@ -194,10 +205,10 @@ export const ForkConfigSchema = z.object({
 		.boolean()
 		.describe("Don't throw an error if multiple versions are found in the given files."),
 	/**
-	 * Commit all changes, not just files updated by fork-version.
+	 * Commit all changes, not just files updated by Fork-Version.
 	 * @default false
 	 */
-	commitAll: z.boolean().describe("Commit all changes, not just files updated by fork-version."),
+	commitAll: z.boolean().describe("Commit all changes, not just files updated by Fork-Version."),
 	/**
 	 * By default the conventional-changelog spec will only add commit types of `feat` and `fix` to the generated changelog.
 	 * If this flag is set, all [default commit types](https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/238093090c14bd7d5151eb5316e635623ce633f9/versions/2.2.0/schema.json#L18)

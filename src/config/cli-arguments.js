@@ -9,24 +9,25 @@ export const helperText = `Usage:
 
 Commands:
   --help                           Show this help message.
-  --version                        Show the current version of fork-version.
-  --inspect-version                If set, fork-version will print the current project version and exit.
+  --version                        Show the current version of Fork-Version.
+  --inspect-version                If set, Fork-Version will print the current project version and exit.
 
 Options:
   --file, -F                       List of the files to be updated. [Default: ["bower.json", "deno.json", "jsr.json", "manifest.json", "npm-shrinkwrap.json", "package-lock.json", "package.json"]]
   --glob, -G                       Glob pattern to match files to be updated.
-  --path, -P                       The path fork-version will run from. [Default: process.cwd()]
+  --path, -P                       The path Fork-Version will run from. [Default: process.cwd()]
   --changelog                      Name of the changelog file. [Default: "CHANGELOG.md"]
   --header                         The header text for the changelog.
   --tag-prefix                     Specify a prefix for the created tag. [Default: "v"]
   --pre-release                    Mark this release as a pre-release.
   --pre-release-tag                Mark this release with a tagged pre-release. [Example: "alpha", "beta", "rc"]
-  --current-version                If set, fork-version will use this version instead of trying to determine one.
-  --next-version                   If set, fork-version will attempt to update to this version, instead of incrementing using "conventional-commit".
+  --current-version                If set, Fork-Version will use this version instead of trying to determine one.
+  --next-version                   If set, Fork-Version will attempt to update to this version, instead of incrementing using "conventional-commit".
+  --release-as                     Release as increments the version by the specified level. [Choices: "major", "minor", "patch"]
 
 Flags:
   --allow-multiple-versions        Don't throw an error if multiple versions are found in the given files. [Default: true]
-  --commit-all                     Commit all changes, not just files updated by fork-version.
+  --commit-all                     Commit all changes, not just files updated by Fork-Version.
   --changelog-all                  If this flag is set, all default commit types will be added to the changelog.
   --debug                          Output debug information.
   --dry-run                        No output will be written to disk or committed.
@@ -84,6 +85,7 @@ export function getCliArguments() {
 			preReleaseTag: { type: "string" },
 			currentVersion: { type: "string" },
 			nextVersion: { type: "string" },
+			releaseAs: { type: "string", choices: ["major", "minor", "patch"] },
 
 			// Flags
 			allowMultipleVersions: { type: "boolean" },
