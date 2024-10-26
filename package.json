@@ -97,6 +97,7 @@
     "git-semver-tags": "7.0.1",
     "glob": "10.3.12",
     "joycon": "3.1.1",
+    "jsonc-parser": "^3.3.1",
     "meow": "13.2.0",
     "semver": "7.6.3",
     "zod": "3.23.8"
