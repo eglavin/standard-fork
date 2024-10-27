@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.6.0 (2024-10-27)
+
+
+### Features
+
+* support deno.jsonc, jsr.jsonc ([#74](https://github.com/eglavin/fork-version/issues/74)) ([7506497](https://github.com/eglavin/fork-version/commit/7506497c7f49a4dd9b35f6787ce59a8d22592d3d))
+
+
 ## 1.5.0 (2024-10-20)
 
 
