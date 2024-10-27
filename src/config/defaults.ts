@@ -10,7 +10,9 @@ export const DEFAULT_CONFIG: ForkConfig = {
 		"package-lock.json",
 		"npm-shrinkwrap.json",
 		"jsr.json",
+		"jsr.jsonc",
 		"deno.json",
+		"deno.jsonc",
 		"manifest.json", // Chrome extensions
 		"bower.json",
 	],

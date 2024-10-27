@@ -14,6 +14,21 @@ describe("strategies json-package", () => {
 		expect(file?.version).toEqual("1.2.3");
 	});
 
+	it("should read a deno.jsonc file", async () => {
+		const { config, logger, createFile } = await createTestDir("strategies json-package");
+		const fileManager = new JSONPackage(config, logger);
+		createFile(
+			`{
+			    // This is a comment about the version
+				"version": "1.2.3", // Another comment about the version
+				"lock": true,
+			}`,
+			"deno.jsonc",
+		);
+		const file = fileManager.read("deno.jsonc");
+		expect(file?.version).toEqual("1.2.3");
+	});
+
 	it("should log a message if unable to read version", async () => {
 		const { config, logger, createJSONFile } = await createTestDir("strategies json-package");
 		const fileManager = new JSONPackage(config, logger);
@@ -85,6 +100,37 @@ describe("strategies json-package", () => {
 		expect(content.packages[""].version).toContain("4.5.6");
 	});
 
+	it("should write a deno.jsonc file", async () => {
+		const { relativeTo, config, logger, createFile } =
+			await createTestDir("strategies json-package");
+		const fileManager = new JSONPackage(config, logger);
+		createFile(
+			`{
+			    // This is a comment about the version
+				"version": "1.2.3", // Another comment about the version
+				"lock": true,
+			}`,
+			"deno.jsonc",
+		);
+		fileManager.write(
+			{
+				name: "deno.jsonc",
+				path: relativeTo("deno.jsonc"),
+				version: "1.2.3",
+			},
+			"4.5.6",
+		);
+
+		const content = readFileSync(relativeTo("deno.jsonc"), "utf8");
+		expect(content).toBe(
+			`{
+			    // This is a comment about the version
+				"version": "4.5.6", // Another comment about the version
+				"lock": true,
+			}`,
+		);
+	});
+
 	it("should write output with tabs if input file is using tabs", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
 			await createTestDir("strategies json-package");
@@ -112,6 +158,7 @@ describe("strategies json-package", () => {
 		// Supported
 		expect(fileManager.isSupportedFile("package.json")).toBe(true);
 		expect(fileManager.isSupportedFile("package-lock.json")).toBe(true);
+		expect(fileManager.isSupportedFile("deno.jsonc")).toBe(true);
 
 		// Not supported
 		expect(fileManager.isSupportedFile("package.json.lock")).toBe(false);
