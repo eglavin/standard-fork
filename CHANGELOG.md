@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.0 (2024-10-31)
+
+
+### Features
+
+* add yaml support ([#76](https://github.com/eglavin/fork-version/issues/76)) ([2a0d89e](https://github.com/eglavin/fork-version/commit/2a0d89e6174ef098ec7fc697ff05e24572b4a84c))
+
+
 ## 1.6.0 (2024-10-27)
 
 
