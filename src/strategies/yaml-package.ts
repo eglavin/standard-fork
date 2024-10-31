@@ -71,7 +71,7 @@ export class YAMLPackage implements IFileManager {
 		this.logger.warn(`[File Manager] Unable to determine PubSpec file: ${fileName}`);
 	}
 
-	write(fileState: FileState, newVersion: string): void {
+	public write(fileState: FileState, newVersion: string): void {
 		const fileContents = readFileSync(fileState.path, "utf8");
 		const yamlDocument = parseDocument(fileContents);
 
@@ -85,7 +85,7 @@ export class YAMLPackage implements IFileManager {
 		writeFileSync(fileState.path, yamlDocument.toString(), "utf8");
 	}
 
-	isSupportedFile(fileName: string): boolean {
+	public isSupportedFile(fileName: string): boolean {
 		return fileName.endsWith(".yaml") || fileName.endsWith(".yml");
 	}
 }
