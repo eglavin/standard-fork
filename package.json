@@ -98,6 +98,7 @@
     "jsonc-parser": "^3.3.1",
     "meow": "13.2.0",
     "semver": "7.6.3",
+    "yaml": "2.6.0",
     "zod": "3.23.8"
   },
   "devDependencies": {
