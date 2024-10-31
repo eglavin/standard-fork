@@ -1,4 +1,5 @@
 import { JSONPackage } from "./json-package";
+import { YAMLPackage } from "./yaml-package";
 import { PlainText } from "./plain-text";
 import { MSBuildProject } from "./ms-build-project";
 
@@ -21,6 +22,7 @@ export interface IFileManager {
 
 export class FileManager {
 	private JSONPackage: JSONPackage;
+	private YAMLPackage: YAMLPackage;
 	private PlainText: PlainText;
 	private MSBuildProject: MSBuildProject;
 
@@ -29,6 +31,7 @@ export class FileManager {
 		private logger: Logger,
 	) {
 		this.JSONPackage = new JSONPackage(config, logger);
+		this.YAMLPackage = new YAMLPackage(config, logger);
 		this.PlainText = new PlainText(config, logger);
 		this.MSBuildProject = new MSBuildProject(config, logger);
 	}
@@ -51,6 +54,10 @@ export class FileManager {
 
 		if (this.JSONPackage.isSupportedFile(_fileName)) {
 			return this.JSONPackage.read(fileName);
+		}
+
+		if (this.YAMLPackage.isSupportedFile(_fileName)) {
+			return this.YAMLPackage.read(fileName);
 		}
 
 		if (this.PlainText.isSupportedFile(_fileName)) {
@@ -83,6 +90,10 @@ export class FileManager {
 
 		if (this.JSONPackage.isSupportedFile(_fileName)) {
 			return this.JSONPackage.write(fileState, newVersion);
+		}
+
+		if (this.YAMLPackage.isSupportedFile(_fileName)) {
+			return this.YAMLPackage.write(fileState, newVersion);
 		}
 
 		if (this.PlainText.isSupportedFile(_fileName)) {

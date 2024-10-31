@@ -14,6 +14,27 @@ describe("strategies file-manager", () => {
 		expect(file?.version).toEqual("1.2.3");
 	});
 
+	it("should read yaml file when the file extension is .yaml", async () => {
+		const { config, logger, createFile } = await createTestDir("strategies file-manager");
+		const fileManager = new FileManager(config, logger);
+
+		createFile(
+			`name: wordionary
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.2.3+55 # Comment about the version number
+environment:
+  sdk: ^3.5.4
+
+`,
+			"pubspec.yaml",
+		);
+
+		const file = fileManager.read("pubspec.yaml");
+		expect(file?.version).toEqual("1.2.3");
+		expect(file?.builderNumber).toEqual("55");
+	});
+
 	it("should read plain text when file is version.txt", async () => {
 		const { config, logger, createAndCommitFile } = await createTestDir("strategies file-manager");
 		const fileManager = new FileManager(config, logger);
@@ -86,6 +107,37 @@ describe("strategies file-manager", () => {
 		);
 		const packageJSON = JSON.parse(readFileSync(relativeTo("package.json"), "utf-8"));
 		expect(packageJSON.version).toEqual("1.2.3");
+	});
+
+	it("should write yaml file when file extension is .yaml", async () => {
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("strategies yaml-package");
+		const fileManager = new FileManager(config, logger);
+
+		createAndCommitFile(
+			`name: wordionary
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.2.3+55 # Comment about the version number
+environment:
+  sdk: ^3.5.4
+`,
+			"pubspec.yaml",
+		);
+
+		fileManager.write(
+			{
+				name: "pubspec.yaml",
+				path: relativeTo("pubspec.yaml"),
+				version: "1.2.3",
+				builderNumber: 55,
+			},
+			"2.4.6",
+		);
+
+		const file = fileManager.read(relativeTo("pubspec.yaml"));
+		expect(file?.version).toEqual("2.4.6");
+		expect(file?.builderNumber).toEqual("55");
 	});
 
 	it("should write plain text when file is version.txt", async () => {

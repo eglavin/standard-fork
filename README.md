@@ -374,6 +374,7 @@ Adds a suffix to the end of the release message, useful to add a `[skip ci]` mes
 ### Supported File Types
 
 - [Json Package](#json-package)
+- [Yaml Package](#yaml-package)
 - [Plain Text](#plain-text)
 - [MS Build](#ms-build)
 
@@ -388,6 +389,20 @@ A json package is a json file which contains a version property, such as a npm p
   "private": false,
 }
 ```
+
+#### Yaml Package
+
+A yaml package is a yaml file which contains a version property, such as a dart pubspec.yaml file.
+
+```yaml
+name: wordionary
+description: "My project"
+publish_to: 'none'
+version: 1.2.3
+```
+
+> [!NOTE]
+> If you're using Fork-Version for a flutter project, Fork-Version will split the version and the builder number on the "+" character, the version will be updated and the builder number will be left as is.
 
 #### Plain Text
 
