@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.1 (2024-11-01)
+
+
+### Docs
+
+* update using npx section of readme ([737a72a](https://github.com/eglavin/fork-version/commit/737a72a8485a5e1035543245c498e9f76ce1050b))
+
+
 ## 1.7.0 (2024-10-31)
 
 
