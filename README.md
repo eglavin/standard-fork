@@ -41,18 +41,27 @@ Fork-Version can be configured either through a config file or by passing option
 
 ### Using `npx` (Recommended)
 
-To use Fork-Version with `npx` you can use the following command, by using `npx` you can also use Fork-Version without installation and on other projects including non node projects.
+To use Fork-Version without installation you can use `npx`:
 
 ```sh
 npx fork-version
 ```
 
+`npx` is a package runner which allows you to execute npm packages without installation, this can be useful when working on projects outside of the Node ecosystem.
+
 > [!NOTE]
-> If you want to use a specific version you can add a version tag to the end of the name.
+> By default `npx` will use the latest release, if you want to use a specific version you can add a version tag to the end of the name.
 >
-> Example: `npx fork-version@1.4.67`
+> Example: `npx fork-version@1.7.0`
 >
 > The version tag needs to match against one of the [published versions on npm](https://www.npmjs.com/package/fork-version?activeTab=versions).
+
+Alternatively you can use other npm compatible javascript runtime's:
+
+| Runner | Command                    |
+| ------ | -------------------------- |
+| bun    | `bunx fork-version`        |
+| deno   | `deno -A npm:fork-version` |
 
 ### Install Locally
 
@@ -63,6 +72,7 @@ To install the package locally to your project you can use one of the following 
 | npm             | `npm install fork-version --save-dev` |
 | yarn            | `yarn add fork-version --dev`         |
 | pnpm            | `pnpm add fork-version --save-dev`    |
+| bun             | `bun install fork-version --dev`      |
 
 You can then add the following entry to your package.json scripts section and use it like any other script you already use in your project.
 
