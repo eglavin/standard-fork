@@ -1,11 +1,11 @@
 import semver, { type ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 
-import { getLatestGitTagVersion } from "../utils/git-tag-version";
-import { getReleaseType } from "../utils/release-type";
-import type { ForkConfig } from "../config/types";
-import type { FileManager, FileState } from "../strategies/file-manager";
-import type { Logger } from "../utils/logger";
+import { getLatestGitTagVersion } from "../utils/git-tag-version.js";
+import { getReleaseType } from "../utils/release-type.js";
+import type { ForkConfig } from "../config/types.js";
+import type { FileManager, FileState } from "../strategies/file-manager.js";
+import type { Logger } from "../utils/logger.js";
 
 export interface CurrentVersion {
 	version: string;

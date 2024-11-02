@@ -13,8 +13,22 @@ export default tsEslint.config(
 				...globals.node,
 				...globals.es2021,
 			},
+		},
+	},
+	{
+		files: ["src/**/*.ts"],
+		languageOptions: {
 			parserOptions: {
-				project: true,
+				project: "./tsconfig.build.json",
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
+	},
+	{
+		files: ["src/**/*.test.ts"],
+		languageOptions: {
+			parserOptions: {
+				project: "./tsconfig.test.json",
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
@@ -43,5 +57,8 @@ export default tsEslint.config(
 		files: ["**/*.js"],
 		...tsEslint.configs.disableTypeChecked,
 	},
-	eslintPluginPrettierRecommended,
+	{
+		ignores: ["coverage/**/*", "dist/**/*", "node_modules/**/*"],
+		...eslintPluginPrettierRecommended,
+	},
 );

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { PlainText } from "../plain-text";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { PlainText } from "../plain-text.js";
 
 describe("strategies plain-text", () => {
 	it("should be able to read version from version.txt file", async () => {

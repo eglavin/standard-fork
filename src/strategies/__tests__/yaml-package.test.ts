@@ -1,5 +1,5 @@
-import { createTestDir } from "../../../tests/create-test-directory";
-import { YAMLPackage } from "../yaml-package";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { YAMLPackage } from "../yaml-package.js";
 
 describe("strategies yaml-package", () => {
 	it("should read a flutter pubspec.yaml file", async () => {

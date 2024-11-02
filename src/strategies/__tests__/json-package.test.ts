@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { JSONPackage } from "../json-package";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { JSONPackage } from "../json-package.js";
 
 describe("strategies json-package", () => {
 	it("should read a package.json file", async () => {

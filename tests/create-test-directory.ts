@@ -3,9 +3,9 @@ import { join } from "node:path";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { type ExecSyncOptionsWithBufferEncoding, execSync } from "node:child_process";
 
-import { getUserConfig } from "../src";
-import { Logger } from "../src/utils/logger";
-import { Git } from "../src/utils/git";
+import { getUserConfig } from "../src/config/user-config.js";
+import { Logger } from "../src/utils/logger.js";
+import { Git } from "../src/utils/git.js";
 
 export async function createTestDir(name: string) {
 	const testFolderLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.

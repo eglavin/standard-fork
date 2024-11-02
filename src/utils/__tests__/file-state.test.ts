@@ -1,5 +1,5 @@
-import { resolve } from "path";
-import { fileExists } from "../file-state";
+import { resolve } from "node:path";
+import { fileExists } from "../file-state.js";
 
 describe("file-state", () => {
 	it("should determine this file exists", () => {

@@ -1,10 +1,10 @@
-import { JSONPackage } from "./json-package";
-import { YAMLPackage } from "./yaml-package";
-import { PlainText } from "./plain-text";
-import { MSBuildProject } from "./ms-build-project";
+import { JSONPackage } from "./json-package.js";
+import { YAMLPackage } from "./yaml-package.js";
+import { PlainText } from "./plain-text.js";
+import { MSBuildProject } from "./ms-build-project.js";
 
-import type { ForkConfig } from "../config/types";
-import type { Logger } from "../utils/logger";
+import type { ForkConfig } from "../config/types.js";
+import type { Logger } from "../utils/logger.js";
 
 export interface FileState {
 	name: string;

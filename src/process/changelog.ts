@@ -2,9 +2,9 @@ import { resolve } from "node:path";
 import { writeFileSync, readFileSync } from "node:fs";
 import conventionalChangelog from "conventional-changelog";
 
-import { fileExists } from "../utils/file-state";
-import type { ForkConfig } from "../config/types";
-import type { Logger } from "../utils/logger";
+import { fileExists } from "../utils/file-state.js";
+import type { ForkConfig } from "../config/types.js";
+import type { Logger } from "../utils/logger.js";
 
 /**
  * Matches the following changelog header formats:

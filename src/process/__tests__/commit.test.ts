@@ -1,8 +1,8 @@
 import { writeFileSync } from "node:fs";
 import { execFile } from "node:child_process";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { commitChanges } from "../commit";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { commitChanges } from "../commit.js";
 
 describe("commit", () => {
 	it("should commit changed files", async () => {

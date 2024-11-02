@@ -4,12 +4,12 @@ import JoyCon from "joycon";
 import { bundleRequire } from "bundle-require";
 import { glob } from "glob";
 
-import { ForkConfigSchema } from "./schema";
-import { DEFAULT_CONFIG } from "./defaults";
-import { getCliArguments } from "./cli-arguments";
-import { getChangelogPresetConfig } from "./changelog-preset-config";
-import { detectGitHost } from "./detect-git-host";
-import type { Config, ForkConfig } from "./types";
+import { ForkConfigSchema } from "./schema.js";
+import { DEFAULT_CONFIG } from "./defaults.js";
+import { getCliArguments } from "./cli-arguments.js";
+import { getChangelogPresetConfig } from "./changelog-preset-config.js";
+import { detectGitHost } from "./detect-git-host.js";
+import type { Config, ForkConfig } from "./types.js";
 
 /**
  * Name of the key in the package.json file that contains the users configuration.
@@ -20,7 +20,7 @@ export async function getUserConfig(): Promise<ForkConfig> {
 	const cliArguments = getCliArguments();
 
 	const cwd = cliArguments.flags.path ? resolve(cliArguments.flags.path) : process.cwd();
-	const joycon = new JoyCon({
+	const joycon = new JoyCon.default({
 		cwd,
 		packageKey: PACKAGE_JSON_CONFIG_KEY,
 		stopDir: parse(cwd).root,

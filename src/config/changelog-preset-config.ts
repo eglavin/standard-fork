@@ -1,10 +1,10 @@
 import { z } from "zod";
 import conventionalChangelogConfigSpec from "conventional-changelog-config-spec";
 
-import { ChangelogPresetConfigTypeSchema, ChangelogPresetConfigSchema } from "./schema";
-import type { ForkConfig } from "./types";
-import type { getCliArguments } from "./cli-arguments";
-import type { DetectedGitHost } from "./detect-git-host";
+import { ChangelogPresetConfigTypeSchema, ChangelogPresetConfigSchema } from "./schema.js";
+import type { ForkConfig } from "./types.js";
+import type { getCliArguments } from "./cli-arguments.js";
+import type { DetectedGitHost } from "./detect-git-host.js";
 
 export function getChangelogPresetConfig(
 	mergedConfig: Partial<ForkConfig> | undefined,

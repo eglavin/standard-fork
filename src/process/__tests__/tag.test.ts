@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { tagChanges } from "../tag";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { tagChanges } from "../tag.js";
 
 describe("tagChanges", () => {
 	it("should create a tag", async () => {

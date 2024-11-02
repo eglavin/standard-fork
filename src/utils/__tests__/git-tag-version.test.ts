@@ -1,4 +1,4 @@
-import { getLatestGitTagVersion } from "../git-tag-version";
+import { getLatestGitTagVersion } from "../git-tag-version.js";
 
 // Need to mock the "git-semver-tags" package as testing it will
 // run git commands within the fork-version repository which will

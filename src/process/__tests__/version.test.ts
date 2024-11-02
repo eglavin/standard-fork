@@ -1,6 +1,6 @@
-import { createTestDir } from "../../../tests/create-test-directory";
-import { getCurrentVersion, getNextVersion } from "../version";
-import { FileManager } from "../../strategies/file-manager";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { getCurrentVersion, getNextVersion } from "../version.js";
+import { FileManager } from "../../strategies/file-manager.js";
 
 describe("version > getCurrentVersion", () => {
 	it("should be able to read package.json", async () => {

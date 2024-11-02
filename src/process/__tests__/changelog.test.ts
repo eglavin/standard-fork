@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { updateChangelog } from "../changelog";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { updateChangelog } from "../changelog.js";
 
 describe("changelog", () => {
 	it("should create changelog file", async () => {

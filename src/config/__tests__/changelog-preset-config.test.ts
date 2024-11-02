@@ -1,4 +1,4 @@
-import { getChangelogPresetConfig } from "../changelog-preset-config";
+import { getChangelogPresetConfig } from "../changelog-preset-config.js";
 
 describe("changelog-preset-config", () => {
 	it("should return the default config", () => {

@@ -35,28 +35,17 @@
   },
   "private": false,
   "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
       }
     },
     "./cli": {
       "import": {
         "types": "./dist/cli.d.ts",
         "default": "./dist/cli.js"
-      },
-      "require": {
-        "types": "./dist/cli.d.cts",
-        "default": "./dist/cli.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -71,14 +60,14 @@
   ],
   "scripts": {
     "fork-version": "node dist/cli.js",
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsc --project tsconfig.build.json --watch",
+    "build": "tsc --project tsconfig.build.json",
     "generate-json-schema": "node scripts/generate-json-schema.js",
     "update-readme-cli-options": "node scripts/update-readme-cli-options.js",
-    "lint": "eslint --fix \"src/**/*.ts\"",
-    "lint:check": "eslint \"src/**/*.ts\"",
-    "lint:format": "prettier --write \"src/**/*.ts\"",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint --fix \"src/**/*\"",
+    "lint:check": "eslint \"src/**/*\"",
+    "lint:format": "prettier --write \"src/**/*\"",
+    "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest",
     "test:cover": "vitest --coverage",
     "test:ci": "vitest run --coverage --no-file-parallelism",

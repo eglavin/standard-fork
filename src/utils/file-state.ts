@@ -1,4 +1,4 @@
-import { lstatSync } from "fs";
+import { lstatSync } from "node:fs";
 
 /**
  * Determine if a file exists.

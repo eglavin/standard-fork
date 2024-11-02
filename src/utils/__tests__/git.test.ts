@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { Git } from "../git";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { Git } from "../git.js";
 
 describe("git", () => {
 	it("should accept arguments", async () => {

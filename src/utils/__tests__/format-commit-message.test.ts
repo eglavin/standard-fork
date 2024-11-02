@@ -1,4 +1,4 @@
-import { formatCommitMessage } from "../format-commit-message";
+import { formatCommitMessage } from "../format-commit-message.js";
 
 describe("format-commit-message", () => {
 	it("should return message with the version replaced", () => {

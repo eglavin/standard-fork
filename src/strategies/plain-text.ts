@@ -1,10 +1,10 @@
 import { resolve } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 
-import { fileExists } from "../utils/file-state";
-import type { ForkConfig } from "../config/types";
-import type { Logger } from "../utils/logger";
-import type { FileState, IFileManager } from "./file-manager";
+import { fileExists } from "../utils/file-state.js";
+import type { ForkConfig } from "../config/types.js";
+import type { Logger } from "../utils/logger.js";
+import type { FileState, IFileManager } from "./file-manager.js";
 
 /**
  * A plain text file will have just the version as the content.

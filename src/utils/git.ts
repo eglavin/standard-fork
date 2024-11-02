@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
-import type { ForkConfig } from "../config/types";
-import type { Logger } from "./logger";
+import type { ForkConfig } from "../config/types.js";
+import type { Logger } from "./logger.js";
 
 export class Git {
 	constructor(

@@ -1,4 +1,4 @@
-import { getReleaseType } from "../release-type";
+import { getReleaseType } from "../release-type.js";
 
 describe("release-type", () => {
 	it("should return the given release type when no tag given", () => {

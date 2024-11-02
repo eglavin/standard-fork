@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
-import { FileManager } from "../file-manager";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { FileManager } from "../file-manager.js";
 
 describe("strategies file-manager", () => {
 	it("should read json when file extension is .json", async () => {

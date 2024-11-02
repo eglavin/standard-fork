@@ -1,7 +1,7 @@
-import { formatCommitMessage } from "../utils/format-commit-message";
-import type { ForkConfig } from "../config/types";
-import type { Logger } from "../utils/logger";
-import type { Git } from "../utils/git";
+import { formatCommitMessage } from "../utils/format-commit-message.js";
+import type { ForkConfig } from "../config/types.js";
+import type { Logger } from "../utils/logger.js";
+import type { Git } from "../utils/git.js";
 
 export async function tagChanges(
 	config: ForkConfig,

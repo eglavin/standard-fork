@@ -1,4 +1,4 @@
-import { defineConfig } from "../user-config";
+import { defineConfig } from "../user-config.js";
 
 describe("user-config", () => {
 	it("should return the given config", () => {

@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { ForkConfigSchema } from "./schema";
+import type { ForkConfigSchema } from "./schema.js";
 
 export type ForkConfig = z.infer<typeof ForkConfigSchema>;
 

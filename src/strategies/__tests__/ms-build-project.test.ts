@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
-import { createTestDir } from "../../../tests/create-test-directory";
-import { MSBuildProject } from "../ms-build-project";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { MSBuildProject } from "../ms-build-project.js";
 
 describe("strategies ms-build-project", () => {
 	it("should read version from csproj file", async () => {

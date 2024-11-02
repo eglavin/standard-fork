@@ -3,15 +3,15 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { getUserConfig } from "./config/user-config";
-import { Logger } from "./utils/logger";
-import { FileManager } from "./strategies/file-manager";
-import { Git } from "./utils/git";
+import { getUserConfig } from "./config/user-config.js";
+import { Logger } from "./utils/logger.js";
+import { FileManager } from "./strategies/file-manager.js";
+import { Git } from "./utils/git.js";
 
-import { getCurrentVersion, getNextVersion } from "./process/version";
-import { updateChangelog } from "./process/changelog";
-import { commitChanges } from "./process/commit";
-import { tagChanges } from "./process/tag";
+import { getCurrentVersion, getNextVersion } from "./process/version.js";
+import { updateChangelog } from "./process/changelog.js";
+import { commitChanges } from "./process/commit.js";
+import { tagChanges } from "./process/tag.js";
 
 async function runFork() {
 	const startTime = Date.now();
@@ -23,7 +23,7 @@ async function runFork() {
 	const git = new Git(config, logger);
 
 	logger.log(`Running fork-version - ${new Date().toUTCString()}`);
-	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
+	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : ""); //
 
 	/**
 	 * Get the list of files to update, excluding any files that are ignored by git.

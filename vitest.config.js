@@ -10,5 +10,8 @@ export default defineConfig({
 			all: true,
 			reporter: ["cobertura", "html", "text"],
 		},
+		typecheck: {
+			tsconfig: "tsconfig.test.json",
+		},
 	},
 });

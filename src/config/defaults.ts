@@ -1,4 +1,4 @@
-import type { ForkConfig } from "./types";
+import type { ForkConfig } from "./types.js";
 
 export const DEFAULT_CONFIG: ForkConfig = {
 	// Commands

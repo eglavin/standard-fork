@@ -1,6 +1,6 @@
 import { execFileSync } from "child_process";
-import { createTestDir } from "../../../tests/create-test-directory";
-import { detectGitHost } from "../detect-git-host";
+import { createTestDir } from "../../../tests/create-test-directory.js";
+import { detectGitHost } from "../detect-git-host.js";
 
 describe("detect-git-host", () => {
 	it("should detect a https azure git host", async () => {
