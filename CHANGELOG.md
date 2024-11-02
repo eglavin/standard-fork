@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.2 (2024-11-02)
+
+
+### Chore
+
+* bump pnpm dependency ([#77](https://github.com/eglavin/fork-version/issues/77)) ([158c70c](https://github.com/eglavin/fork-version/commit/158c70c06311fb624be03b522c06730f8f314d37))
+
+
 ## 1.7.1 (2024-11-01)
 
 
