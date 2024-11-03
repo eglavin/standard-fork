@@ -33,7 +33,7 @@ export class PlainText implements IFileManager {
 			};
 		}
 
-		this.logger.warn(`[File Manager] Unable to determine plain text: ${fileName}`);
+		this.logger.warn(`[File Manager] Unable to determine plain text version: ${fileName}`);
 	}
 
 	public write(fileState: FileState, newVersion: string) {

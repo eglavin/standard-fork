@@ -1,13 +1,13 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 import { createTestDir } from "../../../tests/create-test-directory";
 import { Git } from "../git";
 
 describe("git", () => {
 	it("should accept arguments", async () => {
-		const { testFolder, config, logger, createCommits, createJSONFile } =
+		const { testFolder, config, createCommits, createJSONFile } =
 			await createTestDir("execute-file");
-		const git = new Git(config, logger);
+		const git = new Git(config);
 
 		createJSONFile();
 		createCommits();
@@ -19,10 +19,10 @@ describe("git", () => {
 	});
 
 	it("should not execute if dryRun is enabled", async () => {
-		const { testFolder, config, logger, createCommits, createJSONFile } =
+		const { testFolder, config, createCommits, createJSONFile } =
 			await createTestDir("execute-file");
 		config.dryRun = true;
-		const git = new Git(config, logger);
+		const git = new Git(config);
 
 		createJSONFile();
 		createCommits();
@@ -33,40 +33,22 @@ describe("git", () => {
 		expect(log).not.toMatch(/test: test arguments works/);
 	});
 
-	it("should log if debug is enabled", async () => {
-		const { config, logger, createCommits, createJSONFile } = await createTestDir("execute-file");
-		const git = new Git(config, logger);
+	it("should log if error is thrown", async () => {
+		const { config, createCommits, createJSONFile } = await createTestDir("execute-file");
+		const git = new Git(config);
 
 		createJSONFile();
 		createCommits();
 
-		await git.commit("--allow-empty", "-m", "test: test arguments works");
-
-		expect(logger.debug).toHaveBeenCalledTimes(1);
-		expect(logger.debug).toHaveBeenCalledWith(
-			expect.stringMatching(/\[git commit\] --allow-empty -m test: test arguments works$/),
+		expect(async () => await git.add("non-existing-file")).rejects.toThrowError(
+			"Command failed: git add non-existing-file\nfatal: pathspec 'non-existing-file' did not match any files",
 		);
 	});
 
-	it("should log if error is thrown", async () => {
-		const { config, logger, createCommits, createJSONFile } = await createTestDir("execute-file");
-		const git = new Git(config, logger);
-
-		createJSONFile();
-		createCommits();
-
-		try {
-			await git.add("non-existing-file");
-		} catch (_error) {}
-
-		expect(logger.error).toHaveBeenCalledTimes(1);
-		expect(logger.error).toHaveBeenCalledWith(expect.stringMatching(/\[git add\] $/));
-	});
-
 	it("should check if a file is ignored by git", async () => {
-		const { config, logger, createAndCommitFile, createFile, createDirectory } =
+		const { config, createAndCommitFile, createFile, createDirectory } =
 			await createTestDir("execute-file");
-		const git = new Git(config, logger);
+		const git = new Git(config);
 
 		createAndCommitFile(
 			`

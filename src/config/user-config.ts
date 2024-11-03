@@ -87,7 +87,7 @@ async function loadConfigFile(configFilePath: string | null) {
 			) {
 				const parsed = ForkConfigSchema.partial().safeParse(fileContent[PACKAGE_JSON_CONFIG_KEY]);
 				if (!parsed.success) {
-					throw parsed.error;
+					throw new Error(`Validation error in: ${configFilePath}`, { cause: parsed.error });
 				}
 				return parsed.data;
 			}
@@ -97,7 +97,7 @@ async function loadConfigFile(configFilePath: string | null) {
 
 		const parsed = ForkConfigSchema.partial().safeParse(fileContent);
 		if (!parsed.success) {
-			throw parsed.error;
+			throw new Error(`Validation error in: ${configFilePath}`, { cause: parsed.error });
 		}
 		return parsed.data;
 	}
@@ -107,7 +107,7 @@ async function loadConfigFile(configFilePath: string | null) {
 
 	const parsed = ForkConfigSchema.partial().safeParse(fileContent.mod.default || fileContent.mod);
 	if (!parsed.success) {
-		throw parsed.error;
+		throw new Error(`Validation error in: ${configFilePath}`, { cause: parsed.error });
 	}
 	return parsed.data;
 }

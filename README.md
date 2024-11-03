@@ -86,6 +86,16 @@ You can then add the following entry to your package.json scripts section and us
 
 For example if you use npm you can now use `npm run release` to run Fork-Version.
 
+### Exit Codes
+
+When ran as a cli tool Fork-Version will exit with one of the following exit codes:
+
+| Exit Code | Description                  |
+| --------- | ---------------------------- |
+| 0         | Success                      |
+| 1         | General Error                |
+| 3         | Config File Validation Error |
+
 ### Command Line Options
 
 <!-- START COMMAND LINE OPTIONS -->
@@ -138,6 +148,11 @@ Conventional Changelog Overrides:
   --user-url-format                Override the default user URL format.
   --release-commit-message-format  Override the default release commit message format.
   --release-message-suffix         Add a suffix to the end of the release message.
+
+Exit Codes:
+  0: Success
+  1: General Error
+  3: Config File Validation Error
 
 Examples:
   $ fork-version

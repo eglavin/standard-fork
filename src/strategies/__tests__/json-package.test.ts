@@ -38,7 +38,7 @@ describe("strategies json-package", () => {
 		const file = fileManager.read("package.json");
 		expect(file).toBeUndefined();
 		expect(logger.warn).toBeCalledWith(
-			"[File Manager] Unable to determine json package: package.json",
+			"[File Manager] Unable to determine json version: package.json",
 		);
 	});
 

@@ -14,7 +14,7 @@ export async function commitChanges(
 	nextVersion: string,
 ): Promise<void> {
 	if (config.skipCommit) {
-		logger.log("Skip commit");
+		logger.warn("Skip commit");
 		return;
 	}
 

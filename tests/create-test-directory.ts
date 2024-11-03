@@ -54,7 +54,7 @@ export async function createTestDir(name: string) {
 	logger.error = vi.fn();
 	logger.debug = vi.fn();
 
-	const git = new Git(config, logger);
+	const git = new Git(config);
 
 	return {
 		testFolder,

@@ -42,7 +42,7 @@ describe("strategies ms-build-project", () => {
 		const file = fileManager.read("API.csproj");
 		expect(file).toBeUndefined();
 		expect(logger.warn).toBeCalledWith(
-			"[File Manager] Unable to determine ms-build package: API.csproj",
+			"[File Manager] Unable to determine ms-build version: API.csproj",
 		);
 	});
 
