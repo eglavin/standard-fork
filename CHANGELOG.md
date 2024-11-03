@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.3 (2024-11-03)
+
+
+### Refactor
+
+* general cleanup of error message handling ([#78](https://github.com/eglavin/fork-version/issues/78)) ([a83ff13](https://github.com/eglavin/fork-version/commit/a83ff13443d50edfba18c5502d9c38e834e3236d))
+
+
 ## 1.7.2 (2024-11-02)
 
 
