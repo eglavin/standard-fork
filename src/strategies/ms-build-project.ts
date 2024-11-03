@@ -46,7 +46,7 @@ export class MSBuildProject implements IFileManager {
 				};
 			}
 
-			this.logger.warn(`[File Manager] Unable to determine ms-build package: ${fileName}`);
+			this.logger.warn(`[File Manager] Unable to determine ms-build version: ${fileName}`);
 		}
 	}
 

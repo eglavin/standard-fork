@@ -2,6 +2,7 @@
 
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { ZodError } from "zod";
 
 import { getUserConfig } from "./config/user-config";
 import { Logger } from "./utils/logger";
@@ -20,22 +21,12 @@ async function runFork() {
 
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
-	const git = new Git(config, logger);
+	const git = new Git(config);
 
 	logger.log(`Running fork-version - ${new Date().toUTCString()}`);
-	logger.log(config.dryRun ? "[DRY RUN] No changes will be written to disk.\n" : "");
+	logger.warn(config.dryRun ? "[Dry Run] No changes will be written to disk.\n" : "");
 
-	/**
-	 * Get the list of files to update, excluding any files that are ignored by git.
-	 */
-	const filesToUpdate: string[] = [];
-	for (const file of config.files) {
-		if (!(await git.shouldIgnore(file))) {
-			filesToUpdate.push(file);
-		}
-	}
-
-	const current = await getCurrentVersion(config, logger, fileManager, filesToUpdate);
+	const current = await getCurrentVersion(config, logger, git, fileManager, config.files);
 	const next = await getNextVersion(config, logger, current.version);
 
 	logger.log("Updating Files: ");
@@ -83,4 +74,25 @@ async function runFork() {
 	return result;
 }
 
-runFork();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+runFork().catch((error: Error | any) => {
+	if (error instanceof Error) {
+		// If the error is a ZodError, print the keys that failed validation
+		if (error.cause instanceof ZodError) {
+			console.error(error.message);
+			for (const err of error.cause.errors) {
+				console.log(`${err.path} => ${err.message}`);
+			}
+			process.exit(3);
+		}
+
+		if (error.stack) {
+			console.error(error.stack);
+		} else {
+			console.error(error.message);
+		}
+	} else {
+		console.error(error);
+	}
+	process.exit(1);
+});

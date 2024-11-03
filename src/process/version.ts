@@ -6,6 +6,7 @@ import { getReleaseType } from "../utils/release-type";
 import type { ForkConfig } from "../config/types";
 import type { FileManager, FileState } from "../strategies/file-manager";
 import type { Logger } from "../utils/logger";
+import type { Git } from "../utils/git";
 
 export interface CurrentVersion {
 	version: string;
@@ -15,6 +16,7 @@ export interface CurrentVersion {
 export async function getCurrentVersion(
 	config: ForkConfig,
 	logger: Logger,
+	git: Git,
 	fileManager: FileManager,
 	filesToUpdate: string[],
 ): Promise<CurrentVersion> {
@@ -22,16 +24,18 @@ export async function getCurrentVersion(
 	const versions = new Set<string>();
 
 	for (const file of filesToUpdate) {
-		const fileState = fileManager.read(file);
+		if (await git.shouldIgnore(file)) {
+			logger.debug(`[Git Ignored] ${file}`);
+			continue;
+		}
 
+		const fileState = fileManager.read(file);
 		if (fileState) {
 			files.push(fileState);
 
-			if (config.currentVersion) {
-				continue;
+			if (!config.currentVersion) {
+				versions.add(fileState.version);
 			}
-
-			versions.add(fileState.version);
 		}
 	}
 
@@ -43,7 +47,7 @@ export async function getCurrentVersion(
 	if (versions.size === 0 && config.gitTagFallback) {
 		const version = await getLatestGitTagVersion(config.tagPrefix);
 		if (version) {
-			logger.log(`[Version] Using git tag fallback.`);
+			logger.warn(`Using latest git tag fallback`);
 			versions.add(version);
 		}
 	}
@@ -54,8 +58,9 @@ export async function getCurrentVersion(
 		if (!config.allowMultipleVersions) {
 			throw new Error("Found multiple versions");
 		}
-		logger.warn("[WARNING] Found multiple versions, using the first one.");
-		logger.log(`Versions: ${Array.from(versions).join(", ")}`);
+		logger.warn(
+			`Found multiple versions (${Array.from(versions).join(", ")}), using the higher semver version`,
+		);
 	}
 
 	const currentVersion = semver.rsort(Array.from(versions))[0];
@@ -87,7 +92,7 @@ export async function getNextVersion(
 	currentVersion: string,
 ): Promise<NextVersion> {
 	if (config.skipBump) {
-		logger.log("Skip bump, using current version as next version");
+		logger.warn(`Skip bump, using ${currentVersion} as the next version`);
 		return {
 			version: currentVersion,
 		};
@@ -103,14 +108,14 @@ export async function getNextVersion(
 	const isPreMajor = semver.lt(currentVersion, "1.0.0");
 
 	let recommendedBump: Awaited<ReturnType<typeof conventionalRecommendedBump>>;
-	try {
-		if (config.releaseAs) {
-			recommendedBump = {
-				releaseType: config.releaseAs,
-				level: -1,
-				reason: "User defined",
-			};
-		} else {
+	if (config.releaseAs) {
+		recommendedBump = {
+			releaseType: config.releaseAs,
+			level: -1,
+			reason: "User defined",
+		};
+	} else {
+		try {
 			recommendedBump = await conventionalRecommendedBump({
 				preset: {
 					name: "conventionalcommits",
@@ -121,9 +126,11 @@ export async function getNextVersion(
 				tagPrefix: config.tagPrefix,
 				cwd: config.path,
 			});
+		} catch (cause) {
+			throw new Error(`[conventional-recommended-bump] Unable to determine next version`, {
+				cause,
+			});
 		}
-	} catch (_error) {
-		throw new Error(`[conventional-recommended-bump] Unable to determine next version`);
 	}
 
 	if (recommendedBump.releaseType) {
@@ -132,21 +139,20 @@ export async function getNextVersion(
 			currentVersion,
 			config.preRelease,
 		);
+		const nextVersion =
+			semver.inc(
+				currentVersion,
+				releaseType,
+				typeof config.preRelease === "string" ? config.preRelease : undefined,
+			) ?? "";
 
-		const state: NextVersion = {
+		logger.log(`Next version: ${nextVersion} (${releaseType})`);
+		return {
 			...recommendedBump,
 			preMajor: isPreMajor,
 			releaseType,
-			version:
-				semver.inc(
-					currentVersion,
-					releaseType,
-					typeof config.preRelease === "string" ? config.preRelease : undefined,
-				) ?? "",
+			version: nextVersion,
 		};
-
-		logger.log(`Next version: ${state.version} (${state.releaseType})`);
-		return state;
 	}
 
 	throw new Error("Unable to find next version");

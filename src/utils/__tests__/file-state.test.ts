@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { resolve } from "node:path";
 import { fileExists } from "../file-state";
 
 describe("file-state", () => {

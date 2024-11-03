@@ -59,9 +59,8 @@ function getNewReleaseContent(
 				path: config.path,
 			},
 		)
-			.on("error", (error) => {
-				logger.error("[conventional-changelog] Unable to parse changes");
-				throw error;
+			.on("error", (cause) => {
+				throw new Error("[conventional-changelog] Unable to parse changes", { cause });
 			})
 			.on("data", (chunk) => {
 				newContent += chunk.toString();
@@ -78,7 +77,7 @@ export async function updateChangelog(
 	nextVersion: string,
 ): Promise<void> {
 	if (config.skipChangelog) {
-		logger.log("Skip changelog update");
+		logger.warn("Skip changelog update");
 		return;
 	}
 
@@ -89,15 +88,17 @@ export async function updateChangelog(
 
 	// Create the changelog file if it doesn't exist
 	const changelogPath = resolve(config.path, config.changelog);
+
 	if (!config.dryRun && !fileExists(changelogPath)) {
-		logger.log(`Creating Changelog file: ${changelogPath}`);
+		logger.log(`Creating Changelog: ${changelogPath}`);
 		writeFileSync(changelogPath, "\n", "utf8");
+	} else {
+		logger.log(`Updating Changelog: ${changelogPath}`);
 	}
 
 	const oldContent = getOldReleaseContent(changelogPath, fileExists(changelogPath));
 	const newContent = await getNewReleaseContent(config, logger, nextVersion);
 
-	logger.log(`Updating Changelog: ${changelogPath}`);
 	if (!config.dryRun && newContent) {
 		writeFileSync(
 			changelogPath,

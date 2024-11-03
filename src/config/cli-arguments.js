@@ -52,6 +52,11 @@ Conventional Changelog Overrides:
   --release-commit-message-format  Override the default release commit message format.
   --release-message-suffix         Add a suffix to the end of the release message.
 
+Exit Codes:
+  0: Success
+  1: General Error
+  3: Config File Validation Error
+
 Examples:
   $ fork-version
     Run fork-version in the current directory with default options.

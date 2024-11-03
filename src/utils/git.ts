@@ -1,61 +1,54 @@
 import { execFile } from "node:child_process";
 import type { ForkConfig } from "../config/types";
-import type { Logger } from "./logger";
 
 export class Git {
-	constructor(
-		private config: ForkConfig,
-		private logger: Logger,
-	) {
+	constructor(private config: Pick<ForkConfig, "path" | "dryRun">) {
 		this.add = this.add.bind(this);
 		this.commit = this.commit.bind(this);
 		this.tag = this.tag.bind(this);
+		this.shouldIgnore = this.shouldIgnore.bind(this);
 		this.currentBranch = this.currentBranch.bind(this);
 	}
 
-	public add(...args: (string | undefined)[]): Promise<string> {
+	public async add(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
-			return Promise.resolve("");
+			return "";
 		}
 
 		return this.execGit("add", args.filter(Boolean) as string[]);
 	}
 
-	public commit(...args: (string | undefined)[]): Promise<string> {
+	public async commit(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
-			return Promise.resolve("");
+			return "";
 		}
 
 		return this.execGit("commit", args.filter(Boolean) as string[]);
 	}
 
-	public tag(...args: (string | undefined)[]): Promise<string> {
+	public async tag(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
-			return Promise.resolve("");
+			return "";
 		}
 
 		return this.execGit("tag", args.filter(Boolean) as string[]);
 	}
 
-	public shouldIgnore(file: string): Promise<boolean> {
-		return new Promise((onResolve) => {
-			execFile("git", ["check-ignore", "--no-index", file], { cwd: this.config.path }, (error) => {
-				if (error) {
-					onResolve(false);
-				}
+	public async shouldIgnore(file: string): Promise<boolean> {
+		try {
+			await this.execGit("check-ignore", ["--no-index", file]);
 
-				onResolve(true);
-			});
-		});
+			return true;
+		} catch (_error) {
+			return false;
+		}
 	}
 
 	public async currentBranch(): Promise<string> {
 		return (await this.execGit("rev-parse", ["--abbrev-ref", "HEAD"])).trim();
 	}
 
-	private execGit(command: string, args: string[]): Promise<string> {
-		this.logger.debug(`[git ${command}] ${args.join(" ")}`);
-
+	private async execGit(command: string, args: string[]): Promise<string> {
 		return new Promise((onResolve, onReject) => {
 			execFile(
 				"git",
@@ -65,11 +58,10 @@ export class Git {
 				},
 				(error, stdout, stderr) => {
 					if (error) {
-						this.logger.error(`[git ${command}] `);
 						onReject(error);
+					} else {
+						onResolve(stdout ? stdout : stderr);
 					}
-
-					onResolve(stdout ? stdout : stderr);
 				},
 			);
 		});

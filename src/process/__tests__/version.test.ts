@@ -4,7 +4,7 @@ import { FileManager } from "../../strategies/file-manager";
 
 describe("version > getCurrentVersion", () => {
 	it("should be able to read package.json", async () => {
-		const { relativeTo, config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { relativeTo, config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		const fileManager = new FileManager(config, logger);
@@ -12,7 +12,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager, config.files);
+		const result = await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -27,7 +27,7 @@ describe("version > getCurrentVersion", () => {
 	});
 
 	it("should determine the package is private", async () => {
-		const { relativeTo, config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { relativeTo, config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		const fileManager = new FileManager(config, logger);
@@ -35,7 +35,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3", private: true });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager, config.files);
+		const result = await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -50,7 +50,7 @@ describe("version > getCurrentVersion", () => {
 	});
 
 	it("should be able to read package-lock.json", async () => {
-		const { relativeTo, config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { relativeTo, config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		const fileManager = new FileManager(config, logger);
@@ -66,7 +66,7 @@ describe("version > getCurrentVersion", () => {
 		);
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager, config.files);
+		const result = await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -87,7 +87,7 @@ describe("version > getCurrentVersion", () => {
 	});
 
 	it("should throw an error if multiple versions found and not allowing multiple versions", async () => {
-		const { config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		const fileManager = new FileManager(config, logger);
@@ -97,22 +97,22 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "3.2.1" }, "package-lock.json");
 		createCommits();
 
-		expect(getCurrentVersion(config, logger, fileManager, config.files)).rejects.toThrow(
+		expect(getCurrentVersion(config, logger, git, fileManager, config.files)).rejects.toThrow(
 			"Found multiple versions",
 		);
 	});
 
 	it("should throw an error if no version found", async () => {
-		const { config, logger } = await createTestDir("getCurrentVersion");
+		const { config, logger, git } = await createTestDir("getCurrentVersion");
 		const fileManager = new FileManager(config, logger);
 
-		expect(getCurrentVersion(config, logger, fileManager, config.files)).rejects.toThrow(
+		expect(getCurrentVersion(config, logger, git, fileManager, config.files)).rejects.toThrow(
 			"Unable to find current version",
 		);
 	});
 
 	it("should take the latest version if multiple found", async () => {
-		const { config, logger, createJSONFile, createCommits } =
+		const { config, logger, git, createJSONFile, createCommits } =
 			await createTestDir("getCurrentVersion");
 		const fileManager = new FileManager(config, logger);
 
@@ -120,13 +120,13 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "3.2.1" }, "package-lock.json");
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager, config.files);
+		const result = await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(result.files.map((f) => f.version)).toEqual(["1.2.3", "3.2.1"]);
 		expect(result.version).toEqual("3.2.1");
 	});
 
 	it("should be able to define the current version using the config", async () => {
-		const { relativeTo, config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { relativeTo, config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		config.currentVersion = "3.2.1";
@@ -135,7 +135,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		const result = await getCurrentVersion(config, logger, fileManager, config.files);
+		const result = await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(result).toEqual({
 			files: [
 				{
@@ -153,7 +153,7 @@ describe("version > getCurrentVersion", () => {
 		const spyOnConsole = vi.spyOn(console, "log").mockImplementation(() => undefined);
 		const spyOnProcess = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
 
-		const { config, logger, createJSONFile, createCommits } = await createTestDir(
+		const { config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
 		);
 		config.inspectVersion = true;
@@ -162,7 +162,7 @@ describe("version > getCurrentVersion", () => {
 		createJSONFile({ version: "1.2.3" });
 		createCommits();
 
-		await getCurrentVersion(config, logger, fileManager, config.files);
+		await getCurrentVersion(config, logger, git, fileManager, config.files);
 		expect(spyOnConsole).toHaveBeenCalledWith("1.2.3");
 		expect(spyOnProcess).toHaveBeenCalledWith(0);
 

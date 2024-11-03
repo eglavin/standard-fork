@@ -68,7 +68,7 @@ export class YAMLPackage implements IFileManager {
 			}
 		}
 
-		this.logger.warn(`[File Manager] Unable to determine PubSpec file: ${fileName}`);
+		this.logger.warn(`[File Manager] Unable to determine yaml version: ${fileName}`);
 	}
 
 	public write(fileState: FileState, newVersion: string): void {

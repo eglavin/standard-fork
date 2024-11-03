@@ -23,7 +23,7 @@ describe("strategies plain-text", () => {
 
 		expect(file).toBeUndefined();
 		expect(logger.warn).toHaveBeenCalledWith(
-			"[File Manager] Unable to determine plain text: version.txt",
+			"[File Manager] Unable to determine plain text version: version.txt",
 		);
 	});
 
