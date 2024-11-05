@@ -14,7 +14,7 @@ Fork-Version automates version control tasks such as determining, updating, and 
 </p>
 
 <details>
-<summary>This project is essentially a complete re-write of standard-version following on from its deprecation in May 2022.</summary>
+<summary>This project is essentially a complete re-write of <a href=https://github.com/conventional-changelog/standard-version>standard-version</a> following on from its deprecation in May 2022.</summary>
 Although there are many alternatives such as <a href=https://github.com/googleapis/release-please>release-please</a>. This project aims to continue focusing on just the versioning and changelog generation aspect of the process for use in other Git hosts outside of Github.
 </details>
 
@@ -23,7 +23,7 @@ Although there are many alternatives such as <a href=https://github.com/googleap
 By following the [conventional commit](https://www.conventionalcommits.org) standard Fork-Version can automate the following tasks for you:
 
 1. Determine the current and next version
-1. Update the version in the selected files
+1. Update the version in the selected files [(View the supported files)](#supported-file-types)
 1. Update your changelog
 1. Commit the changed files
 1. Create a tag for the new version
@@ -77,6 +77,7 @@ To install the package locally to your project you can use one of the following 
 You can then add the following entry to your package.json scripts section and use it like any other script you already use in your project.
 
 ```json
+// package.json
 {
   "scripts": {
     "release": "fork-version"
@@ -97,6 +98,8 @@ When ran as a cli tool Fork-Version will exit with one of the following exit cod
 | 3         | Config File Validation Error |
 
 ### Command Line Options
+
+The following help text can be viewed by running the following command: `npx fork-version --help`
 
 <!-- START COMMAND LINE OPTIONS -->
 
@@ -188,6 +191,7 @@ You can configure Fork-Version using one of the following files:
 Configuring using a javascript file is the most flexible option. You can use any javascript file type you prefer including typescript. Both commonjs and esm exports styles are supported. The `defineConfig` function in the following snippet is optional, using it will give you intellisense information in your code editor of choice.
 
 ```js
+// fork.config.ts
 import { defineConfig } from 'fork-version';
 
 export default defineConfig({
@@ -199,6 +203,7 @@ export default defineConfig({
 Alternatively you can use typescript type annotations in a typescript file:
 
 ```ts
+// fork.config.ts
 import type { Config } from 'fork-version';
 
 const config: Config = {
@@ -212,6 +217,7 @@ export default config;
 Or jsdocs in a javascript file:
 
 ```js
+// fork.config.js
 /** @type {import("fork-version").Config} */
 export default {
   header: `# My Changelog`,
@@ -228,6 +234,7 @@ Another way you can configure Fork-Version is by using a json file called `fork.
 If you still want intellisense information you can use the following schema in your json file, otherwise `$schema` is an optional key.
 
 ```json
+// fork.config.json
 {
   "$schema": "https://raw.githubusercontent.com/eglavin/fork-version/main/schema/latest.json",
   "header": "# My Changelog",
@@ -243,6 +250,7 @@ Internally we're using [zod-to-json-schema](https://github.com/StefanTerdell/zod
 Alternatively you can define your config using a key in your `package.json` file called `fork-version`:
 
 ```json
+// package.json
 {
   "name": "my-js-project",
   "version": "1.2.3",
@@ -389,7 +397,7 @@ Checkout the `fork.config.js` file [here](./fork.config.js) to see an example of
 | section  | string  | The name of the section in the `CHANGELOG` the commit should show up in. |
 | hidden   | boolean | Should show in the generated changelog message?                          |
 
-###### config.releaseMessageSuffix
+##### config.releaseMessageSuffix
 
 Adds a suffix to the end of the release message, useful to add a `[skip ci]` message to the end of the created commit.
 
@@ -431,7 +439,7 @@ version: 1.2.3
 
 #### Plain Text
 
-A plain text file will have just the version as the content.
+A plain text file is a file which contains just the version as the content. Files that end with `version.txt` will be treated as a plain text version file.
 
 ```text
 1.2.3
