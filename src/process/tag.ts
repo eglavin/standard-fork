@@ -17,7 +17,7 @@ export async function tagChanges(
 	/** @example "v1.2.3" or "version/1.2.3" */
 	const tag = `${config.tagPrefix}${nextVersion}`;
 
-	logger.log(`Creating Tag: ${tag}`);
+	logger.log(`Creating tag: ${tag}`);
 
 	await git.tag(
 		config.sign ? "--sign" : "--annotate",

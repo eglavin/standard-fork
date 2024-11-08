@@ -29,7 +29,7 @@ async function runFork() {
 	const current = await getCurrentVersion(config, logger, git, fileManager, config.files);
 	const next = await getNextVersion(config, logger, current.version);
 
-	logger.log("Updating Files: ");
+	logger.log("Updating files: ");
 	for (const outFile of current.files) {
 		logger.log(`  - ${outFile.path}`);
 

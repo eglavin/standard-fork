@@ -90,10 +90,10 @@ export async function updateChangelog(
 	const changelogPath = resolve(config.path, config.changelog);
 
 	if (!config.dryRun && !fileExists(changelogPath)) {
-		logger.log(`Creating Changelog: ${changelogPath}`);
+		logger.log(`Creating changelog: ${changelogPath}`);
 		writeFileSync(changelogPath, "\n", "utf8");
 	} else {
-		logger.log(`Updating Changelog: ${changelogPath}`);
+		logger.log(`Updating changelog: ${changelogPath}`);
 	}
 
 	const oldContent = getOldReleaseContent(changelogPath, fileExists(changelogPath));
