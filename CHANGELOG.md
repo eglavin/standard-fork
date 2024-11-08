@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.4 (2024-11-08)
+
+
+### Bug Fixes
+
+* match casing of logs between steps ([df88a60](https://github.com/eglavin/fork-version/commit/df88a60429b508dcbaa55aff34ff816e745b26f5))
+
+
 ## 1.7.3 (2024-11-03)
 
 
