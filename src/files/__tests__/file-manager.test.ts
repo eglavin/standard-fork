@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import { createTestDir } from "../../../tests/create-test-directory";
 import { FileManager } from "../file-manager";
 
-describe("strategies file-manager", () => {
+describe("files file-manager", () => {
 	it("should read json when file extension is .json", async () => {
-		const { config, logger, createJSONFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createJSONFile } = await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
@@ -15,7 +15,7 @@ describe("strategies file-manager", () => {
 	});
 
 	it("should read yaml file when the file extension is .yaml", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createFile } = await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createFile(
@@ -36,7 +36,7 @@ environment:
 	});
 
 	it("should read plain text when file is version.txt", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createAndCommitFile } = await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile("1.2.3", "version.txt");
@@ -46,9 +46,7 @@ environment:
 	});
 
 	it("should read csproj when file extension is csproj", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile(
@@ -66,7 +64,7 @@ environment:
 	});
 
 	it("should log an error when read file type is not supported", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("strategies file-manager");
+		const { config, logger, createAndCommitFile } = await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile("Version: 1.2.3", "version.unknown");
@@ -76,7 +74,7 @@ environment:
 	});
 
 	it("should not write to file if dry run is enabled", async () => {
-		const { relativeTo, config, logger } = await createTestDir("strategies file-manager");
+		const { relativeTo, config, logger } = await createTestDir("files file-manager");
 		config.dryRun = true;
 		const fileManager = new FileManager(config, logger);
 
@@ -92,7 +90,7 @@ environment:
 
 	it("should write json file when file extension is .json", async () => {
 		const { relativeTo, config, logger, createJSONFile } =
-			await createTestDir("strategies file-manager");
+			await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createJSONFile({ version: "1.0.0" }, "package.json");
@@ -111,7 +109,7 @@ environment:
 
 	it("should write yaml file when file extension is .yaml", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies yaml-package");
+			await createTestDir("files yaml-package");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile(
@@ -142,7 +140,7 @@ environment:
 
 	it("should write plain text when file is version.txt", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies file-manager");
+			await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile("1.0.0", "version.txt");
@@ -160,9 +158,8 @@ environment:
 	});
 
 	it("should write csproj when file extension is csproj", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("files ms-build-project");
 		const fileManager = new FileManager(config, logger);
 
 		createAndCommitFile(
@@ -189,7 +186,7 @@ environment:
 	});
 
 	it("should log an error when write file type is not supported", async () => {
-		const { relativeTo, config, logger } = await createTestDir("strategies file-manager");
+		const { relativeTo, config, logger } = await createTestDir("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.write(

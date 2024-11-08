@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import { createTestDir } from "../../../tests/create-test-directory";
 import { JSONPackage } from "../json-package";
 
-describe("strategies json-package", () => {
+describe("files json-package", () => {
 	it("should read a package.json file", async () => {
-		const { config, logger, createJSONFile } = await createTestDir("strategies json-package");
+		const { config, logger, createJSONFile } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
@@ -15,7 +15,7 @@ describe("strategies json-package", () => {
 	});
 
 	it("should read a deno.jsonc file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies json-package");
+		const { config, logger, createFile } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 		createFile(
 			`{
@@ -30,7 +30,7 @@ describe("strategies json-package", () => {
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createJSONFile } = await createTestDir("strategies json-package");
+		const { config, logger, createJSONFile } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createJSONFile({ version: "" }, "package.json");
@@ -43,7 +43,7 @@ describe("strategies json-package", () => {
 	});
 
 	it("should read private property", async () => {
-		const { config, logger, createJSONFile } = await createTestDir("strategies json-package");
+		const { config, logger, createJSONFile } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createJSONFile({ version: "1.2.3", private: true }, "package.json");
@@ -54,7 +54,7 @@ describe("strategies json-package", () => {
 
 	it("should write a package.json file", async () => {
 		const { relativeTo, config, logger, createJSONFile } =
-			await createTestDir("strategies json-package");
+			await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createJSONFile({ version: "1.2.3" }, "package.json");
@@ -74,7 +74,7 @@ describe("strategies json-package", () => {
 
 	it("should write a package-lock.json file", async () => {
 		const { relativeTo, config, logger, createJSONFile } =
-			await createTestDir("strategies json-package");
+			await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createJSONFile(
@@ -101,8 +101,7 @@ describe("strategies json-package", () => {
 	});
 
 	it("should write a deno.jsonc file", async () => {
-		const { relativeTo, config, logger, createFile } =
-			await createTestDir("strategies json-package");
+		const { relativeTo, config, logger, createFile } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 		createFile(
 			`{
@@ -133,7 +132,7 @@ describe("strategies json-package", () => {
 
 	it("should write output with tabs if input file is using tabs", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies json-package");
+			await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		createAndCommitFile('{\n\t"version": "1.2.3"\n}', "package.json");
@@ -152,7 +151,7 @@ describe("strategies json-package", () => {
 	});
 
 	it("should match json files", async () => {
-		const { config, logger } = await createTestDir("strategies json-package");
+		const { config, logger } = await createTestDir("files json-package");
 		const fileManager = new JSONPackage(config, logger);
 
 		// Supported

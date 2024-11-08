@@ -2,11 +2,9 @@ import { readFileSync } from "node:fs";
 import { createTestDir } from "../../../tests/create-test-directory";
 import { MSBuildProject } from "../ms-build-project";
 
-describe("strategies ms-build-project", () => {
+describe("files ms-build-project", () => {
 	it("should read version from csproj file", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		createAndCommitFile(
@@ -24,9 +22,7 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		createAndCommitFile(
@@ -47,9 +43,8 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should write a csproj file", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		createAndCommitFile(
@@ -76,9 +71,8 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should keep the same property ordering", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } = await createTestDir(
-			"strategies ms-build-project",
-		);
+		const { relativeTo, config, logger, createAndCommitFile } =
+			await createTestDir("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		createAndCommitFile(
@@ -143,7 +137,7 @@ describe("strategies ms-build-project", () => {
 	});
 
 	it("should match known ms-build project file extensions", async () => {
-		const { config, logger } = await createTestDir("strategies ms-build-project");
+		const { config, logger } = await createTestDir("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		// Supported

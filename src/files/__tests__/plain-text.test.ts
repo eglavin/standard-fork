@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import { createTestDir } from "../../../tests/create-test-directory";
 import { PlainText } from "../plain-text";
 
-describe("strategies plain-text", () => {
+describe("files plain-text", () => {
 	it("should be able to read version from version.txt file", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("strategies plain-text");
+		const { config, logger, createAndCommitFile } = await createTestDir("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		createAndCommitFile("1.2.3", "version.txt");
@@ -16,7 +16,7 @@ describe("strategies plain-text", () => {
 	});
 
 	it('should log a warning when "version.txt" file is not found', async () => {
-		const { config, logger } = await createTestDir("strategies plain-text");
+		const { config, logger } = await createTestDir("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		const file = fileManager.read("version.txt");
@@ -29,7 +29,7 @@ describe("strategies plain-text", () => {
 
 	it("should return empty string when version.txt is empty", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies plain-text");
+			await createTestDir("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		createAndCommitFile("", "version.txt");
@@ -41,7 +41,7 @@ describe("strategies plain-text", () => {
 
 	it("should be able to write version to version.txt file", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies plain-text");
+			await createTestDir("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		createAndCommitFile("1.2.3", "version.txt");
@@ -60,7 +60,7 @@ describe("strategies plain-text", () => {
 	});
 
 	it('should match "version.txt" file name', async () => {
-		const { config, logger } = await createTestDir("strategies plain-text");
+		const { config, logger } = await createTestDir("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		// Supported

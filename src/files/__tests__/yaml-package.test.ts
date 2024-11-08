@@ -1,9 +1,9 @@
 import { createTestDir } from "../../../tests/create-test-directory";
 import { YAMLPackage } from "../yaml-package";
 
-describe("strategies yaml-package", () => {
+describe("files yaml-package", () => {
 	it("should read a flutter pubspec.yaml file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies yaml-package");
+		const { config, logger, createFile } = await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		createFile(
@@ -24,7 +24,7 @@ environment:
 	});
 
 	it("should read a regular yaml file", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies yaml-package");
+		const { config, logger, createFile } = await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		createFile(
@@ -40,7 +40,7 @@ version: 1.2.3 # Comment about the version number
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createFile } = await createTestDir("strategies yaml-package");
+		const { config, logger, createFile } = await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		createFile(
@@ -60,7 +60,7 @@ environment:
 
 	it("should write a flutter pubspec.yaml file", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies yaml-package");
+			await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		createAndCommitFile(
@@ -91,7 +91,7 @@ environment:
 
 	it("should write a regular yaml file", async () => {
 		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("strategies yaml-package");
+			await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		createAndCommitFile(
@@ -117,7 +117,7 @@ version: 1.2.3 # Comment about the version number
 	});
 
 	it("should match known yaml files", async () => {
-		const { config, logger } = await createTestDir("strategies yaml-package");
+		const { config, logger } = await createTestDir("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		// Supported
