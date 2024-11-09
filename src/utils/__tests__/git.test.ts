@@ -97,7 +97,7 @@ describe("git", () => {
 		createJSONFile();
 		createCommits();
 
-		const branch = await git.currentBranch();
+		const branch = await git.getBranchName();
 		expect(branch).toBe("main");
 	});
 
@@ -117,11 +117,95 @@ test/**
 		createDirectory("src");
 		createFile("", "src", "my-file.txt");
 		createFile("", "src", "my-file.js");
-		expect(await git.shouldIgnore("src/my-file.txt")).toBe(true);
-		expect(await git.shouldIgnore("src/my-file.js")).toBe(false);
+		expect(await git.isIgnored("src/my-file.txt")).toBe(true);
+		expect(await git.isIgnored("src/my-file.js")).toBe(false);
 
 		createDirectory("test");
 		createFile("", "test", "my-file.txt");
-		expect(await git.shouldIgnore("test/my-file.txt")).toBe(true);
+		expect(await git.isIgnored("test/my-file.txt")).toBe(true);
+	});
+
+	it("should be able to get the latest semver tags", async () => {
+		const { config, createJSONFile, createCommits } = await createTestDir("execute-file");
+		const git = new Git(config);
+
+		createJSONFile();
+		createCommits();
+
+		const noTags = await git.getLatestTag(config.tagPrefix);
+		expect(noTags).toBe("");
+
+		await git.commit("--allow-empty", "-m", "test: a commit");
+		await git.tag("v1.0.0", "-m", "chore: release v1.0.0");
+
+		await git.commit("--allow-empty", "-m", "test: another commit");
+		await git.tag("v1.0.1", "-m", "chore: release v1.0.1");
+
+		const hasTags = await git.getLatestTag(config.tagPrefix);
+		expect(hasTags).toStrictEqual("1.0.1");
+	});
+
+	it("should be able to get the latest semver tags with empty tagPrefix", async () => {
+		const { config, createJSONFile, createCommits } = await createTestDir("execute-file");
+		const git = new Git(config);
+
+		createJSONFile();
+		createCommits();
+
+		const noTags = await git.getLatestTag("");
+		expect(noTags).toBe("");
+
+		await git.commit("--allow-empty", "-m", "test: a commit");
+		await git.tag("1.0.0", "-m", "chore: release 1.0.0");
+
+		await git.commit("--allow-empty", "-m", "test: another commit");
+		await git.tag("1.0.1", "-m", "chore: release 1.0.1");
+
+		await git.commit("--allow-empty", "-m", "test: another another commit");
+		await git.tag("1.0.0-fix.0", "-m", "chore: release 1.0.0-fix.0");
+
+		const hasTags = await git.getLatestTag("");
+		expect(hasTags).toStrictEqual("1.0.1");
+	});
+
+	it("should only return tags that match the provided tagPrefix", async () => {
+		const { config } = await createTestDir("execute-file");
+		const git = new Git(config);
+
+		await git.commit("--allow-empty", "-m", "test: a commit");
+		await git.tag("@fork-version/1.0.0", "-m", "chore: release v1.0.0");
+
+		await git.commit("--allow-empty", "-m", "test: another commit");
+		await git.tag("v1.0.1", "-m", "chore: release v1.0.1");
+
+		await git.commit("--allow-empty", "-m", "test: another another commit");
+		await git.tag("1.0.2", "-m", "chore: release 1.0.2");
+
+		const vTags = await git.getTags("v");
+		expect(vTags).toStrictEqual(["v1.0.1"]);
+		expect(vTags).not.toContain("@fork-version/1.0.0");
+
+		const forkVersionTags = await git.getTags("@fork-version/");
+		expect(forkVersionTags).toStrictEqual(["@fork-version/1.0.0"]);
+
+		const noTags = await git.getTags("non-existing-prefix");
+		expect(noTags).toStrictEqual([]);
+	});
+
+	it("should return tags sorted by most recent commit", async () => {
+		const { config } = await createTestDir("execute-file");
+		const git = new Git(config);
+
+		await git.commit("--allow-empty", "-m", "test: a commit");
+		await git.tag("v1.0.0", "-m", "chore: release v1.0.0");
+
+		await git.commit("--allow-empty", "-m", "test: another commit");
+		await git.tag("v1.0.1", "-m", "chore: release v1.0.1");
+
+		await git.commit("--allow-empty", "-m", "test: another another commit");
+		await git.tag("v1.0.2", "-m", "chore: release v1.0.2");
+
+		const Tags = await git.getTags("v");
+		expect(Tags).toStrictEqual(["v1.0.2", "v1.0.1", "v1.0.0"]);
 	});
 });

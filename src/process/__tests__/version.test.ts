@@ -86,6 +86,26 @@ describe("version > getCurrentVersion", () => {
 		});
 	});
 
+	it("should fallback and get the latest tag from git", async () => {
+		const { config, logger, git } = await createTestDir("version getCurrentVersion");
+		const fileManager = new FileManager(config, logger);
+
+		await git.commit("--allow-empty", "-m", "test: a commit");
+		await git.tag("v1.2.3", "-m", "chore: release 1.2.3");
+
+		await expect(() =>
+			getCurrentVersion(config, logger, git, fileManager, config.files),
+		).rejects.toThrow("Unable to find current version");
+
+		config.gitTagFallback = true;
+
+		const taggedResult = await getCurrentVersion(config, logger, git, fileManager, config.files);
+		expect(taggedResult).toEqual({
+			files: [],
+			version: "1.2.3",
+		});
+	});
+
 	it("should throw an error if multiple versions found and not allowing multiple versions", async () => {
 		const { config, logger, git, createJSONFile, createCommits } = await createTestDir(
 			"version getCurrentVersion",
