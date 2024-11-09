@@ -97,7 +97,7 @@ describe("git", () => {
 		createJSONFile();
 		createCommits();
 
-		const branch = await git.getBranchName();
+		const branch = await git.getCurrentBranchName();
 		expect(branch).toBe("main");
 	});
 

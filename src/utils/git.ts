@@ -8,7 +8,7 @@ export class Git {
 		this.commit = this.commit.bind(this);
 		this.tag = this.tag.bind(this);
 		this.isIgnored = this.isIgnored.bind(this);
-		this.getBranchName = this.getBranchName.bind(this);
+		this.getCurrentBranchName = this.getCurrentBranchName.bind(this);
 		this.getTags = this.getTags.bind(this);
 		this.getLatestTag = this.getLatestTag.bind(this);
 	}
@@ -67,7 +67,7 @@ export class Git {
 		}
 	}
 
-	public async getBranchName(): Promise<string> {
+	public async getCurrentBranchName(): Promise<string> {
 		return (await this.execGit("rev-parse", ["--abbrev-ref", "HEAD"])).trim();
 	}
 
