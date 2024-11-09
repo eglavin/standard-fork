@@ -1,7 +1,6 @@
 import semver, { type ReleaseType } from "semver";
 import conventionalRecommendedBump from "conventional-recommended-bump";
 
-import { getLatestGitTagVersion } from "../utils/git-tag-version";
 import { getReleaseType } from "../utils/release-type";
 import type { ForkConfig } from "../config/types";
 import type { FileManager, FileState } from "../files/file-manager";
@@ -24,7 +23,7 @@ export async function getCurrentVersion(
 	const versions = new Set<string>();
 
 	for (const file of filesToUpdate) {
-		if (await git.shouldIgnore(file)) {
+		if (await git.isIgnored(file)) {
 			logger.debug(`[Git Ignored] ${file}`);
 			continue;
 		}
@@ -45,9 +44,9 @@ export async function getCurrentVersion(
 
 	// If we still don't have a version, try to get the latest git tag
 	if (versions.size === 0 && config.gitTagFallback) {
-		const version = await getLatestGitTagVersion(config.tagPrefix);
+		const version = await git.getLatestTag(config.tagPrefix);
 		if (version) {
-			logger.warn(`Using latest git tag fallback`);
+			logger.warn(`Using latest git tag as fallback`);
 			versions.add(version);
 		}
 	}

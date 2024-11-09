@@ -351,14 +351,14 @@ Marking a release as a pre-release allows you to define a change as a patch to a
 | Example Value | Version Created |
 |:--------------|:----------------|
 | `true`        | `1.2.3-0`       |
-| `alpha`       | `1.2.3-alpha-0` |
+| `alpha`       | `1.2.3-alpha.0` |
 
 Fork-Version uses [meow](https://github.com/sindresorhus/meow) to parse cli arguments which is unable to take a single argument and parse it as either a string and or a boolean. So to do the above through the cli interface you'll need to use two different arguments:
 
 | Example CLI Usage                      | Version Created |
 |:---------------------------------------|:----------------|
 | `fork-version --pre-release`           | `1.2.3-0`       |
-| `fork-version --pre-release-tag alpha` | `1.2.3-alpha-0` |
+| `fork-version --pre-release-tag alpha` | `1.2.3-alpha.0` |
 
 ##### config.releaseAs
 
