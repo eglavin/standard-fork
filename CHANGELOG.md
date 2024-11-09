@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.5 (2024-11-09)
+
+
+### Refactor
+
+* rename strategies folder to files ([#79](https://github.com/eglavin/fork-version/issues/79)) ([9a06f63](https://github.com/eglavin/fork-version/commit/9a06f63c95d760fa0d729a839d2dc576c9c059e9))
+
+
 ## 1.7.4 (2024-11-08)
 
 
