@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.6 (2024-11-09)
+
+
+### Refactor
+
+* remove git-semver-tags library in favour of vendoring it ([#80](https://github.com/eglavin/fork-version/issues/80)) ([5e1b9cb](https://github.com/eglavin/fork-version/commit/5e1b9cbe7c7d77479235fcdc6f1dbc182c10ecd3))
+
+
 ## 1.7.5 (2024-11-09)
 
 
