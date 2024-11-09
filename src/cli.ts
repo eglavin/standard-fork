@@ -6,7 +6,7 @@ import { ZodError } from "zod";
 
 import { getUserConfig } from "./config/user-config";
 import { Logger } from "./utils/logger";
-import { FileManager } from "./strategies/file-manager";
+import { FileManager } from "./files/file-manager";
 import { Git } from "./utils/git";
 
 import { getCurrentVersion, getNextVersion } from "./process/version";

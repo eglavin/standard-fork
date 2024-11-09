@@ -2,11 +2,11 @@ import { resolve } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 import {
 	applyEdits,
-	type EditResult,
 	type JSONPath,
 	modify,
 	parse,
 	type ParseError,
+	type ParseOptions,
 } from "jsonc-parser";
 
 import { fileExists } from "../utils/file-state";
@@ -24,13 +24,6 @@ interface PackageJsonish {
 		};
 	};
 }
-
-/** Options for parsing JSON and JSONC files. */
-const PARSE_OPTIONS = {
-	allowTrailingComma: true,
-	allowEmptyContent: false,
-	disallowComments: false,
-};
 
 /**
  * A json package file should have a version property, like what can be seen
@@ -51,13 +44,33 @@ export class JSONPackage implements IFileManager {
 		private logger: Logger,
 	) {}
 
+	/** Options for parsing JSON and JSONC files. */
+	private PARSE_OPTIONS: ParseOptions = {
+		allowEmptyContent: false,
+		allowTrailingComma: true,
+		disallowComments: false,
+	};
+
+	/**
+	 * Sets a new string value at the given path in a JSON or JSONC string.
+	 * @param jsonc the JSON or JSONC string (the contents of a file)
+	 * @param jsonPath path to the value to set, as an array of segments
+	 * @param newString string to set the value to
+	 * @returns the JSON or JSONC string with the value set
+	 */
+	private setStringInJsonc(jsonc: string, jsonPath: JSONPath, newString: string): string {
+		const edits = modify(jsonc, jsonPath, newString, {});
+		return applyEdits(jsonc, edits);
+	}
+
 	public read(fileName: string): FileState | undefined {
 		const filePath = resolve(this.config.path, fileName);
 
 		if (fileExists(filePath)) {
 			const fileContents = readFileSync(filePath, "utf8");
+
 			const parseErrors: ParseError[] = [];
-			const parsedJson: PackageJsonish = parse(fileContents, parseErrors, PARSE_OPTIONS);
+			const parsedJson: PackageJsonish = parse(fileContents, parseErrors, this.PARSE_OPTIONS);
 			if (parseErrors.length) {
 				this.logger.warn(`[File Manager] Unable to parse JSON: ${fileName}`, parseErrors);
 				return undefined;
@@ -81,16 +94,16 @@ export class JSONPackage implements IFileManager {
 		let fileContents = readFileSync(fileState.path, "utf8");
 
 		const parseErrors: ParseError[] = [];
-		const parsedJson: PackageJsonish = parse(fileContents, parseErrors, PARSE_OPTIONS);
+		const parsedJson: PackageJsonish = parse(fileContents, parseErrors, this.PARSE_OPTIONS);
 		if (parseErrors.length) {
 			this.logger.warn(`[File Manager] Unable to parse JSON: ${fileState.path}`, parseErrors);
 			return;
 		}
 
-		fileContents = setStringInJsonc(fileContents, ["version"], newVersion);
+		fileContents = this.setStringInJsonc(fileContents, ["version"], newVersion);
 		if (parsedJson?.packages?.[""]) {
 			// package-lock v2 stores version here too.
-			fileContents = setStringInJsonc(fileContents, ["packages", "", "version"], newVersion);
+			fileContents = this.setStringInJsonc(fileContents, ["packages", "", "version"], newVersion);
 		}
 
 		writeFileSync(fileState.path, fileContents, "utf8");
@@ -99,16 +112,4 @@ export class JSONPackage implements IFileManager {
 	public isSupportedFile(fileName: string): boolean {
 		return fileName.endsWith(".json") || fileName.endsWith(".jsonc");
 	}
-}
-
-/**
- * Sets a new string value at the given path in a JSON or JSONC string.
- * @param jsonc the JSON or JSONC string (the contents of a file)
- * @param jsonPath path to the value to set, as an array of segments
- * @param newString string to set the value to
- * @returns the JSON or JSONC string with the value set
- */
-function setStringInJsonc(jsonc: string, jsonPath: JSONPath, newString: string): string {
-	const edits: EditResult = modify(jsonc, jsonPath, newString, {});
-	return applyEdits(jsonc, edits);
 }
