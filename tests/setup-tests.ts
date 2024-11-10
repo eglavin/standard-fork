@@ -1,0 +1,205 @@
+import { randomBytes } from "node:crypto";
+import { join } from "node:path";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { type ExecSyncOptionsWithBufferEncoding, execFile, execSync } from "node:child_process";
+
+import { getUserConfig } from "../src/config/user-config";
+import { Logger } from "../src/utils/logger";
+import { Git } from "../src/utils/git";
+
+/**
+ * Setup a test environment with a test folder, config, logger and git instances.
+ *
+ * Tests live in the `fork-version.tests` folder, which is created in the parent directory of the fork-version repo.
+ *
+ * @example
+ * ```js
+ * const { config, create, logger, git } = await setupTest("execute-file");
+ * ```
+ */
+export async function setupTest(testName: string) {
+	const testFolderLocation = join(process.cwd(), "..", "fork-version.tests"); // Need to step up outside of the fork-version repo to avoid git conflicts.
+	const testFolder = join(testFolderLocation, `${randomBytes(16).toString("hex")}-${testName}`);
+
+	const execSyncOptions: ExecSyncOptionsWithBufferEncoding = {
+		cwd: testFolder,
+		stdio: "ignore",
+	};
+
+	if (!existsSync(testFolder)) {
+		mkdirSync(testFolder, { recursive: true });
+
+		if (!existsSync(testFolder)) {
+			throw new Error("Unable to create test folder.");
+		}
+	} else {
+		throw new Error(`Test folder already exists: ${testFolder}`);
+	}
+
+	execSync("git init --initial-branch=main", execSyncOptions);
+	execSync("git config commit.gpgSign false", execSyncOptions);
+	execSync("git config core.autocrlf false", execSyncOptions);
+
+	//#region Create default test config, logger and git instances
+	const config = await getUserConfig();
+	config.path = testFolder;
+	config.header = "# Test Header\n";
+	config.changelogPresetConfig = {
+		...config.changelogPresetConfig,
+		types: [
+			{ type: "feat", section: "Features" },
+			{ type: "fix", section: "Bug Fixes" },
+			{ type: "chore", section: "Chore" },
+			{ type: "docs", section: "Docs" },
+			{ type: "style", section: "Style" },
+			{ type: "refactor", section: "Refactor" },
+			{ type: "perf", section: "Perf" },
+			{ type: "test", section: "Test" },
+		],
+	};
+	config.gitTagFallback = false;
+
+	const logger = new Logger({ silent: true, debug: false, inspectVersion: false });
+	logger.log = vi.fn();
+	logger.warn = vi.fn();
+	logger.error = vi.fn();
+	logger.debug = vi.fn();
+
+	const git = new Git(config);
+	//#endregion
+
+	function returnHandler(path: string) {
+		return {
+			/**
+			 * Track the newly created file.
+			 * @example
+			 * ```js
+			 * create.file("Hello, World!", "src", "index.ts").add();
+			 * ```
+			 */
+			add: function _add() {
+				execSync(`git add "${path}"`, execSyncOptions);
+			},
+		};
+	}
+
+	return {
+		testFolder,
+		config,
+		logger,
+		git,
+
+		/**
+		 * Create a path relative to the test folder.
+		 * @example
+		 * ```js
+		 * relativeTo("src", "components");
+		 * ```
+		 */
+		relativeTo: function _relativeTo(...pathSegments: string[]) {
+			return join(testFolder, ...pathSegments);
+		},
+
+		create: {
+			/**
+			 * Create a directory in the test folder.
+			 * @example
+			 * ```js
+			 * create.directory("src", "components");
+			 * ```
+			 */
+			directory: function _createDirectory(...directory: string[]) {
+				const path = join(testFolder, ...directory);
+				mkdirSync(path, { recursive: true });
+			},
+			/**
+			 * Create a file in the test folder.
+			 * @example
+			 * ```js
+			 * create.file("Hello, World!", "src", "index.ts");
+			 * ```
+			 */
+			file: function _createFile(content: string, ...file: string[]) {
+				const path = join(testFolder, ...file);
+				writeFileSync(path, content, "utf-8");
+
+				return returnHandler(path);
+			},
+			/**
+			 * Create a JSON file in the test folder.
+			 * @example
+			 * ```js
+			 * create.json({ key: "value" }, "src", "config.json");
+			 * ```
+			 */
+			json: function _createJson(jsObject: object, ...files: string[]) {
+				const path = join(testFolder, ...files);
+				writeFileSync(path, JSON.stringify(jsObject, null, 2), "utf-8");
+
+				return returnHandler(path);
+			},
+		},
+
+		execGit: {
+			/**
+			 * Execute a git command in the test folder.
+			 * @example
+			 * ```js
+			 * execGit.raw("status");
+			 * ```
+			 */
+			raw: function _execGitRaw(command: string, ...args: string[]) {
+				return new Promise<string>((onResolve, onReject) => {
+					execFile(
+						"git",
+						[command, ...args],
+						{
+							cwd: config.path,
+						},
+						(error, stdout, stderr) => {
+							if (error) {
+								onReject(error);
+							} else {
+								onResolve(stdout ? stdout : stderr);
+							}
+						},
+					);
+				});
+			},
+			/**
+			 * Create a git commit in the test folder.
+			 * @example
+			 * ```js
+			 * execGit.commit("feat: A feature commit", "This is the body of the commit.");
+			 * ```
+			 */
+			commit: function _execGitCommit(message: string, commitBody?: string) {
+				execSync(
+					commitBody
+						? `git commit --allow-empty -m "${message}" -m "${commitBody}"`
+						: `git commit --allow-empty -m "${message}"`,
+					execSyncOptions,
+				);
+			},
+			/**
+			 * Create a series of commits in the test folder.
+			 * @default
+			 * ```js
+			 * ["initial commit", "feat: A feature commit", "test: A test commit", "fix: A fix commit"]
+			 * ```
+			 */
+			commits: function _execGitCommits(
+				commits: string[] = [
+					"initial commit",
+					"feat: A feature commit",
+					"test: A test commit",
+					"fix: A fix commit",
+				],
+			) {
+				for (const message of commits) {
+					this.commit(message);
+				}
+			},
+		},
+	};
+}

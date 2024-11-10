@@ -1,20 +1,15 @@
-import { execFileSync } from "node:child_process";
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { detectGitHost } from "../detect-git-host";
 
 describe("detect-git-host", () => {
 	it("should detect a https azure git host", async () => {
-		const { testFolder } = await createTestDir("detect-git-host");
+		const { execGit, testFolder } = await setupTest("detect-git-host");
 
-		execFileSync(
-			"git",
-			[
-				"remote",
-				"add",
-				"origin",
-				"https://ORGANISATION@dev.azure.com/ORGANISATION/PROJECT/_git/REPOSITORY",
-			],
-			{ cwd: testFolder },
+		await execGit.raw(
+			"remote",
+			"add",
+			"origin",
+			"https://ORGANISATION@dev.azure.com/ORGANISATION/PROJECT/_git/REPOSITORY",
 		);
 
 		const gitHost = await detectGitHost(testFolder);
@@ -30,12 +25,13 @@ describe("detect-git-host", () => {
 	});
 
 	it("should detect a ssh azure git host", async () => {
-		const { testFolder } = await createTestDir("detect-git-host");
+		const { execGit, testFolder } = await setupTest("detect-git-host");
 
-		execFileSync(
-			"git",
-			["remote", "add", "origin", "git@ssh.dev.azure.com:v3/ORGANISATION/PROJECT/REPOSITORY"],
-			{ cwd: testFolder },
+		await execGit.raw(
+			"remote",
+			"add",
+			"origin",
+			"git@ssh.dev.azure.com:v3/ORGANISATION/PROJECT/REPOSITORY",
 		);
 
 		const gitHost = await detectGitHost(testFolder);
@@ -51,8 +47,8 @@ describe("detect-git-host", () => {
 	});
 
 	it("should not throw when no remote defined", async () => {
-		const { testFolder } = await createTestDir("detect-git-host");
+		const { testFolder } = await setupTest("detect-git-host");
 
-		expect(await detectGitHost(testFolder)).toBe(null);
+		await expect(detectGitHost(testFolder)).resolves.toBeNull();
 	});
 });

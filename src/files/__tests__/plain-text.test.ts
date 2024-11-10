@@ -1,22 +1,22 @@
 import { readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { PlainText } from "../plain-text";
 
 describe("files plain-text", () => {
 	it("should be able to read version from version.txt file", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files plain-text");
+		const { config, create, logger } = await setupTest("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createAndCommitFile("1.2.3", "version.txt");
+		create.file("1.2.3", "version.txt");
 
 		const file = fileManager.read("version.txt");
 
-		expect(file?.version).toEqual("1.2.3");
+		expect(file?.version).toBe("1.2.3");
 	});
 
 	it('should log a warning when "version.txt" file is not found', async () => {
-		const { config, logger } = await createTestDir("files plain-text");
+		const { config, logger } = await setupTest("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		const file = fileManager.read("version.txt");
@@ -28,23 +28,21 @@ describe("files plain-text", () => {
 	});
 
 	it("should return empty string when version.txt is empty", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files plain-text");
+		const { config, create, logger, relativeTo } = await setupTest("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createAndCommitFile("", "version.txt");
+		create.file("", "version.txt");
 
 		const file = fileManager.read(relativeTo("version.txt"));
 
-		expect(file?.version).toEqual("");
+		expect(file?.version).toBe("");
 	});
 
 	it("should be able to write version to version.txt file", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files plain-text");
+		const { config, create, logger, relativeTo } = await setupTest("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
-		createAndCommitFile("1.2.3", "version.txt");
+		create.file("1.2.3", "version.txt");
 
 		fileManager.write(
 			{
@@ -56,11 +54,11 @@ describe("files plain-text", () => {
 		);
 		const newVersion = readFileSync(relativeTo("version.txt"), "utf-8");
 
-		expect(newVersion).toEqual("1.2.4");
+		expect(newVersion).toBe("1.2.4");
 	});
 
 	it('should match "version.txt" file name', async () => {
-		const { config, logger } = await createTestDir("files plain-text");
+		const { config, logger } = await setupTest("files plain-text");
 		const fileManager = new PlainText(config, logger);
 
 		// Supported

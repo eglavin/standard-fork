@@ -1,13 +1,14 @@
 import { readFileSync } from "node:fs";
-import { createTestDir } from "../../../tests/create-test-directory";
+
+import { setupTest } from "../../../tests/setup-tests";
 import { MSBuildProject } from "../ms-build-project";
 
 describe("files ms-build-project", () => {
 	it("should read version from csproj file", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
+		const { config, create, logger } = await setupTest("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -18,14 +19,14 @@ describe("files ms-build-project", () => {
 		);
 
 		const file = fileManager.read("API.csproj");
-		expect(file?.version).toEqual("1.2.3");
+		expect(file?.version).toBe("1.2.3");
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
+		const { config, create, logger } = await setupTest("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version></Version>
@@ -43,11 +44,10 @@ describe("files ms-build-project", () => {
 	});
 
 	it("should write a csproj file", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files ms-build-project");
+		const { config, create, logger, relativeTo } = await setupTest("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -67,15 +67,14 @@ describe("files ms-build-project", () => {
 		);
 
 		const file = fileManager.read(relativeTo("API.csproj"));
-		expect(file?.version).toEqual("4.5.6");
+		expect(file?.version).toBe("4.5.6");
 	});
 
 	it("should keep the same property ordering", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files ms-build-project");
+		const { config, create, logger, relativeTo } = await setupTest("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
@@ -111,7 +110,7 @@ describe("files ms-build-project", () => {
 
 		const updatedFileContent = readFileSync(relativeTo("API.csproj"), "utf8");
 
-		expect(updatedFileContent).toEqual(
+		expect(updatedFileContent).toBe(
 			`<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
@@ -137,7 +136,7 @@ describe("files ms-build-project", () => {
 	});
 
 	it("should match known ms-build project file extensions", async () => {
-		const { config, logger } = await createTestDir("files ms-build-project");
+		const { config, logger } = await setupTest("files ms-build-project");
 		const fileManager = new MSBuildProject(config, logger);
 
 		// Supported
