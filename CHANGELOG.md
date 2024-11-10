@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.7 (2024-11-10)
+
+
+### Refactor
+
+* clean up test setup functions ([#81](https://github.com/eglavin/fork-version/issues/81)) ([2525687](https://github.com/eglavin/fork-version/commit/252568781e8678a065063f8a1a02b6a1681078ad))
+
+
 ## 1.7.6 (2024-11-09)
 
 
