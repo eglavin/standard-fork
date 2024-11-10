@@ -1,24 +1,24 @@
 import { readFileSync } from "node:fs";
 
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { FileManager } from "../file-manager";
 
 describe("files file-manager", () => {
 	it("should read json when file extension is .json", async () => {
-		const { config, logger, createJSONFile } = await createTestDir("files file-manager");
+		const { config, create, logger } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createJSONFile({ version: "1.2.3" }, "package.json");
+		create.json({ version: "1.2.3" }, "package.json");
 
 		const file = fileManager.read("package.json");
-		expect(file?.version).toEqual("1.2.3");
+		expect(file?.version).toBe("1.2.3");
 	});
 
 	it("should read yaml file when the file extension is .yaml", async () => {
-		const { config, logger, createFile } = await createTestDir("files file-manager");
+		const { config, create, logger } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createFile(
+		create.file(
 			`name: wordionary
 description: "A new Flutter project."
 publish_to: 'none'
@@ -31,25 +31,25 @@ environment:
 		);
 
 		const file = fileManager.read("pubspec.yaml");
-		expect(file?.version).toEqual("1.2.3");
-		expect(file?.builderNumber).toEqual("55");
+		expect(file?.version).toBe("1.2.3");
+		expect(file?.builderNumber).toBe("55");
 	});
 
 	it("should read plain text when file is version.txt", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files file-manager");
+		const { config, create, logger } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile("1.2.3", "version.txt");
+		create.file("1.2.3", "version.txt");
 
 		const file = fileManager.read("version.txt");
-		expect(file?.version).toEqual("1.2.3");
+		expect(file?.version).toBe("1.2.3");
 	});
 
 	it("should read csproj when file extension is csproj", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files ms-build-project");
+		const { config, create, logger } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -60,21 +60,21 @@ environment:
 		);
 
 		const file = fileManager.read("API.csproj");
-		expect(file?.version).toEqual("1.2.3");
+		expect(file?.version).toBe("1.2.3");
 	});
 
 	it("should log an error when read file type is not supported", async () => {
-		const { config, logger, createAndCommitFile } = await createTestDir("files file-manager");
+		const { config, create, logger } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile("Version: 1.2.3", "version.unknown");
+		create.file("Version: 1.2.3", "version.unknown");
 
 		fileManager.read("version.unknown");
 		expect(logger.error).toHaveBeenCalledWith("[File Manager] Unsupported file: version.unknown");
 	});
 
 	it("should not write to file if dry run is enabled", async () => {
-		const { relativeTo, config, logger } = await createTestDir("files file-manager");
+		const { config, logger, relativeTo } = await setupTest("files file-manager");
 		config.dryRun = true;
 		const fileManager = new FileManager(config, logger);
 
@@ -89,11 +89,10 @@ environment:
 	});
 
 	it("should write json file when file extension is .json", async () => {
-		const { relativeTo, config, logger, createJSONFile } =
-			await createTestDir("files file-manager");
+		const { config, create, logger, relativeTo } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createJSONFile({ version: "1.0.0" }, "package.json");
+		create.json({ version: "1.0.0" }, "package.json");
 
 		fileManager.write(
 			{
@@ -104,15 +103,14 @@ environment:
 			"1.2.3",
 		);
 		const packageJSON = JSON.parse(readFileSync(relativeTo("package.json"), "utf-8"));
-		expect(packageJSON.version).toEqual("1.2.3");
+		expect(packageJSON.version).toBe("1.2.3");
 	});
 
 	it("should write yaml file when file extension is .yaml", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files yaml-package");
+		const { config, create, logger, relativeTo } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`name: wordionary
 description: "A new Flutter project."
 publish_to: 'none'
@@ -134,16 +132,15 @@ environment:
 		);
 
 		const file = fileManager.read(relativeTo("pubspec.yaml"));
-		expect(file?.version).toEqual("2.4.6");
-		expect(file?.builderNumber).toEqual("55");
+		expect(file?.version).toBe("2.4.6");
+		expect(file?.builderNumber).toBe("55");
 	});
 
 	it("should write plain text when file is version.txt", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files file-manager");
+		const { config, create, logger, relativeTo } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile("1.0.0", "version.txt");
+		create.file("1.0.0", "version.txt");
 
 		fileManager.write(
 			{
@@ -154,15 +151,14 @@ environment:
 			"1.2.3",
 		);
 		const version = readFileSync(relativeTo("version.txt"), "utf-8");
-		expect(version).toEqual("1.2.3");
+		expect(version).toBe("1.2.3");
 	});
 
 	it("should write csproj when file extension is csproj", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files ms-build-project");
+		const { config, create, logger, relativeTo } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.2.3</Version>
@@ -182,11 +178,11 @@ environment:
 		);
 
 		const file = fileManager.read(relativeTo("API.csproj"));
-		expect(file?.version).toEqual("4.5.6");
+		expect(file?.version).toBe("4.5.6");
 	});
 
 	it("should log an error when write file type is not supported", async () => {
-		const { relativeTo, config, logger } = await createTestDir("files file-manager");
+		const { config, logger, relativeTo } = await setupTest("files file-manager");
 		const fileManager = new FileManager(config, logger);
 
 		fileManager.write(

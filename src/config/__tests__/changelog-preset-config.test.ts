@@ -4,7 +4,7 @@ describe("changelog-preset-config", () => {
 	it("should return the default config", () => {
 		const config = getChangelogPresetConfig({}, {} as never, null);
 
-		expect(config).toMatchObject({
+		expect(config).toStrictEqual({
 			commitUrlFormat: "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
 			compareUrlFormat:
 				"{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
@@ -72,7 +72,7 @@ describe("changelog-preset-config", () => {
 			null,
 		);
 
-		expect(config).toMatchObject({
+		expect(config).toStrictEqual({
 			commitUrlFormat: "{{host}}/fork-version/commit/{{hash}}",
 			compareUrlFormat:
 				"{{host}}/fork-version/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}",
@@ -193,7 +193,7 @@ describe("changelog-preset-config", () => {
 	it("should not change log all if not set", () => {
 		const config = getChangelogPresetConfig({}, {} as never, null);
 
-		expect(config.types).toEqual([
+		expect(config.types).toStrictEqual([
 			{
 				type: "feat",
 				section: "Features",
@@ -238,7 +238,7 @@ describe("changelog-preset-config", () => {
 			null,
 		);
 
-		expect(config.types).toEqual([
+		expect(config.types).toStrictEqual([
 			{
 				type: "feat",
 				section: "Features",

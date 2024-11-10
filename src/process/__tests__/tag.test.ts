@@ -1,47 +1,34 @@
-import { execFile } from "node:child_process";
-
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { tagChanges } from "../tag";
 
 describe("tagChanges", () => {
 	it("should create a tag", async () => {
-		const { testFolder, config, logger, git, createCommit } = await createTestDir("tagChanges");
+		const { config, execGit, git, logger } = await setupTest("tagChanges");
 
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
-		createCommit("feat: A feature commit");
-
+		execGit.commit("feat: A feature commit");
 		await tagChanges(config, logger, git, "1.2.4");
 
-		await execFile("git", ["tag"], { cwd: testFolder }, (_error, stdout, _stderr) => {
-			expect(stdout).toContain("v1.2.4");
-		});
+		await expect(execGit.raw("tag")).resolves.toContain("v1.2.4");
 	});
 
 	it("should throw an error if the tag already exists", async () => {
-		const { testFolder, config, logger, git, createCommit } = await createTestDir("tagChanges");
+		const { config, execGit, git, logger } = await setupTest("tagChanges");
 
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
-		createCommit("feat: A feature commit");
+		execGit.commit("feat: A feature commit");
+		await tagChanges(config, logger, git, "1.2.4");
 
-		expect(
-			(async () => {
-				await tagChanges(config, logger, git, "1.2.4");
-				await tagChanges(config, logger, git, "1.2.4");
-			})(),
-		).rejects.toThrow("tag 'v1.2.4' already exists");
+		await expect(tagChanges(config, logger, git, "1.2.4")).rejects.toThrow(
+			"tag 'v1.2.4' already exists",
+		);
 	});
 
 	it("should skip tag creation", async () => {
-		const { testFolder, config, logger, git, createCommit } = await createTestDir("tagChanges");
+		const { config, execGit, git, logger } = await setupTest("tagChanges");
 		config.skipTag = true;
 
-		await execFile("git", ["checkout", "-b", "main"], { cwd: testFolder }, () => {});
-		createCommit("feat: A feature commit");
-
+		execGit.commit("feat: A feature commit");
 		await tagChanges(config, logger, git, "1.2.4");
 
-		await execFile("git", ["tag"], { cwd: testFolder }, (_error, stdout, _stderr) => {
-			expect(stdout).not.toContain("v1.2.4");
-		});
+		await expect(execGit.raw("tag")).resolves.not.toContain("v1.2.4");
 	});
 });

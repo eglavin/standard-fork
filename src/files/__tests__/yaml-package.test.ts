@@ -1,12 +1,12 @@
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { YAMLPackage } from "../yaml-package";
 
 describe("files yaml-package", () => {
 	it("should read a flutter pubspec.yaml file", async () => {
-		const { config, logger, createFile } = await createTestDir("files yaml-package");
+		const { config, create, logger } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
-		createFile(
+		create.file(
 			`name: wordionary
 description: "A new Flutter project."
 publish_to: 'none'
@@ -19,15 +19,15 @@ environment:
 		);
 
 		const file = fileManager.read("pubspec.yaml");
-		expect(file?.version).toEqual("1.2.3");
-		expect(file?.builderNumber).toEqual("55");
+		expect(file?.version).toBe("1.2.3");
+		expect(file?.builderNumber).toBe("55");
 	});
 
 	it("should read a regular yaml file", async () => {
-		const { config, logger, createFile } = await createTestDir("files yaml-package");
+		const { config, create, logger } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
-		createFile(
+		create.file(
 			`name: My Project
 version: 1.2.3 # Comment about the version number
 `,
@@ -35,15 +35,15 @@ version: 1.2.3 # Comment about the version number
 		);
 
 		const file = fileManager.read("my-project.yaml");
-		expect(file?.version).toEqual("1.2.3");
-		expect(file?.builderNumber).toEqual(undefined);
+		expect(file?.version).toBe("1.2.3");
+		expect(file?.builderNumber).toBeUndefined();
 	});
 
 	it("should log a message if unable to read version", async () => {
-		const { config, logger, createFile } = await createTestDir("files yaml-package");
+		const { config, create, logger } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
-		createFile(
+		create.file(
 			`name: wordionary
 description: "A new Flutter project."
 publish_to: 'none'
@@ -54,16 +54,15 @@ environment:
 		);
 
 		const file = fileManager.read("pubspec.yaml");
-		expect(file?.version).toEqual(undefined);
-		expect(file?.builderNumber).toEqual(undefined);
+		expect(file?.version).toBeUndefined();
+		expect(file?.builderNumber).toBeUndefined();
 	});
 
 	it("should write a flutter pubspec.yaml file", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files yaml-package");
+		const { config, create, logger, relativeTo } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`name: wordionary
 description: "A new Flutter project."
 publish_to: 'none'
@@ -85,16 +84,15 @@ environment:
 		);
 
 		const file = fileManager.read(relativeTo("pubspec.yaml"));
-		expect(file?.version).toEqual("2.4.6");
-		expect(file?.builderNumber).toEqual("55");
+		expect(file?.version).toBe("2.4.6");
+		expect(file?.builderNumber).toBe("55");
 	});
 
 	it("should write a regular yaml file", async () => {
-		const { relativeTo, config, logger, createAndCommitFile } =
-			await createTestDir("files yaml-package");
+		const { config, create, logger, relativeTo } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
-		createAndCommitFile(
+		create.file(
 			`name: My Project
 version: 1.2.3 # Comment about the version number
 `,
@@ -112,12 +110,12 @@ version: 1.2.3 # Comment about the version number
 		);
 
 		const file = fileManager.read(relativeTo("my-project.yaml"));
-		expect(file?.version).toEqual("2.4.6");
-		expect(file?.builderNumber).toEqual(undefined);
+		expect(file?.version).toBe("2.4.6");
+		expect(file?.builderNumber).toBeUndefined();
 	});
 
 	it("should match known yaml files", async () => {
-		const { config, logger } = await createTestDir("files yaml-package");
+		const { config, logger } = await setupTest("files yaml-package");
 		const fileManager = new YAMLPackage(config, logger);
 
 		// Supported

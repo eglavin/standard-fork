@@ -1,12 +1,11 @@
 import { writeFileSync } from "node:fs";
-import { execFile } from "node:child_process";
 
-import { createTestDir } from "../../../tests/create-test-directory";
+import { setupTest } from "../../../tests/setup-tests";
 import { commitChanges } from "../commit";
 
 describe("commit", () => {
 	it("should commit changed files", async () => {
-		const { testFolder, relativeTo, config, logger, git } = await createTestDir("commit");
+		const { config, execGit, git, logger, relativeTo } = await setupTest("commit");
 
 		writeFileSync(relativeTo("CHANGELOG.md"), "Test content");
 		writeFileSync(relativeTo("package.json"), JSON.stringify({ version: "1.2.3" }));
@@ -23,35 +22,21 @@ describe("commit", () => {
 			"1.2.4",
 		);
 
-		await execFile(
-			"git",
-			["status", "--porcelain"],
-			{
-				cwd: testFolder,
-			},
-			(error, stdout) => expect(stdout).toContain("?? README.md"),
-		);
+		await expect(execGit.raw("status", "--porcelain")).resolves.toBe("?? README.md\n"); // README.md should not be committed
 	});
 
 	it("should not commit if there are no files to commit", async () => {
-		const { testFolder, relativeTo, config, logger, git } = await createTestDir("commit");
+		const { config, execGit, git, logger, relativeTo } = await setupTest("commit");
 
 		writeFileSync(relativeTo("README.md"), "Test readme content");
 
 		await commitChanges(config, logger, git, [], "1.2.4");
 
-		await execFile(
-			"git",
-			["status", "--porcelain"],
-			{
-				cwd: testFolder,
-			},
-			(error, stdout) => expect(stdout).toContain(""),
-		);
+		await expect(execGit.raw("status", "--porcelain")).resolves.toBe("?? README.md\n"); // README.md should not be committed
 	});
 
 	it("should commit all files if commitAll is set to true", async () => {
-		const { testFolder, relativeTo, config, logger, git } = await createTestDir("commit");
+		const { config, execGit, git, logger, relativeTo } = await setupTest("commit");
 		config.commitAll = true;
 
 		writeFileSync(relativeTo("CHANGELOG.md"), "Test content");
@@ -69,18 +54,11 @@ describe("commit", () => {
 			"1.2.4",
 		);
 
-		await execFile(
-			"git",
-			["status", "--porcelain"],
-			{
-				cwd: testFolder,
-			},
-			(error, stdout) => expect(stdout).toBe(""),
-		);
+		await expect(execGit.raw("status", "--porcelain")).resolves.toBe("");
 	});
 
 	it("should skip commit", async () => {
-		const { testFolder, relativeTo, config, logger, git } = await createTestDir("commit");
+		const { config, execGit, git, logger, relativeTo } = await setupTest("commit");
 		config.skipCommit = true;
 
 		writeFileSync(relativeTo("package.json"), JSON.stringify({ version: "1.2.3" }));
@@ -93,13 +71,6 @@ describe("commit", () => {
 			"1.2.4",
 		);
 
-		await execFile(
-			"git",
-			["status", "--porcelain"],
-			{
-				cwd: testFolder,
-			},
-			(error, stdout) => expect(stdout).toContain("?? package.json\n"),
-		);
+		await expect(execGit.raw("status", "--porcelain")).resolves.toBe("?? package.json\n"); // package.json should not be committed
 	});
 });
