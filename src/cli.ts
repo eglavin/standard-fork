@@ -4,6 +4,7 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ZodError } from "zod";
 
+import { getCliArguments } from "./config/cli-arguments";
 import { getUserConfig } from "./config/user-config";
 import { Logger } from "./utils/logger";
 import { FileManager } from "./files/file-manager";
@@ -14,10 +15,10 @@ import { updateChangelog } from "./process/changelog";
 import { commitChanges } from "./process/commit";
 import { tagChanges } from "./process/tag";
 
-async function runFork() {
+async function runFork(cliArguments: ReturnType<typeof getCliArguments>) {
 	const startTime = Date.now();
 
-	const config = await getUserConfig();
+	const config = await getUserConfig(cliArguments);
 
 	const logger = new Logger(config);
 	const fileManager = new FileManager(config, logger);
@@ -74,8 +75,10 @@ async function runFork() {
 	return result;
 }
 
+const cliArguments = getCliArguments();
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-runFork().catch((error: Error | any) => {
+runFork(cliArguments).catch((error: Error | any) => {
 	if (error instanceof Error) {
 		// If the error is a ZodError, print the keys that failed validation
 		if (error.cause instanceof ZodError) {
