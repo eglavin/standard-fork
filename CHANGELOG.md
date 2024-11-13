@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.8 (2024-11-13)
+
+
+### Refactor
+
+* split user-config to allow easier testing ([#82](https://github.com/eglavin/fork-version/issues/82)) ([dfe01e0](https://github.com/eglavin/fork-version/commit/dfe01e058df1006995c82743ddb0c55831477c87))
+
+
 ## 1.7.7 (2024-11-10)
 
 
