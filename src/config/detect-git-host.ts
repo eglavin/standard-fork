@@ -18,11 +18,11 @@ export interface DetectedGitHost {
  * correctly.
  */
 export async function detectGitHost(cwd: string): Promise<DetectedGitHost | null> {
-	const remoteUrl = (await new Promise((onResolve) => {
+	const remoteUrl = await new Promise<string>((onResolve) => {
 		execFile("git", ["config", "--get", "remote.origin.url"], { cwd }, (_error, stdout) => {
 			onResolve(stdout ? stdout.trim() : "");
 		});
-	})) as string;
+	});
 
 	// A checked out Azure DevOps remote URL looks like one of these:
 	//

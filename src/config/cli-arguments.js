@@ -117,5 +117,5 @@ export function getCliArguments() {
 			releaseCommitMessageFormat: { type: "string" },
 			releaseMessageSuffix: { type: "string" },
 		},
-	});
+	}).flags;
 }

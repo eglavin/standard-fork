@@ -8,7 +8,7 @@ import type { DetectedGitHost } from "./detect-git-host";
 
 export function getChangelogPresetConfig(
 	mergedConfig: Partial<ForkConfig> | undefined,
-	cliArgumentsFlags: ReturnType<typeof getCliArguments>["flags"],
+	cliArguments: Partial<ReturnType<typeof getCliArguments>>,
 	detectedGitHost: DetectedGitHost | null,
 ) {
 	const preset: { name: string; [_: string]: unknown } = {
@@ -64,28 +64,28 @@ export function getChangelogPresetConfig(
 	}
 
 	// If the user has defined a releaseMessageSuffix, append it to the releaseCommitMessageFormat
-	if (mergedConfig?.releaseMessageSuffix && !cliArgumentsFlags?.releaseMessageSuffix) {
+	if (mergedConfig?.releaseMessageSuffix && !cliArguments?.releaseMessageSuffix) {
 		preset.releaseCommitMessageFormat = `${preset.releaseCommitMessageFormat} ${mergedConfig.releaseMessageSuffix}`;
 	}
 
 	// Finally overwrite with any values from the CLI arguments
-	if (cliArgumentsFlags?.commitUrlFormat) {
-		preset.commitUrlFormat = cliArgumentsFlags.commitUrlFormat;
+	if (cliArguments?.commitUrlFormat) {
+		preset.commitUrlFormat = cliArguments.commitUrlFormat;
 	}
-	if (cliArgumentsFlags?.compareUrlFormat) {
-		preset.compareUrlFormat = cliArgumentsFlags.compareUrlFormat;
+	if (cliArguments?.compareUrlFormat) {
+		preset.compareUrlFormat = cliArguments.compareUrlFormat;
 	}
-	if (cliArgumentsFlags?.issueUrlFormat) {
-		preset.issueUrlFormat = cliArgumentsFlags.issueUrlFormat;
+	if (cliArguments?.issueUrlFormat) {
+		preset.issueUrlFormat = cliArguments.issueUrlFormat;
 	}
-	if (cliArgumentsFlags?.userUrlFormat) {
-		preset.userUrlFormat = cliArgumentsFlags.userUrlFormat;
+	if (cliArguments?.userUrlFormat) {
+		preset.userUrlFormat = cliArguments.userUrlFormat;
 	}
-	if (cliArgumentsFlags?.releaseCommitMessageFormat) {
-		preset.releaseCommitMessageFormat = cliArgumentsFlags.releaseCommitMessageFormat;
+	if (cliArguments?.releaseCommitMessageFormat) {
+		preset.releaseCommitMessageFormat = cliArguments.releaseCommitMessageFormat;
 	}
-	if (cliArgumentsFlags?.releaseMessageSuffix) {
-		preset.releaseCommitMessageFormat = `${preset.releaseCommitMessageFormat} ${cliArgumentsFlags.releaseMessageSuffix}`;
+	if (cliArguments?.releaseMessageSuffix) {
+		preset.releaseCommitMessageFormat = `${preset.releaseCommitMessageFormat} ${cliArguments.releaseMessageSuffix}`;
 	}
 
 	return ChangelogPresetConfigSchema.passthrough().parse(preset);

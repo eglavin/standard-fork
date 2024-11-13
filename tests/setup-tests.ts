@@ -41,7 +41,7 @@ export async function setupTest(testName: string) {
 	execSync("git config core.autocrlf false", execSyncOptions);
 
 	//#region Create default test config, logger and git instances
-	const config = await getUserConfig();
+	const config = await getUserConfig({});
 	config.path = testFolder;
 	config.header = "# Test Header\n";
 	config.changelogPresetConfig = {
@@ -132,8 +132,8 @@ export async function setupTest(testName: string) {
 			 * create.json({ key: "value" }, "src", "config.json");
 			 * ```
 			 */
-			json: function _createJson(jsObject: object, ...files: string[]) {
-				const path = join(testFolder, ...files);
+			json: function _createJson(jsObject: object, ...file: string[]) {
+				const path = join(testFolder, ...file);
 				writeFileSync(path, JSON.stringify(jsObject, null, 2), "utf-8");
 
 				return returnHandler(path);
@@ -170,6 +170,7 @@ export async function setupTest(testName: string) {
 			 * Create a git commit in the test folder.
 			 * @example
 			 * ```js
+			 * execGit.commit("feat: A feature commit");
 			 * execGit.commit("feat: A feature commit", "This is the body of the commit.");
 			 * ```
 			 */
@@ -186,6 +187,11 @@ export async function setupTest(testName: string) {
 			 * @default
 			 * ```js
 			 * ["initial commit", "feat: A feature commit", "test: A test commit", "fix: A fix commit"]
+			 * ```
+			 * @example
+			 * ```js
+			 * execGit.commits();
+			 * execGit.commits(["feat: A feature commit", "test: A test commit"]);
 			 * ```
 			 */
 			commits: function _execGitCommits(
