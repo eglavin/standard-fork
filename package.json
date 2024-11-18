@@ -93,7 +93,7 @@
     "conventional-changelog-conventionalcommits": "7.0.2",
     "conventional-recommended-bump": "9.0.0",
     "esbuild": "0.24.0",
-    "glob": "10.3.12",
+    "glob": "10.4.5",
     "joycon": "3.1.1",
     "jsonc-parser": "^3.3.1",
     "meow": "13.2.0",
