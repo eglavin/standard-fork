@@ -252,6 +252,7 @@ export const ForkConfigSchema = z.object({
 	sign: z.boolean().describe("If true, git will sign the commit with the systems GPG key."),
 	/**
 	 * If true, git will run user defined git hooks before committing.
+	 * @see {@link https://git-scm.com/docs/githooks Git - Git Hooks}
 	 * @default false
 	 */
 	verify: z.boolean().describe("If true, git will run user defined git hooks before committing."),

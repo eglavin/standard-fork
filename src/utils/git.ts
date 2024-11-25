@@ -33,6 +33,9 @@ export class Git {
 		});
 	}
 
+	/**
+	 * - [git-add Documentation](https://git-scm.com/docs/git-add)
+	 */
 	public async add(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return "";
@@ -41,6 +44,9 @@ export class Git {
 		return this.execGit("add", args.filter(Boolean) as string[]);
 	}
 
+	/**
+	 * - [git-commit Documentation](https://git-scm.com/docs/git-commit)
+	 */
 	public async commit(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return "";
@@ -49,6 +55,9 @@ export class Git {
 		return this.execGit("commit", args.filter(Boolean) as string[]);
 	}
 
+	/**
+	 * - [git-tag Documentation](https://git-scm.com/docs/git-tag)
+	 */
 	public async tag(...args: (string | undefined)[]): Promise<string> {
 		if (this.config.dryRun) {
 			return "";
@@ -57,6 +66,9 @@ export class Git {
 		return this.execGit("tag", args.filter(Boolean) as string[]);
 	}
 
+	/**
+	 * - [git-check-ignore Documentation](https://git-scm.com/docs/git-check-ignore)
+	 */
 	public async isIgnored(file: string): Promise<boolean> {
 		try {
 			await this.execGit("check-ignore", ["--no-index", file]);
