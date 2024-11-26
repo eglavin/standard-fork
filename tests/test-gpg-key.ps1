@@ -7,7 +7,7 @@ param (
 
 $CurrentPath = Get-Location
 $SourceRootPath = Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath "..")
-$TestPath = Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\fork-version.tests\gpg")
+$TestPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath((Join-Path -Path $PSScriptRoot -ChildPath "..\..\fork-version.tests\gpg"))
 $TempKeyContentPath = (Join-Path -Path $PSScriptRoot -ChildPath "TEST_GPG_KEY_CONTENT.tmp")
 
 $KeyContent = @"
