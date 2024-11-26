@@ -6,7 +6,8 @@ param (
 )
 
 $CurrentPath = Get-Location
-$TestPath = (Join-Path -Path $PSScriptRoot -ChildPath "..\..\fork-version.tests\gpg")
+$SourceRootPath = Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath "..")
+$TestPath = Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\fork-version.tests\gpg")
 $TempKeyContentPath = (Join-Path -Path $PSScriptRoot -ChildPath "TEST_GPG_KEY_CONTENT.tmp")
 
 $KeyContent = @"
@@ -117,7 +118,7 @@ function Main() {
 	git add .
 	git commit -S -m "chore: init commit"
 
-	Set-Location -Path $CurrentPath
+	Set-Location -Path $SourceRootPath
 
 	# Run fork-version script with GPG signing
 	pnpm run fork-version --path $TestPath --sign
