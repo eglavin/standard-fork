@@ -1,5 +1,13 @@
 # Fork Version
 
+## 1.7.9 (2024-11-26)
+
+
+### Refactor
+
+* dont sign if --sign not passed into cli arguments ([#84](https://github.com/eglavin/fork-version/issues/84)) ([8a9e6f4](https://github.com/eglavin/fork-version/commit/8a9e6f49ef1715fe0c2b0f5adaa5e9a032683727))
+
+
 ## 1.7.8 (2024-11-13)
 
 
