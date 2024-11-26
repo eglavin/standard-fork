@@ -19,8 +19,11 @@ export async function tagChanges(
 
 	logger.log(`Creating tag: ${tag}`);
 
+	const shouldSign = config.sign ? "--sign" : "--no-sign";
+
 	await git.tag(
-		config.sign ? "--sign" : "--annotate",
+		shouldSign,
+		"--annotate",
 		tag,
 		"--message",
 		formatCommitMessage(config.changelogPresetConfig?.releaseCommitMessageFormat, nextVersion),

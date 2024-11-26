@@ -40,7 +40,7 @@ export async function commitChanges(
 	}
 
 	const shouldVerify = config.verify ? undefined : "--no-verify";
-	const shouldSign = config.sign ? "--gpg-sign" : undefined;
+	const shouldSign = config.sign ? "--gpg-sign" : "--no-gpg-sign";
 
 	await git.commit(
 		shouldVerify,
