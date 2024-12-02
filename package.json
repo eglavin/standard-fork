@@ -73,7 +73,7 @@
     "fork-version": "node dist/cli.js",
     "dev": "tsup --watch",
     "build": "tsup",
-    "generate-json-schema": "node scripts/generate-json-schema.js",
+    "update-json-schema": "node scripts/update-json-schema.js",
     "update-readme-cli-options": "node scripts/update-readme-cli-options.js",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\"",
