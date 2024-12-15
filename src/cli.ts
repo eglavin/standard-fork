@@ -42,7 +42,7 @@ async function runFork(cliArguments: ReturnType<typeof getCliArguments>) {
 	await tagChanges(config, logger, git, next.version);
 
 	// Print git push command
-	const branchName = await git.getCurrentBranchName();
+	const branchName = await git.getBranchName();
 	logger.log(
 		`\nRun \`git push --follow-tags origin ${branchName}\` to push the changes and the tag.`,
 	);

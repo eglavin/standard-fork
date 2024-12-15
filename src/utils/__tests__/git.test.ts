@@ -90,7 +90,7 @@ describe("git", () => {
 		create.json({ version: "1.0.0" }, "package.json").add();
 		execGit.commits();
 
-		const branch = await git.getCurrentBranchName();
+		const branch = await git.getBranchName();
 		expect(branch).toBe("main");
 	});
 
