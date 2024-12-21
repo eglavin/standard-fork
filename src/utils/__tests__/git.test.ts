@@ -199,4 +199,62 @@ test/**
 
 		await expect(git.getTags("v")).resolves.toStrictEqual(["v1.0.2", "v1.0.1", "v1.0.0"]);
 	});
+
+	it("should read commits", async () => {
+		const { config, create } = await setupTest("execute-file");
+		const git = new Git(config);
+
+		// Create a commit in the root src folder
+		create.directory("src");
+		create.file("", "src", "file1.txt");
+		await git.add("src/file1.txt");
+		await git.commit(
+			"-m",
+			"feat: initial commit",
+			"-m",
+			"BREAKING CHANGE: this is a breaking change",
+		);
+		await git.tag("v1.0.0");
+
+		// Create a commit in the src/libs folder
+		create.directory("src", "libs");
+		create.file("", "src", "libs", "file2.txt");
+		await git.add("src/libs/file2.txt");
+		await git.commit("-m", "refactor: add lib file");
+		await git.tag("v1.0.1");
+
+		// Create a commit in the src/utils folder
+		create.directory("src", "utils");
+		create.file("", "src", "utils", "file3.txt");
+		await git.add("src/utils/file3.txt");
+		await git.commit("-m", "refactor: add util file");
+		await git.tag("v1.0.2");
+
+		// Create a commit in the src/test folder
+		create.directory("src", "test");
+		create.file("", "src", "test", "file4.txt");
+		await git.add("src/test/file4.txt");
+		await git.commit("-m", "refactor: add test file");
+		await git.tag("v1.0.3");
+
+		// Get commits in specific folders
+		const filteredCommits = await git.getCommits("v1.0.1", "HEAD", "src/libs", "src/utils");
+		expect(filteredCommits[0].includes("refactor: add util file")).toBe(true);
+		expect(filteredCommits.length).toBe(1);
+
+		// Get commits in all folders
+		const commitsFrom100 = await git.getCommits("v1.0.0");
+		expect(commitsFrom100[0].includes("refactor: add test file")).toBe(true);
+		expect(commitsFrom100[1].includes("refactor: add util file")).toBe(true);
+		expect(commitsFrom100[2].includes("refactor: add lib file")).toBe(true);
+		expect(commitsFrom100.length).toBe(3);
+
+		// Get all commits
+		const allCommits = await git.getCommits();
+		expect(allCommits[0].includes("refactor: add test file")).toBe(true);
+		expect(allCommits[1].includes("refactor: add util file")).toBe(true);
+		expect(allCommits[2].includes("refactor: add lib file")).toBe(true);
+		expect(allCommits[3].includes("feat: initial commit")).toBe(true);
+		expect(allCommits.length).toBe(4);
+	});
 });

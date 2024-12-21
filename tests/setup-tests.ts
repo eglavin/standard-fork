@@ -40,6 +40,9 @@ export async function setupTest(testName: string) {
 	execSync("git config commit.gpgSign false", execSyncOptions);
 	execSync("git config core.autocrlf false", execSyncOptions);
 
+	execSync('git config user.name "Fork Version"', execSyncOptions);
+	execSync('git config user.email "fork-version@example.com"', execSyncOptions);
+
 	//#region Create default test config, logger and git instances
 	const config = await getUserConfig({});
 	config.path = testFolder;

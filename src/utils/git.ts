@@ -7,11 +7,13 @@ export class Git {
 		this.add = this.add.bind(this);
 		this.commit = this.commit.bind(this);
 		this.tag = this.tag.bind(this);
+		this.log = this.log.bind(this);
 		this.isIgnored = this.isIgnored.bind(this);
 		this.getBranchName = this.getBranchName.bind(this);
 		this.getRemoteUrl = this.getRemoteUrl.bind(this);
 		this.getTags = this.getTags.bind(this);
 		this.getLatestTag = this.getLatestTag.bind(this);
+		this.getCommits = this.getCommits.bind(this);
 	}
 
 	async #execGit(command: string, args: string[]): Promise<string> {
@@ -89,6 +91,21 @@ export class Git {
 	}
 
 	/**
+	 * Show commit logs
+	 *
+	 * - [git-log Documentation](https://git-scm.com/docs/git-log)
+	 * - [pretty-formats Documentation](https://git-scm.com/docs/pretty-formats)
+	 *
+	 * @example
+	 * ```ts
+	 * await git.log("--oneline");
+	 * ```
+	 */
+	async log(...args: (string | undefined)[]): Promise<string> {
+		return this.#execGit("log", args.filter(Boolean) as string[]);
+	}
+
+	/**
 	 * Check if a file is ignored by git
 	 *
 	 * [git-check-ignore Documentation](https://git-scm.com/docs/git-check-ignore)
@@ -145,7 +162,7 @@ export class Git {
 	}
 
 	/**
-	 * `getTags` returns valid semver version tags in order of the commit history.
+	 * `getTags` returns valid semver version tags in order of the commit history
 	 *
 	 * Using `git log` to get the commit history, we then parse the tags from the
 	 * commit details which is expected to be in the following format:
@@ -166,7 +183,7 @@ export class Git {
 	 * ```
 	 */
 	async getTags(tagPrefix: string | undefined): Promise<string[]> {
-		const logOutput = await this.#execGit("log", ["--decorate", "--no-color", "--date-order"]);
+		const logOutput = await this.log("--decorate", "--no-color", "--date-order");
 
 		/**
 		 * Search for tags in the following formats:
@@ -221,5 +238,44 @@ export class Git {
 		}
 
 		return cleanedTags.sort(semver.rcompare)[0];
+	}
+
+	/**
+	 * Get the commit history between two commits
+	 *
+	 * An array of commits are returned in the following format:
+	 * ```txt
+	 * commit body
+	 * commit hash
+	 * author date
+	 * author name
+	 * author email
+	 * ```
+	 *
+	 * @example
+	 * ```ts
+	 * await git.getCommits("v1.0.0", "HEAD", "src/utils");
+	 * ```
+	 */
+	async getCommits(from = "", to = "HEAD", ...paths: string[]): Promise<string[]> {
+		const SCISSOR = "^----------- FORK VERSION -----------^";
+
+		const LOG_FORMAT = [
+			"%B", // body
+			"%H", // commit hash
+			"%aI", // author date
+			"%aN", // author name
+			"%aE", // author email
+			SCISSOR,
+		].join("%n");
+
+		const commits = await this.log(
+			`--format=${LOG_FORMAT}`,
+			[from, to].filter(Boolean).join(".."),
+			paths.length ? "--" : "",
+			...paths,
+		);
+
+		return commits.split(`${SCISSOR}\n`).filter(Boolean);
 	}
 }
