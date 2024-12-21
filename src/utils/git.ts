@@ -241,7 +241,7 @@ export class Git {
 	}
 
 	/**
-	 * Get the commit history between two commits
+	 * Get commit history in a parsable format
 	 *
 	 * An array of commits are returned in the following format:
 	 * ```txt
