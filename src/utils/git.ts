@@ -243,10 +243,11 @@ export class Git {
 	/**
 	 * Get commit history in a parsable format
 	 *
-	 * An array of commits are returned in the following format:
+	 * An array of strings with commit details is returned in the following format:
 	 * ```txt
-	 * commit body
-	 * commit hash
+	 * subject
+	 * body
+	 * hash
 	 * author date
 	 * author name
 	 * author email
@@ -261,8 +262,9 @@ export class Git {
 		const SCISSOR = "^----------- FORK VERSION -----------^";
 
 		const LOG_FORMAT = [
-			"%B", // body
-			"%H", // commit hash
+			"%s", // subject
+			"%b", // body
+			"%H", // hash
 			"%aI", // author date
 			"%aN", // author name
 			"%aE", // author email

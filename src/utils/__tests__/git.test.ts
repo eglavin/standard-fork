@@ -237,6 +237,19 @@ test/**
 		await git.commit("-m", "refactor: add test file");
 		await git.tag("v1.0.3");
 
+		// Create a commit with a long title and a message body
+		create.file("", "src", "test", "file5.txt");
+		await git.add("src/test/file5.txt");
+		await git.commit(
+			"-m",
+			`refactor: this is a long commit message with a lot of content in it
+which I'm wondering how it would be handled by the commit log parsing
+system so we'll see what happens.`,
+			"-m",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		);
+		await git.tag("v1.0.4");
+
 		// Get commits in specific folders
 		const filteredCommits = await git.getCommits("v1.0.1", "HEAD", "src/libs", "src/utils");
 		expect(filteredCommits[0].includes("refactor: add util file")).toBe(true);
@@ -244,17 +257,27 @@ test/**
 
 		// Get commits in all folders
 		const commitsFrom100 = await git.getCommits("v1.0.0");
-		expect(commitsFrom100[0].includes("refactor: add test file")).toBe(true);
-		expect(commitsFrom100[1].includes("refactor: add util file")).toBe(true);
-		expect(commitsFrom100[2].includes("refactor: add lib file")).toBe(true);
-		expect(commitsFrom100.length).toBe(3);
+		expect(
+			commitsFrom100[0].includes(
+				"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+			),
+		).toBe(true);
+		expect(commitsFrom100[1].includes("refactor: add test file")).toBe(true);
+		expect(commitsFrom100[2].includes("refactor: add util file")).toBe(true);
+		expect(commitsFrom100[3].includes("refactor: add lib file")).toBe(true);
+		expect(commitsFrom100.length).toBe(4);
 
 		// Get all commits
 		const allCommits = await git.getCommits();
-		expect(allCommits[0].includes("refactor: add test file")).toBe(true);
-		expect(allCommits[1].includes("refactor: add util file")).toBe(true);
-		expect(allCommits[2].includes("refactor: add lib file")).toBe(true);
-		expect(allCommits[3].includes("feat: initial commit")).toBe(true);
-		expect(allCommits.length).toBe(4);
+		expect(
+			allCommits[0].includes(
+				"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+			),
+		).toBe(true);
+		expect(allCommits[1].includes("refactor: add test file")).toBe(true);
+		expect(allCommits[2].includes("refactor: add util file")).toBe(true);
+		expect(allCommits[3].includes("refactor: add lib file")).toBe(true);
+		expect(allCommits[4].includes("feat: initial commit")).toBe(true);
+		expect(allCommits.length).toBe(5);
 	});
 });
