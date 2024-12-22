@@ -19,7 +19,7 @@ interface Commit {
  * ```
  * @see {@link https://git-scm.com/docs/pretty-formats|Git Pretty Format Documentation}
  */
-export function parseCommit(commit: string): Commit | null {
+export function parseCommit(commit: string): Commit {
 	const parsedCommit: Commit = {
 		title: "",
 		body: "",
