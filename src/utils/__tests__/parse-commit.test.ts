@@ -1,9 +1,9 @@
 import { setupTest } from "../../../tests/setup-tests";
 import { Git } from "../git";
-import { parseCommit } from "../parse-commit";
+import { parseRawCommit } from "../parse-commit";
 
 describe("parse-commit", () => {
-	it("should be able to parse commit", () => {
+	it("should be able to parse raw commits", () => {
 		const commits = [
 			"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n5e82c418e5007cc9d53a30e17068f928353ff4db\n2024-12-22T17:36:50Z\nFork Version\nfork-version@example.com\n",
 			"refactor: add test file\n\n4ef2c86d393a9660aa9f753144256b1f200c16bd\n2024-12-22T17:36:50Z\nFork Version\nfork-version@example.com\n",
@@ -12,7 +12,7 @@ describe("parse-commit", () => {
 			"feat: initial commit\nBREAKING CHANGE: this is a breaking change\n\n4a79e9e546b4020d2882b7810dc549fa71960f4f\n2024-12-22T17:36:50Z\nFork Version\nfork-version@example.com\n",
 		];
 
-		const parsedCommits = commits.map(parseCommit);
+		const parsedCommits = commits.map(parseRawCommit);
 
 		expect(parsedCommits[0]).toStrictEqual({
 			title:
@@ -85,7 +85,7 @@ system so we'll see what happens.`,
 
 		const commits = await git.getCommits();
 
-		const parsedCommits = commits.map(parseCommit);
+		const parsedCommits = commits.map(parseRawCommit);
 
 		expect(parsedCommits[0]).toStrictEqual({
 			title:
@@ -109,16 +109,16 @@ system so we'll see what happens.`,
 
 	it("should return null if the commit is not in the correct format", () => {
 		const title = "refactor: add test file";
-		const body = "";
+		const body = "\r\n\n";
 		const hash = "4ef2c86d393a9660aa9f753144256b1f200c16bd";
 		const date = "2024-12-22T17:36:50Z";
 		const name = "Fork Version";
 		const email = "fork-version@example.com";
 
 		// should parse correctly
-		expect(parseCommit([title, body, hash, date, name, email, ""].join("\n"))).toStrictEqual({
+		expect(parseRawCommit([title, body, hash, date, name, email, ""].join("\n"))).toStrictEqual({
 			title,
-			body,
+			body: "", // Extra whitespace should be removed
 			hash,
 			date,
 			name,
@@ -127,16 +127,13 @@ system so we'll see what happens.`,
 
 		// should return null
 		expect(
-			() => parseCommit([title, body, hash, date, name, email].join("\n")), // missing final new line
+			() => parseRawCommit([title, body, hash, name, email, date, ""].join("\n")), // date and email are swapped
 		).toThrowError("Invalid commit format");
 		expect(
-			() => parseCommit([title, body, hash, name, email, date, ""].join("\n")), // date and email are swapped
+			() => parseRawCommit([title, body, hash, date, name, email, "extra line"].join("\n")), // unknown extra content
 		).toThrowError("Invalid commit format");
 		expect(
-			() => parseCommit([title, body, hash, date, name, email, "extra line"].join("\n")), // unknown extra content
-		).toThrowError("Invalid commit format");
-		expect(
-			() => parseCommit([title, body, hash, date, name].join("\n")), // missing data
+			() => parseRawCommit([title, body, hash, date, name].join("\n")), // missing data
 		).toThrowError("Invalid commit format");
 	});
 });

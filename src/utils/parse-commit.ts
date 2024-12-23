@@ -19,7 +19,7 @@ interface Commit {
  * ```
  * @see {@link https://git-scm.com/docs/pretty-formats|Git Pretty Format Documentation}
  */
-export function parseCommit(commit: string): Commit {
+export function parseRawCommit(rawCommit: string): Commit {
 	const parsedCommit: Commit = {
 		title: "",
 		body: "",
@@ -29,22 +29,21 @@ export function parseCommit(commit: string): Commit {
 		email: "",
 	};
 
-	// Split the commit log into separate parts on the new line character.
-	const parts = commit.split("\n");
+	// Split commit into separate parts on new line characters
+	const parts = rawCommit.trim().split(/\r?\n/);
 
-	if (parts.length <= 6) {
-		throw new Error("Invalid commit format", {
-			cause: "Commit doesn't contain enough parts",
-		});
+	if (parts.length <= 5) {
+		throw new Error("Invalid commit format", { cause: "Commit doesn't contain enough parts" });
 	}
 
-	// Remove the last empty line
-	const finalNewLine = parts.pop();
-	if (finalNewLine !== "") {
-		throw new Error("Invalid commit format", {
-			cause: "Commit doesn't end with a new line character",
-		});
-	}
+	// Walk backwards through the parts array to extract
+	// the data in the expected order:
+	// - author email
+	// - author name
+	// - author date
+	// - hash
+	// Take the title from the front of the array
+	// and the rest of the content is the body of the commit
 
 	const email = parts.pop();
 	if (email) {
@@ -62,9 +61,7 @@ export function parseCommit(commit: string): Commit {
 
 		// Date is one only fields we can properly validate, so we'll check it now to ensure its in the correct place.
 		if (Number.isNaN(Date.parse(parsedCommit.date))) {
-			throw new Error("Invalid commit format", {
-				cause: "Date is not a valid date string",
-			});
+			throw new Error("Invalid commit format", { cause: "Unable to parse commit date" });
 		}
 	}
 
