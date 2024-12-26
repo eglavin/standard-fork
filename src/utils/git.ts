@@ -248,9 +248,9 @@ export class Git {
 	 * subject
 	 * body
 	 * hash
-	 * author date
-	 * author name
-	 * author email
+	 * committer date
+	 * committer name
+	 * committer email
 	 * ```
 	 *
 	 * @example
@@ -265,9 +265,9 @@ export class Git {
 			"%s", // subject
 			"%b", // body
 			"%H", // hash
-			"%aI", // author date
-			"%aN", // author name
-			"%aE", // author email
+			"%cI", // committer date
+			"%cN", // committer name
+			"%cE", // committer email
 			SCISSOR,
 		].join("%n");
 
