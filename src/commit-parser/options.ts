@@ -62,7 +62,7 @@ export function createParserOptions(userOptions?: Partial<ParserOptions>): Parse
 
 		revertPattern: /^Revert "(?<subject>.*)"(\s*This reverts commit (?<hash>[a-zA-Z0-9]*)\.)?/,
 
-		commentPattern: /^#(.*)/,
+		commentPattern: /^#(?!\d+\s)/,
 
 		mentionPattern: /(?<!\w)@([\w-]+)/,
 

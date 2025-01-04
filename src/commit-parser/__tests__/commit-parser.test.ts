@@ -819,12 +819,16 @@ that spans multiple lines
 with more content
 here.
 
-BREAKING CHANGE: this is another breaking change
+ BREAKING-CHANGE: this is another breaking change
 which also spans multiple lines
-with some more content
+  with some more content
 on this line.
 
 This is some extra content that should be added to the previous note.
+
+fixes owner/repo#1234 @fork-version
+
+This is some other content that shouldn't be added to the previous note.
 `,
 				),
 			);
@@ -835,12 +839,16 @@ This is some extra content that should be added to the previous note.
 				notes: [
 					{
 						title: "BREAKING CHANGE",
-						text: "this is a breaking change\nthat spans multiple lines\nwith more content\nhere.\n",
+						text: "this is a breaking change\nthat spans multiple lines\nwith more content\nhere.",
 					},
 					{
-						title: "BREAKING CHANGE",
-						text: "this is another breaking change\nwhich also spans multiple lines\nwith some more content\non this line.\n\nThis is some extra content that should be added to the previous note.",
+						title: "BREAKING-CHANGE",
+						text: "this is another breaking change\nwhich also spans multiple lines\n  with some more content\non this line.\n\nThis is some extra content that should be added to the previous note.",
 					},
+				],
+				mentions: ["fork-version"],
+				references: [
+					{ prefix: "#", issue: "1234", action: "fixes", owner: "owner", repository: "repo" },
 				],
 			});
 		});
