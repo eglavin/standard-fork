@@ -1,12 +1,16 @@
 import { createParserOptions, type ParserOptions } from "./options";
+import { ParserError } from "./parser-error";
+import type { Logger } from "../utils/logger";
 import type { Commit, CommitNote, CommitReference } from "./types";
 
 export class CommitParser {
 	#options: ParserOptions;
+	#logger?: Logger;
 
-	constructor(userOptions: Partial<ParserOptions> = {}) {
+	constructor(userOptions?: Partial<ParserOptions>) {
 		this.#options = createParserOptions(userOptions);
 
+		this.setLogger = this.setLogger.bind(this);
 		this.createCommit = this.createCommit.bind(this);
 		this.parseRawCommit = this.parseRawCommit.bind(this);
 		this.parseSubject = this.parseSubject.bind(this);
@@ -18,6 +22,11 @@ export class CommitParser {
 		this.parseNotes = this.parseNotes.bind(this);
 		this.parseRawLines = this.parseRawLines.bind(this);
 		this.parse = this.parse.bind(this);
+	}
+
+	setLogger(logger: Logger) {
+		this.#logger = logger;
+		return this;
 	}
 
 	createCommit(): Commit {
@@ -64,9 +73,9 @@ export class CommitParser {
 	parseRawCommit(rawCommit: string): Commit {
 		const parsedCommit = this.createCommit();
 
-		const parts = rawCommit.trim().split(/\r?\n/);
+		const parts = rawCommit.split(/\r?\n/);
 		if (parts.length < 6) {
-			throw new Error("Invalid commit format", { cause: "Commit doesn't contain enough parts" });
+			throw new ParserError("Commit doesn't contain enough parts", rawCommit);
 		}
 
 		// Walk backwards through the parts array to extract the data in the expected order
@@ -87,14 +96,14 @@ export class CommitParser {
 
 			// Date is one of the only fields we can properly validate, check to ensure its in the correct position
 			if (Number.isNaN(Date.parse(parsedCommit.date))) {
-				throw new Error("Invalid commit format", { cause: "Unable to parse commit date" });
+				throw new ParserError("Unable to parse commit date", rawCommit);
 			}
 		}
 		if (hash) parsedCommit.hash = hash.trim();
 
 		// Take the subject from the front of the array, the remainder is the commit body
 
-		const subject = parts.shift();
+		const subject = parts.shift()?.trimStart();
 		if (subject) {
 			parsedCommit.subject = subject;
 			parsedCommit.raw = subject;
@@ -131,9 +140,7 @@ export class CommitParser {
 			const { type = "", scope = "", breakingChange = "", title = "" } = subjectMatch.groups;
 
 			if (!type || !title) {
-				throw new Error("Invalid conventional commit format", {
-					cause: "Unable to parse conventional commit",
-				});
+				throw new ParserError("Unable to parse conventional commit", commit);
 			}
 
 			commit.type = type;
@@ -333,14 +340,9 @@ export class CommitParser {
 		const splitMessage = commit.raw.split("\n");
 		for (let index = 0; index < splitMessage.length; index++) {
 			const line = splitMessage[index];
-
 			const trimmedLine = line.trim();
-			if (!trimmedLine || this.#options.commentPattern?.test(trimmedLine)) {
-				continue;
-			}
 
-			this.parseMentions(trimmedLine, mentions);
-			this.parseReferences(trimmedLine, references);
+			if (this.#options.commentPattern?.test(trimmedLine)) continue;
 
 			// Once we find a note line, we want to keep adding to the last note object
 			// until we find a new note line.
@@ -350,6 +352,9 @@ export class CommitParser {
 				notes[notes.length - 1].text += `\n${line}`;
 				lastNoteLine = index;
 			}
+
+			this.parseMentions(trimmedLine, mentions);
+			this.parseReferences(trimmedLine, references);
 		}
 
 		if (mentions.size > 0) {
@@ -364,14 +369,22 @@ export class CommitParser {
 		}
 	}
 
-	parse(rawCommit: string): Commit {
-		const commit = this.parseRawCommit(rawCommit);
+	parse(rawCommit: string): Commit | undefined {
+		try {
+			const commit = this.parseRawCommit(rawCommit);
 
-		this.parseSubject(commit);
-		this.parseMerge(commit);
-		this.parseRevert(commit);
-		this.parseRawLines(commit);
+			this.parseSubject(commit);
+			this.parseMerge(commit);
+			this.parseRevert(commit);
+			this.parseRawLines(commit);
 
-		return commit;
+			return commit;
+		} catch (error) {
+			if (this.#logger) {
+				this.#logger.debug("[Commit Parser] Failed to parse commit", { error });
+			}
+
+			return undefined;
+		}
 	}
 }

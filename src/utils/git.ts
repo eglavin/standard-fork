@@ -278,6 +278,6 @@ export class Git {
 			...paths,
 		);
 
-		return commits.split(`${SCISSOR}\n`).filter(Boolean);
+		return commits.split(`\n${SCISSOR}\n`).filter(Boolean);
 	}
 }

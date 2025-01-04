@@ -34,9 +34,9 @@ export interface ParserOptions {
 	notePattern: RegExp;
 }
 
-export function createParserOptions(userOptions: Partial<ParserOptions>): ParserOptions {
+export function createParserOptions(userOptions?: Partial<ParserOptions>): ParserOptions {
 	const referenceActions = (
-		trimStringArray(userOptions.referenceActions) ?? [
+		trimStringArray(userOptions?.referenceActions) ?? [
 			"close",
 			"closes",
 			"closed",
@@ -49,10 +49,10 @@ export function createParserOptions(userOptions: Partial<ParserOptions>): Parser
 		]
 	).join("|");
 
-	const issuePrefixes = (trimStringArray(userOptions.issuePrefixes) ?? ["#"]).join("|");
+	const issuePrefixes = (trimStringArray(userOptions?.issuePrefixes) ?? ["#"]).join("|");
 
 	const noteKeywords = (
-		trimStringArray(userOptions.noteKeywords) ?? ["BREAKING CHANGE", "BREAKING-CHANGE"]
+		trimStringArray(userOptions?.noteKeywords) ?? ["BREAKING CHANGE", "BREAKING-CHANGE"]
 	).join("|");
 
 	return {

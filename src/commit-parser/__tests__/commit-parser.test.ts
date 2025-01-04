@@ -1,5 +1,7 @@
+import type { MockInstance } from "vitest";
 import { setupTest } from "../../../tests/setup-tests";
 import { Git } from "../../utils/git";
+import { Logger } from "../../utils/logger";
 import { CommitParser } from "../commit-parser";
 import { type Commit } from "../types";
 
@@ -13,186 +15,236 @@ function createCommit(subject: string, body = "\r\n\n") {
 }
 
 describe("commit-parser", () => {
-	it("should parse raw commit", () => {
-		const parser = new CommitParser();
+	describe("general", () => {
+		it("should parse raw commit", () => {
+			const parser = new CommitParser();
 
-		const commits = [
-			createCommit(
-				"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+			const commits = [
+				createCommit(
+					"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+					"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				),
+				createCommit("refactor: add test file"),
+				createCommit("feat: initial commit", "BREAKING CHANGE: this is a breaking change"),
+			];
+
+			const parsedCommits = commits.map(parser.parse);
+
+			expect(parsedCommits[0]).toStrictEqual({
+				raw: "refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				subject:
+					"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+				body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				hash,
+				date,
+				name,
+				email,
+
+				type: "refactor",
+				scope: "",
+				isBreakingChange: false,
+				title:
+					"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+
+				merge: null,
+				revert: null,
+				notes: [],
+				mentions: [],
+				references: [],
+			} as Commit);
+			expect(parsedCommits[1]).toStrictEqual({
+				raw: "refactor: add test file",
+				subject: "refactor: add test file",
+				body: "",
+				hash,
+				date,
+				name,
+				email,
+
+				type: "refactor",
+				scope: "",
+				isBreakingChange: false,
+				title: "add test file",
+
+				merge: null,
+				revert: null,
+				notes: [],
+				mentions: [],
+				references: [],
+			} as Commit);
+			expect(parsedCommits[2]).toStrictEqual({
+				raw: "feat: initial commit\nBREAKING CHANGE: this is a breaking change",
+				subject: "feat: initial commit",
+				body: "BREAKING CHANGE: this is a breaking change",
+				hash,
+				date,
+				name,
+				email,
+
+				type: "feat",
+				scope: "",
+				isBreakingChange: true,
+				title: "initial commit",
+
+				merge: null,
+				revert: null,
+				notes: [
+					{
+						title: "BREAKING CHANGE",
+						text: "this is a breaking change",
+					},
+				],
+				mentions: [],
+				references: [],
+			} as Commit);
+		});
+
+		it("should parse with no name or email", () => {
+			const parser = new CommitParser();
+
+			const commit = ["feat: create new feature", "", hash, date, "", ""].join("\n");
+
+			expect(parser.parse(commit)).toStrictEqual({
+				raw: "feat: create new feature",
+				subject: "feat: create new feature",
+				body: "",
+				hash,
+				date,
+				name: "",
+				email: "",
+
+				type: "feat",
+				scope: "",
+				isBreakingChange: false,
+				title: "create new feature",
+
+				merge: null,
+				revert: null,
+				notes: [],
+				mentions: [],
+				references: [],
+			} as Commit);
+		});
+
+		it("should interface with getCommits method from the git class", async () => {
+			const { config } = await setupTest("commit-parser");
+			const git = new Git(config);
+			const parser = new CommitParser();
+
+			await git.commit(
+				"--allow-empty",
+				"-m",
+				"feat: initial commit",
+				"-m",
+				"BREAKING CHANGE: this is a breaking change",
+			);
+			await git.commit(
+				"--allow-empty",
+				"-m",
+				"refactor: this is a long commit message with a lot of content in it\nwhich I'm wondering how it would be handled by the commit log parsing\nsystem so we'll see what happens.",
+				"-m",
 				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			),
-			createCommit("refactor: add test file"),
-			createCommit("feat: initial commit", "BREAKING CHANGE: this is a breaking change"),
-		];
+			);
 
-		const parsedCommits = commits.map(parser.parse);
+			const commits = await git.getCommits();
+			const parsedCommits = commits.map(parser.parse);
 
-		expect(parsedCommits[0]).toStrictEqual({
-			raw: "refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			subject:
-				"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
-			body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			hash,
-			date,
-			name,
-			email,
+			expect(parsedCommits[0]).toStrictEqual({
+				raw: "refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				subject:
+					"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+				body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				hash: expect.any(String),
+				date: expect.any(String),
+				name,
+				email,
 
-			type: "refactor",
-			scope: "",
-			isBreakingChange: false,
-			title:
-				"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
+				type: "refactor",
+				scope: "",
+				isBreakingChange: false,
+				title:
+					"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
 
-			merge: null,
-			revert: null,
-			notes: [],
-			mentions: [],
-			references: [],
-		} as Commit);
-		expect(parsedCommits[1]).toStrictEqual({
-			raw: "refactor: add test file",
-			subject: "refactor: add test file",
-			body: "",
-			hash,
-			date,
-			name,
-			email,
+				merge: null,
+				revert: null,
+				notes: [],
+				mentions: [],
+				references: [],
+			} as Commit);
+			expect(parsedCommits[1]).toStrictEqual({
+				raw: "feat: initial commit\nBREAKING CHANGE: this is a breaking change",
+				subject: "feat: initial commit",
+				body: "BREAKING CHANGE: this is a breaking change",
+				hash: expect.any(String),
+				date: expect.any(String),
+				name,
+				email,
 
-			type: "refactor",
-			scope: "",
-			isBreakingChange: false,
-			title: "add test file",
+				type: "feat",
+				scope: "",
+				isBreakingChange: true,
+				title: "initial commit",
 
-			merge: null,
-			revert: null,
-			notes: [],
-			mentions: [],
-			references: [],
-		} as Commit);
-		expect(parsedCommits[2]).toStrictEqual({
-			raw: "feat: initial commit\nBREAKING CHANGE: this is a breaking change",
-			subject: "feat: initial commit",
-			body: "BREAKING CHANGE: this is a breaking change",
-			hash,
-			date,
-			name,
-			email,
-
-			type: "feat",
-			scope: "",
-			isBreakingChange: true,
-			title: "initial commit",
-
-			merge: null,
-			revert: null,
-			notes: [
-				{
-					title: "BREAKING CHANGE",
-					text: "this is a breaking change",
-				},
-			],
-			mentions: [],
-			references: [],
-		} as Commit);
+				merge: null,
+				revert: null,
+				notes: [
+					{
+						title: "BREAKING CHANGE",
+						text: "this is a breaking change",
+					},
+				],
+				mentions: [],
+				references: [],
+			} as Commit);
+		});
 	});
 
-	it("should interface with getCommits method from the git class", async () => {
-		const { config } = await setupTest("commit-parser");
-		const git = new Git(config);
-		const parser = new CommitParser();
+	describe("error handling", () => {
+		let debugSpy: MockInstance;
+		beforeEach(() => {
+			debugSpy = vi.spyOn(global.console, "debug").mockImplementation(() => undefined);
+		});
+		afterEach(() => {
+			debugSpy.mockRestore();
+		});
 
-		await git.commit(
-			"--allow-empty",
-			"-m",
-			"feat: initial commit",
-			"-m",
-			"BREAKING CHANGE: this is a breaking change",
-		);
-		await git.commit(
-			"--allow-empty",
-			"-m",
-			"refactor: this is a long commit message with a lot of content in it\nwhich I'm wondering how it would be handled by the commit log parsing\nsystem so we'll see what happens.",
-			"-m",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-		);
-
-		const commits = await git.getCommits();
-		const parsedCommits = commits.map(parser.parse);
-
-		expect(parsedCommits[0]).toStrictEqual({
-			raw: "refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			subject:
-				"refactor: this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
-			body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			hash: expect.any(String),
-			date: expect.any(String),
-			name,
-			email,
-
-			type: "refactor",
-			scope: "",
-			isBreakingChange: false,
-			title:
-				"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
-
-			merge: null,
-			revert: null,
-			notes: [],
-			mentions: [],
-			references: [],
-		} as Commit);
-		expect(parsedCommits[1]).toStrictEqual({
-			raw: "feat: initial commit\nBREAKING CHANGE: this is a breaking change",
-			subject: "feat: initial commit",
-			body: "BREAKING CHANGE: this is a breaking change",
-			hash: expect.any(String),
-			date: expect.any(String),
-			name,
-			email,
-
-			type: "feat",
-			scope: "",
-			isBreakingChange: true,
-			title: "initial commit",
-
-			merge: null,
-			revert: null,
-			notes: [
-				{
-					title: "BREAKING CHANGE",
-					text: "this is a breaking change",
-				},
-			],
-			mentions: [],
-			references: [],
-		} as Commit);
-	});
-
-	describe("throw due to format", () => {
+		const logger = new Logger({ silent: false, debug: true, inspectVersion: false });
 		const subject = "refactor: add test file";
 
-		it("should throw if date and email are swapped", () => {
+		it("should log if date and email are swapped", () => {
+			const parser = new CommitParser().setLogger(logger);
+
+			const commit = [subject, "", hash, name, email, date, ""].join("\n");
+
+			expect(parser.parse(commit)).toBe(undefined);
+			expect(debugSpy).toHaveBeenCalledOnce();
+		});
+
+		it("should throw if unknown extra content", () => {
+			const parser = new CommitParser().setLogger(logger);
+
+			const commit = [subject, "", hash, date, name, email, "extra line"].join("\n");
+
+			expect(parser.parse(commit)).toBe(undefined);
+			expect(debugSpy).toHaveBeenCalledOnce();
+		});
+
+		it("should throw if missing data", () => {
+			const parser = new CommitParser().setLogger(logger);
+
+			const commit = [subject, "", hash, date, name].join("\n");
+
+			expect(parser.parse(commit)).toBe(undefined);
+			expect(debugSpy).toHaveBeenCalledOnce();
+		});
+
+		it("should not log if not passed a logger instance", () => {
 			const parser = new CommitParser();
 
 			const commit = [subject, "", hash, name, email, date, ""].join("\n");
 
-			expect(() => parser.parse(commit)).toThrowError("Invalid commit format");
-		});
-
-		it("should throw if unknown extra content", () => {
-			const parser = new CommitParser();
-
-			const commit = [subject, "", hash, date, name, email, "extra line"].join("\n");
-
-			expect(() => parser.parse(commit)).toThrowError("Invalid commit format");
-		});
-
-		it("should throw if missing data", () => {
-			const parser = new CommitParser();
-
-			const commit = [subject, "", hash, date, name].join("\n");
-
-			expect(() => parser.parse(commit)).toThrowError("Invalid commit format");
+			expect(parser.parse(commit)).toBe(undefined);
+			expect(debugSpy).not.toHaveBeenCalled();
 		});
 	});
 
@@ -771,6 +823,8 @@ BREAKING CHANGE: this is another breaking change
 which also spans multiple lines
 with some more content
 on this line.
+
+This is some extra content that should be added to the previous note.
 `,
 				),
 			);
@@ -781,11 +835,11 @@ on this line.
 				notes: [
 					{
 						title: "BREAKING CHANGE",
-						text: "this is a breaking change\nthat spans multiple lines\nwith more content\nhere.",
+						text: "this is a breaking change\nthat spans multiple lines\nwith more content\nhere.\n",
 					},
 					{
 						title: "BREAKING CHANGE",
-						text: "this is another breaking change\nwhich also spans multiple lines\nwith some more content\non this line.",
+						text: "this is another breaking change\nwhich also spans multiple lines\nwith some more content\non this line.\n\nThis is some extra content that should be added to the previous note.",
 					},
 				],
 			});
