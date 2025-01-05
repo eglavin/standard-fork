@@ -253,7 +253,7 @@ export class CommitParser {
 				break;
 			}
 
-			const { repository = "", prefix = "", issue = "" } = issueMatch?.groups ?? {};
+			const { repository = "", prefix = "", issue = "" } = issueMatch.groups ?? {};
 
 			const reference: CommitReference = {
 				prefix,
@@ -301,7 +301,7 @@ export class CommitParser {
 				break;
 			}
 
-			const { action = "", reference = "" } = referenceActionMatch?.groups ?? {};
+			const { action = "", reference = "" } = referenceActionMatch.groups ?? {};
 
 			const parsedReferences = this.parseReferenceParts(reference, action || null);
 			if (!parsedReferences) {
