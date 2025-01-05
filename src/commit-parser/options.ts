@@ -1,17 +1,36 @@
 import { trimStringArray } from "../utils/trim-string-array";
 
 export interface ParserOptions {
+	/**
+	 * Pattern to match commit subjects
+	 * - Expected capture groups: `type` `title`
+	 * - Optional capture groups: `scope`, `breakingChange`
+	 */
 	subjectPattern: RegExp;
 
+	/**
+	 * Pattern to match merge commits
+	 * - Expected capture groups: `id`, `source`
+	 */
 	mergePattern: RegExp;
 
+	/**
+	 * Pattern to match revert commits
+	 * - Expected capture groups: `subject`, `hash`
+	 */
 	revertPattern: RegExp;
 
 	/**
-	 * Pattern to match comments, setting to `null` will disable comment trimming
+	 * Pattern to match commented out lines which will be trimmed
+	 *
+	 * Setting to `null` will disable comment trimming
 	 */
 	commentPattern: RegExp | null;
 
+	/**
+	 * Pattern to match mentions
+	 * - Expected capture groups: `username`
+	 */
 	mentionPattern: RegExp;
 
 	/**
@@ -20,6 +39,10 @@ export interface ParserOptions {
 	 * ["close", "closes", "closed", "fix", "fixes", "fixed", "resolve", "resolves", "resolved"]
 	 */
 	referenceActions?: string[];
+	/**
+	 * Pattern to match reference sections
+	 * - Expected capture groups: `action`, `reference`
+	 */
 	referenceActionPattern: RegExp;
 
 	/**
@@ -28,9 +51,23 @@ export interface ParserOptions {
 	 * ["#"]
 	 */
 	issuePrefixes?: string[];
+	/**
+	 * Pattern to match issue references
+	 * - Expected capture groups: `repository`, `prefix`, `issue`
+	 */
 	issuePattern: RegExp;
 
+	/**
+	 * List of keywords to match note titles
+	 * @default
+	 * ["BREAKING CHANGE", "BREAKING-CHANGE"]
+	 */
 	noteKeywords?: string[];
+	/**
+	 * Pattern to match note sections
+	 * - Expected capture groups: `title`
+	 * - Optional capture groups: `text`
+	 */
 	notePattern: RegExp;
 }
 
@@ -64,7 +101,7 @@ export function createParserOptions(userOptions?: Partial<ParserOptions>): Parse
 
 		commentPattern: /^#(?!\d+\s)/,
 
-		mentionPattern: /(?<!\w)@([\w-]+)/,
+		mentionPattern: /(?<!\w)@(?<username>[\w-]+)/,
 
 		referenceActionPattern: new RegExp(
 			`(?<action>${referenceActions})(?:\\s+(?<reference>.*?))(?=(?:${referenceActions})|$)`,

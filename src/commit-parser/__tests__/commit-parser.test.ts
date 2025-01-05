@@ -761,6 +761,29 @@ fixes owner/repo#1234
 				],
 			});
 		});
+
+		it("should parse references with custom actions", () => {
+			const parser = new CommitParser({
+				referenceActions: ["closes", "finishes"],
+			});
+
+			const commit = parser.parse(
+				createCommit(
+					"feat: initial commit closes #123",
+					`This is a reference to #456
+finishes #789, #800`,
+				),
+			);
+
+			expect(commit).toMatchObject({
+				references: [
+					{ prefix: "#", issue: "123", action: "closes", owner: null, repository: null },
+					{ prefix: "#", issue: "456", action: null, owner: null, repository: null },
+					{ prefix: "#", issue: "789", action: "finishes", owner: null, repository: null },
+					{ prefix: "#", issue: "800", action: "finishes", owner: null, repository: null },
+				],
+			});
+		});
 	});
 
 	describe("notes", () => {
@@ -849,6 +872,27 @@ This is some other content that shouldn't be added to the previous note.
 				mentions: ["fork-version"],
 				references: [
 					{ prefix: "#", issue: "1234", action: "fixes", owner: "owner", repository: "repo" },
+				],
+			});
+		});
+
+		it("should parse notes with custom keywords", () => {
+			const parser = new CommitParser({
+				noteKeywords: ["CUSTOM NOTE"],
+			});
+
+			const commit = parser.parse(
+				createCommit("feat: initial commit", `CUSTOM NOTE: this is a custom breaking change`),
+			);
+
+			expect(commit).toMatchObject({
+				isBreakingChange: true,
+
+				notes: [
+					{
+						title: "CUSTOM NOTE",
+						text: "this is a custom breaking change",
+					},
 				],
 			});
 		});

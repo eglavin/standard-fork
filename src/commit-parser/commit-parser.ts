@@ -230,7 +230,9 @@ export class CommitParser {
 				break;
 			}
 
-			outMentions.add(mentionMatch[1]);
+			const { username = "" } = mentionMatch.groups ?? {};
+
+			outMentions.add(username);
 			foundMention = true;
 		}
 
