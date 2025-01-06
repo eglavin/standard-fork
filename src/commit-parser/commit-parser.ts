@@ -143,6 +143,8 @@ export class CommitParser {
 	 * @throws {ParserError}
 	 */
 	parseSubject(commit: Commit) {
+		if (!this.#options.subjectPattern) return false;
+
 		const subjectMatch = new RegExp(this.#options.subjectPattern, "i").exec(commit.subject);
 
 		if (subjectMatch?.groups) {
@@ -171,6 +173,8 @@ export class CommitParser {
 	 * ```
 	 */
 	parseMerge(commit: Commit) {
+		if (!this.#options.mergePattern) return false;
+
 		const mergeMatch = new RegExp(this.#options.mergePattern).exec(commit.subject);
 
 		if (mergeMatch?.groups) {
@@ -197,6 +201,8 @@ export class CommitParser {
 	 * ```
 	 */
 	parseRevert(commit: Commit) {
+		if (!this.#options.revertPattern) return false;
+
 		const revertMatch = new RegExp(this.#options.revertPattern).exec(commit.raw);
 
 		if (revertMatch?.groups) {
@@ -221,6 +227,8 @@ export class CommitParser {
 	 * ```
 	 */
 	parseMentions(line: string, outMentions: Set<string>) {
+		if (!this.#options.mentionPattern) return false;
+
 		const mentionRegex = new RegExp(this.#options.mentionPattern, "g");
 
 		let foundMention = false;
@@ -244,6 +252,8 @@ export class CommitParser {
 	 * @param action - Optional action: `"close"`, `"fix"`, `"resolve"`
 	 */
 	parseReferenceParts(referenceText: string, action: string | null): CommitReference[] | undefined {
+		if (!this.#options.issuePattern) return undefined;
+
 		const references: CommitReference[] = [];
 
 		const issueRegex = new RegExp(this.#options.issuePattern, "gi");
@@ -290,6 +300,8 @@ export class CommitParser {
 	 * ```
 	 */
 	parseReferences(line: string, outReferences: CommitReference[]) {
+		if (!this.#options.referenceActionPattern || !this.#options.issuePattern) return false;
+
 		const referenceActionRegex = new RegExp(this.#options.referenceActionPattern, "gi").test(line)
 			? new RegExp(this.#options.referenceActionPattern, "gi")
 			: /(?<reference>.*)/g;
@@ -327,6 +339,8 @@ export class CommitParser {
 	 * ```
 	 */
 	parseNotes(line: string, outNotes: CommitNote[]) {
+		if (!this.#options.notePattern) return false;
+
 		const noteMatch = new RegExp(this.#options.notePattern, "ig").exec(line);
 
 		if (noteMatch?.groups) {

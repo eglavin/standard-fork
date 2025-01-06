@@ -6,32 +6,30 @@ export interface ParserOptions {
 	 * - Expected capture groups: `type` `title`
 	 * - Optional capture groups: `scope`, `breakingChange`
 	 */
-	subjectPattern: RegExp;
+	subjectPattern: RegExp | undefined;
 
 	/**
 	 * Pattern to match merge commits
 	 * - Expected capture groups: `id`, `source`
 	 */
-	mergePattern: RegExp;
+	mergePattern: RegExp | undefined;
 
 	/**
 	 * Pattern to match revert commits
 	 * - Expected capture groups: `subject`, `hash`
 	 */
-	revertPattern: RegExp;
+	revertPattern: RegExp | undefined;
 
 	/**
 	 * Pattern to match commented out lines which will be trimmed
-	 *
-	 * Setting to `null` will disable comment trimming
 	 */
-	commentPattern: RegExp | null;
+	commentPattern: RegExp | undefined;
 
 	/**
 	 * Pattern to match mentions
 	 * - Expected capture groups: `username`
 	 */
-	mentionPattern: RegExp;
+	mentionPattern: RegExp | undefined;
 
 	/**
 	 * List of action labels to match reference sections
@@ -43,7 +41,7 @@ export interface ParserOptions {
 	 * Pattern to match reference sections
 	 * - Expected capture groups: `action`, `reference`
 	 */
-	referenceActionPattern: RegExp;
+	referenceActionPattern: RegExp | undefined;
 
 	/**
 	 * List of issue prefixes to match issue ids
@@ -55,7 +53,7 @@ export interface ParserOptions {
 	 * Pattern to match issue references
 	 * - Expected capture groups: `repository`, `prefix`, `issue`
 	 */
-	issuePattern: RegExp;
+	issuePattern: RegExp | undefined;
 
 	/**
 	 * List of keywords to match note titles
@@ -68,7 +66,7 @@ export interface ParserOptions {
 	 * - Expected capture groups: `title`
 	 * - Optional capture groups: `text`
 	 */
-	notePattern: RegExp;
+	notePattern: RegExp | undefined;
 }
 
 export function createParserOptions(userOptions?: Partial<ParserOptions>): ParserOptions {
@@ -103,15 +101,21 @@ export function createParserOptions(userOptions?: Partial<ParserOptions>): Parse
 
 		mentionPattern: /(?<!\w)@(?<username>[\w-]+)/,
 
-		referenceActionPattern: new RegExp(
-			`(?<action>${referenceActions})(?:\\s+(?<reference>.*?))(?=(?:${referenceActions})|$)`,
-		),
+		referenceActionPattern: referenceActions
+			? new RegExp(
+					`(?<action>${referenceActions})(?:\\s+(?<reference>.*?))(?=(?:${referenceActions})|$)`,
+				)
+			: undefined,
 
-		issuePattern: new RegExp(
-			`(?:.*?)??\\s*(?<repository>[\\w-\\.\\/]*?)??(?<prefix>${issuePrefixes})(?<issue>[\\w-]*\\d+)`,
-		),
+		issuePattern: issuePrefixes
+			? new RegExp(
+					`(?:.*?)??\\s*(?<repository>[\\w-\\.\\/]*?)??(?<prefix>${issuePrefixes})(?<issue>[\\w-]*\\d+)`,
+				)
+			: undefined,
 
-		notePattern: new RegExp(`^(?<title>${noteKeywords}):(\\s*(?<text>.*))`),
+		notePattern: noteKeywords
+			? new RegExp(`^(?<title>${noteKeywords}):(\\s*(?<text>.*))`)
+			: undefined,
 
 		// Override defaults with user options
 		...userOptions,
