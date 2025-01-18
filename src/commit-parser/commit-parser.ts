@@ -151,7 +151,7 @@ export class CommitParser {
 			const { type = "", scope = "", breakingChange = "", title = "" } = subjectMatch.groups;
 
 			if (!type || !title) {
-				throw new ParserError("Unable to parse conventional commit", commit);
+				throw new ParserError("Unable to parse commit subject", commit);
 			}
 
 			commit.type = type;
