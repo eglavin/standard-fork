@@ -375,11 +375,11 @@ export class CommitParser {
 				continue;
 			}
 
-			const foundMention = this.parseMentions(trimmedLine, mentions);
+			this.parseMentions(trimmedLine, mentions);
 			const foundReference = this.parseReferences(trimmedLine, references);
 
-			// If we find a mention or reference, we can assume the previous note is complete.
-			if (foundMention || foundReference) {
+			// If we find a reference, we can assume the previous note is complete.
+			if (foundReference) {
 				lastNoteLine = -1;
 				continue;
 			}

@@ -677,7 +677,7 @@ Content that will be kept
 
 		it("should parse commented out lines if commentPattern option is null", () => {
 			const parser = new CommitParser({
-				commentPattern: null,
+				commentPattern: undefined,
 			});
 
 			const commit = parser.parse(
@@ -894,6 +894,32 @@ This is some other content that shouldn't be added to the previous note.
 						text: "this is a custom breaking change",
 					},
 				],
+			});
+		});
+
+		it("should parse multi line notes with mentions", () => {
+			const parser = new CommitParser();
+
+			const commit = parser.parse(
+				createCommit(
+					"feat: initial commit",
+					`BREAKING CHANGE: this is a breaking change
+that spans multiple lines
+with more content
+here including this mention @fork-version.`,
+				),
+			);
+
+			expect(commit).toMatchObject({
+				isBreakingChange: true,
+
+				notes: [
+					{
+						title: "BREAKING CHANGE",
+						text: "this is a breaking change\nthat spans multiple lines\nwith more content\nhere including this mention @fork-version.",
+					},
+				],
+				mentions: ["fork-version"],
 			});
 		});
 	});
