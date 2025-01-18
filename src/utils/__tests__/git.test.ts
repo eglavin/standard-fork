@@ -280,4 +280,22 @@ system so we'll see what happens.`,
 		expect(allCommits[4].includes("feat: initial commit")).toBe(true);
 		expect(allCommits.length).toBe(5);
 	});
+
+	it("should handle unset user email in git config", async () => {
+		const { config, create } = await setupTest("execute-file", {
+			userName: "Test User",
+			userEmail: "",
+		});
+		const git = new Git(config);
+
+		create.json({ version: "1.0.0" }, "package.json").add();
+		await git.commit("--allow-empty", "-m", "test: test arguments works");
+
+		const commits = await git.getCommits();
+		const [subject, , , , name, email] = commits[0].split("\n");
+
+		expect(subject).toBe("test: test arguments works");
+		expect(name).toBe("Test User");
+		expect(email).toBe("");
+	});
 });
