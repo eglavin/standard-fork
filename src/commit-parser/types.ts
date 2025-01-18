@@ -44,7 +44,7 @@ export interface Commit {
 
 	type: string;
 	scope: string;
-	isBreakingChange: boolean;
+	breakingChange: string;
 	title: string;
 
 	merge: CommitMerge | null;

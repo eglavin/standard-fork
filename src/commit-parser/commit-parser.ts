@@ -42,7 +42,7 @@ export class CommitParser {
 
 			type: "",
 			scope: "",
-			isBreakingChange: false,
+			breakingChange: "",
 			title: "",
 
 			merge: null,
@@ -156,7 +156,7 @@ export class CommitParser {
 
 			commit.type = type;
 			commit.scope = scope;
-			if (breakingChange) commit.isBreakingChange = true;
+			if (breakingChange) commit.breakingChange = breakingChange;
 			commit.title = title;
 
 			return true;
@@ -405,7 +405,6 @@ export class CommitParser {
 				...note,
 				text: note.text.trim(),
 			}));
-			commit.isBreakingChange = true;
 		}
 	}
 

@@ -42,7 +42,7 @@ describe("commit-parser", () => {
 
 				type: "refactor",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title:
 					"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
 
@@ -63,7 +63,7 @@ describe("commit-parser", () => {
 
 				type: "refactor",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "add test file",
 
 				merge: null,
@@ -83,7 +83,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: true,
+				breakingChange: "",
 				title: "initial commit",
 
 				merge: null,
@@ -115,7 +115,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "create new feature",
 
 				merge: null,
@@ -161,7 +161,7 @@ describe("commit-parser", () => {
 
 				type: "refactor",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title:
 					"this is a long commit message with a lot of content in it which I'm wondering how it would be handled by the commit log parsing system so we'll see what happens.",
 
@@ -182,7 +182,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: true,
+				breakingChange: "",
 				title: "initial commit",
 
 				merge: null,
@@ -265,7 +265,7 @@ describe("commit-parser", () => {
 
 				type: "refactor",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "add test file",
 
 				merge: null,
@@ -292,7 +292,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "login",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "new form implemented",
 
 				merge: null,
@@ -319,7 +319,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: true,
+				breakingChange: "!",
 				title: "new form implemented",
 
 				merge: null,
@@ -346,7 +346,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "login:form/register",
-				isBreakingChange: true,
+				breakingChange: "!",
 				title: "new form implemented",
 
 				merge: null,
@@ -373,7 +373,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "new form implemented",
 
 				merge: null,
@@ -400,7 +400,7 @@ describe("commit-parser", () => {
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: true,
+				breakingChange: "!",
 				title: "new form implemented",
 
 				merge: null,
@@ -460,7 +460,7 @@ describe("commit-parser", () => {
 
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				merge: {
@@ -491,7 +491,7 @@ describe("commit-parser", () => {
 
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				merge: {
@@ -522,7 +522,7 @@ describe("commit-parser", () => {
 
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				merge: {
@@ -549,7 +549,7 @@ This reverts commit 4a79e9e546b4020d2882b7810dc549fa71960f4f.`,
 			expect(commit).toMatchObject({
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				revert: {
@@ -567,7 +567,7 @@ This reverts commit 4a79e9e546b4020d2882b7810dc549fa71960f4f.`,
 			expect(commit).toMatchObject({
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				revert: {
@@ -589,7 +589,7 @@ This reverts commit .`),
 			expect(commit).toMatchObject({
 				type: "",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "",
 
 				revert: {
@@ -626,7 +626,7 @@ Content that will be kept
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "initial commit",
 
 				merge: null,
@@ -664,7 +664,7 @@ Content that will be kept
 
 				type: "feat",
 				scope: "",
-				isBreakingChange: false,
+				breakingChange: "",
 				title: "initial commit",
 
 				merge: null,
@@ -694,7 +694,7 @@ Content that will be kept
 			expect(commit).toMatchObject({
 				body: "# BREAKING CHANGE:\n  # @ignored-mention\nContent that will be kept\n# closes #123",
 
-				isBreakingChange: false,
+				breakingChange: "",
 
 				mentions: ["ignored-mention"],
 				references: [
@@ -795,7 +795,7 @@ finishes #789, #800`,
 			);
 
 			expect(commit).toMatchObject({
-				isBreakingChange: true,
+				breakingChange: "",
 
 				notes: [
 					{
@@ -820,7 +820,7 @@ here.`,
 			);
 
 			expect(commit).toMatchObject({
-				isBreakingChange: true,
+				breakingChange: "",
 
 				notes: [
 					{
@@ -857,7 +857,7 @@ This is some other content that shouldn't be added to the previous note.
 			);
 
 			expect(commit).toMatchObject({
-				isBreakingChange: true,
+				breakingChange: "",
 
 				notes: [
 					{
@@ -886,7 +886,7 @@ This is some other content that shouldn't be added to the previous note.
 			);
 
 			expect(commit).toMatchObject({
-				isBreakingChange: true,
+				breakingChange: "",
 
 				notes: [
 					{
@@ -911,7 +911,7 @@ here including this mention @fork-version.`,
 			);
 
 			expect(commit).toMatchObject({
-				isBreakingChange: true,
+				breakingChange: "",
 
 				notes: [
 					{
